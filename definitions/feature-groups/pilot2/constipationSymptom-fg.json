@@ -1,0 +1,62 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/constipation_symptom",
+  "name": "constipation_symptom",
+  "title": "Parkinson Constipation Symptom Assessment",
+  "description": "Assessment of Parkinson Constipation (existence and numeric evaluation); e.g. scoring with NMS questionnaire",
+  "version": "0.1",
+  "date": "2022-06-01",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonMotorObservation",
+  "fhirSearch": "?patient={{Patient}}&code=http://snomed.info/sct|14760008",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "periodStart",
+  "periodEnd": "periodEnd",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "periodStart",
+      "title": "Assessment date or start date of assessment period",
+      "description": "Assessment date (if periodEnd is not given) or start date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "periodEnd",
+      "title": "Assessment period end date",
+      "description": "End date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectivePeriod.end"
+    },
+    {
+      "name": "method",
+      "title": "Assessment method",
+      "description": "Code for the assessment method used e.g. nms: Non-Motor Rating Scale(NMS),",
+      "dataType": "code",
+      "fhirPath": "Observation.method.coding.where(system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods').first().code"
+    },
+    {
+      "name": "isSymptomSeen",
+      "title": "Is constipation seen",
+      "description": "Whether constipation is seen during the given period",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean or Observation.valueQuantity.value != 0"
+    },
+    {
+      "name": "symptomScore",
+      "title": "Constipation assessment score",
+      "description": "Constipation assessment score (e.g. calculated from NMS, Part J.4, Range: 0-16)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    }
+  ]
+}

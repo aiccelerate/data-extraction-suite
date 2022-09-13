@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/icu_stay_plan",
+  "name": "icu_stay_plan",
+  "title": "Plan for ICU Stay after surgery",
+  "description": "Plan for ICU Stay after surgery",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Encounter",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationEpisodeEncounter",
+  "fhirSearch": "?patient={{Patient}}&type=http://snomed.info/sct|305351004&status=planned",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Encounter.subject"
+    },
+    {
+      "name": "time",
+      "title": "Planned time for ICU stay",
+      "description": "Planned time for ICU stay",
+      "dataType": "dateTime",
+      "fhirPath": "Encounter.period.start"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of this encounter",
+      "dataType": "id",
+      "fhirPath": "Encounter.id"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode of care identifier",
+      "description": "Unique identifier for the main episode (OperationEpisode) that this surgery takes place",
+      "dataType": "id",
+      "fhirPath": "Encounter.episodeOfCare"
+    },
+    {
+      "name": "location",
+      "title": "Operating room",
+      "description": "Unique id of the ICU unit that is planned",
+      "dataType": "id",
+      "fhirPath": "Encounter.location.location"
+    }
+  ]
+}

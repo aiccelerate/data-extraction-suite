@@ -1,0 +1,62 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/motor_symptoms",
+  "name": "motor_symptoms",
+  "title": "Parkinson Motor Symptoms General Assessment",
+  "description": "Assessment of Parkinson motor symptoms (existence and numeric evaluation); Scoring with MDS-UPDRS3 or MDS-UPDRS4",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonMotorObservation",
+  "fhirSearch": "?patient={{Patient}}&code=http://snomed.info/sct|267082004",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "periodStart",
+  "periodEnd": "periodEnd",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "periodStart",
+      "title": "Assessment date or start date of assessment period",
+      "description": "Assessment date (if periodEnd is not given) or start date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "periodEnd",
+      "title": "Assessment period end date",
+      "description": "End date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectivePeriod.end"
+    },
+    {
+      "name": "method",
+      "title": "Assessment method",
+      "description": "Code for the assessment method used (e.g. updrs3, updrs4)",
+      "dataType": "code",
+      "fhirPath": "Observation.method.coding.where(system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods').first().code"
+    },
+    {
+      "name": "isSymptomSeen",
+      "title": "Is any motor symptom seen",
+      "description": "Whether any motor symptom is seen during the given period",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean or Observation.valueQuantity.value != 0"
+    },
+    {
+      "name": "symptomScore",
+      "title": "Motor Symptoms score",
+      "description": "Motor Symptoms score e.g. calculated from MDS-UPDRS3 (Range 0-132) or MDS-UPDRS4(Range: 0-24)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    }
+  ]
+}

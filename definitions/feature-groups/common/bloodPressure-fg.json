@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/common/blood_pressure",
+  "name": "blood_pressure",
+  "title": "Blood Pressure",
+  "description": "Blood Pressure",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/bp",
+  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|85354-9",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of observation",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "systolic",
+      "title": "Systolic BP",
+      "description": "Systolic BP",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://loinc.org' and code='8480-6')).valueQuantity.value"
+    },
+    {
+      "name": "diastolic",
+      "title": "Diastolic BP",
+      "description": "Diastolic BP",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://loinc.org' and code='8462-4')).valueQuantity.value"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

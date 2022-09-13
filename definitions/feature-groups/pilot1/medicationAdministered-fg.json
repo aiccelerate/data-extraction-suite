@@ -1,0 +1,68 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/medication_administered",
+  "name": "medication_administered",
+  "title": "Medication administrations",
+  "description": "Medication administrations within the hospital",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "MedicationAdministration",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationAdministration",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "MedicationAdministration.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time of assessment",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationAdministration.effectiveDateTime.nav:orElse(MedicationAdministration.effectivePeriod.start)"
+    },
+    {
+      "name": "atcCode",
+      "title": "Code for the medication",
+      "description": "ATC or RxNorm code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationAdministration.medicationCodeableConcept.code.coding.where(system='http://www.whocc.no/atc' or system='http://www.nlm.nih.gov/research/umls/rxnorm').first().code"
+    },
+    {
+      "name": "atcCodeWith4Digits",
+      "title": "First 4 digits of ATC code for the medication",
+      "description": "First 4 digits of ATC code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationAdministration.medicationCodeableConcept.code.coding.where(system='http://www.whocc.no/atc' or system='http://www.nlm.nih.gov/research/umls/rxnorm').first().code.substring(0,4)"
+    },
+    {
+      "name": "dose",
+      "title": "Dose administered",
+      "description": "Dose administered",
+      "dataType": "decimal",
+      "fhirPath": "MedicationAdministration.dosage.dose.value"
+    },
+    {
+      "name": "doseUnit",
+      "title": "Unit for the dose",
+      "description": "Unit for the dose (UCUM code)",
+      "dataType": "code",
+      "fhirPath": "MedicationAdministration.dosage.dose.code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this medication is given",
+      "dataType": "id",
+      "fhirPath": "MedicationAdministration.context"
+    }
+  ]
+}

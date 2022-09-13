@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/cleaning_phase",
+  "name": "cleaning_phase",
+  "title": "Cleaning Phase Details",
+  "description": "Information about the cleaning phase (cleaning of operation room)",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationPhaseDetails",
+  "fhirSearch": "?patient={{Patient}}&category=http://snomed.info/sct|441869008",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startTime",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "startTime",
+      "title": "time when cleaning starts in the operation room",
+      "description": "time when cleaning starts in the operation room",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Time when cleaning ends in the operation room",
+      "description": "Time when cleaning ends in the operation room",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.end"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the surgery encounter this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.encounter"
+    },
+    {
+      "name": "duration",
+      "title": "Duration of cleaning phase",
+      "description": "Duration of cleaning phase",
+      "dataType": "integer",
+      "fhirPath": "utl:getDurationAsQuantityObject(Procedure.performedPeriod.start, Procedure.performedPeriod.end).value"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/other_assessment",
+  "name": "other_assessment",
+  "title": "Other cognitive, behavioral, physical assessments",
+  "description": "Other cognitive, behavioral or physical assessments related with Parkinson",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonCognitiveBehavioralAssessment",
+  "fhirSearch": "?patient={{Patient}}&_profile=https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonCognitiveBehavioralAssessment",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "periodStart",
+  "periodEnd": "periodEnd",
+  "pivot": {
+    "name": "assessmentCode",
+    "description": "Coded value for the type of assessment"
+  },
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "periodStart",
+      "title": "Assessment date or start date of assessment period",
+      "description": "Assessment date (if periodEnd is not given) or start date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "periodEnd",
+      "title": "Assessment period end date",
+      "description": "End date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectivePeriod.end"
+    },
+    {
+      "name": "assessmentCode",
+      "title": "Assessment type",
+      "description": "Code for the assessment type e.g. 72106-8 -> MMSE, 72172-0 -> MOCA",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-cognitive-behavioral-assessments' or system='http://loinc.org').code.first()"
+    },
+    {
+      "name": "assessmentName",
+      "title": "Assessment name",
+      "description": "Name for the assessment e.g. MMSE, MoCA, Activity of Daily Livings-ADL",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-cognitive-behavioral-assessments' or system='http://loinc.org').display.first()"
+    },
+    {
+      "name": "assessmentScore",
+      "title": "Score of the assessment",
+      "description": "Numeric value of the assessment",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    }
+  ]
+}

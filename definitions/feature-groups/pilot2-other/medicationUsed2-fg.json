@@ -1,0 +1,64 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+  "name": "medication_used2",
+  "title": "Used Medications",
+  "description": "Parkinson related medications used by patient",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "MedicationStatement",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationUsed",
+  "fhirSearch": "?patient={{Patient}}&status=active,completed,unknown,on-hold",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startDate",
+  "periodEnd": "endDate",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "MedicationStatement.subject"
+    },
+    {
+      "name": "startDate",
+      "title": "Medication start date",
+      "description": "Medication start date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.start"
+    },
+    {
+      "name": "endDate",
+      "title": "Medication end date",
+      "description": "Medication end date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.end"
+    },
+    {
+      "name": "atcCode",
+      "title": "ATC code for the medication",
+      "description": "ATC code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code"
+    },
+    {
+      "name": "levodopaEquivalentDose",
+      "title": "Levodopa Equivalent Dose",
+      "description": "Levodopa equivalent dose calculated from the dose taken for the medication (in mg)",
+      "dataType": "decimal",
+      "precondition": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04B')",
+      "fhirPath": "MedicationStatement.dosage.select(timing.repeat.period * doseAndRate.doseQuantity.value).agg:sum()"
+    },
+    {
+      "name": "numOfDaysUsed",
+      "title": "Number of days medication used",
+      "description": "Number of days medication used",
+      "dataType": "decimal",
+      "precondition": "MedicationStatement.effectivePeriod.end.exists()",
+      "fhirPath": "utl:getPeriod(MedicationStatement.effectivePeriod.start, MedicationStatement.effectivePeriod.end, 'days')"
+    }
+  ]
+}

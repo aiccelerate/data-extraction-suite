@@ -1,0 +1,68 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/intraoperative_observation",
+  "name": "intraoperative_observation",
+  "title": "Intra-Operative Observation",
+  "description": "Other intra operative observations during the operation e.g. cumulative bleeding, etc.",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-IntraOperativeObservation",
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/intra-operative-observations",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time of assessment",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "code",
+      "title": "Code for the observation",
+      "description": "LOINC or SNOMED code indicating the observation",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://loinc.org' or system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "value",
+      "title": "Numeric observation value",
+      "description": "Numeric value of the observation",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    },
+    {
+      "name": "unit",
+      "title": "Observation unit",
+      "description": "Unit of the observation (UCUM unit)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.code.nav:orElse(Observation.valueQuantity.unit)"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    },
+    {
+      "name": "procedureId",
+      "title": "Surgical procedure identifier",
+      "description": "Identifier of the surgical procedure that this observation is made",
+      "dataType": "id",
+      "fhirPath": "Observation.partOf"
+    }
+  ]
+}

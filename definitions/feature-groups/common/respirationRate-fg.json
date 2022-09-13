@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/common/respiration_rate",
+  "name": "respiration_rate",
+  "title": "Respiration Rate",
+  "description": "Respiration Rate",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/resprate",
+  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|9279-1",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of observation",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "value",
+      "title": "Value of the observation",
+      "description": "Value of the observation",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

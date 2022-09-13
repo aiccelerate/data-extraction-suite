@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/common/body_temperature",
+  "name": "body_temperature",
+  "title": "Body Temperature",
+  "description": "Body Temperature",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/bodytemp",
+  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|8310-5",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of observation",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "value",
+      "title": "Body temperature measurement",
+      "description": "Body temperature measurement (in Celsius)",
+      "dataType": "decimal",
+      "fhirPath": "iif(Observation.valueQuantity.code = 'Cel', Observation.valueQuantity.value, (Observation.valueQuantity.value - 32) * 0.55555556)"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

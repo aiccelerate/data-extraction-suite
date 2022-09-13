@@ -1,0 +1,62 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/offtime_symptom",
+  "name": "offtime_symptom",
+  "title": "Parkinson Off Time Symptom Assessment",
+  "description": "Assessment of Parkinson Off Time (existence and numeric evaluation); Scoring with MDS-UPDRS",
+  "version": "0.1",
+  "date": "2022-06-01",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonMotorObservation",
+  "fhirSearch": "?patient={{Patient}}&code=https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms|off-time",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "periodStart",
+  "periodEnd": "periodEnd",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "periodStart",
+      "title": "Assessment date or start date of assessment period",
+      "description": "Assessment date (if periodEnd is not given) or start date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "periodEnd",
+      "title": "Assessment period end date",
+      "description": "End date of assessment period",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectivePeriod.end"
+    },
+    {
+      "name": "method",
+      "title": "Assessment method",
+      "description": "Code for the assessment method used (e.g. mds-updrs)",
+      "dataType": "code",
+      "fhirPath": "Observation.method.coding.where(system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods').first().code"
+    },
+    {
+      "name": "isSymptomSeen",
+      "title": "Is Off-Time seen",
+      "description": "Whether Off-Time is seen during the given period",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean or Observation.valueQuantity.value != 0"
+    },
+    {
+      "name": "symptomScore",
+      "title": "Off-Time Assessment Score",
+      "description": "Off-Time Assessment score (e.g. time spent in off state, MDS-UPDRS Question 4.3; Range: 0-4)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    }
+  ]
+}

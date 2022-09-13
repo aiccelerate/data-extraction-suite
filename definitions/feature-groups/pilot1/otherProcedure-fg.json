@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/other_procedure",
+  "name": "other_procedure",
+  "title": "Other procedures performed in the surgery",
+  "description": "Other procedures performed in the surgery apart from main surgical procedure",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ProcedureRelatedWithSurgicalWorkflow",
+  "fhirSearch": "?patient={{Patient}}&part-of:type=Procedure",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "time",
+      "title": "Time of the procedure",
+      "description": "Time of the procedure",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "code",
+      "title": "Procedure code",
+      "description": "Code for the performed procedure",
+      "dataType": "code",
+      "fhirPath": "Procedure.code.coding.first().code"
+    },
+    {
+      "name": "isIntubationType",
+      "title": "If this procedure is about intubation type",
+      "description": "If this procedure is about intubation type",
+      "dataType": "boolean",
+      "fhirPath": "Procedure.code.coding.exists(system ='http://snomed.info/sct')"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the surgery encounter this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.encounter"
+    }
+  ]
+}

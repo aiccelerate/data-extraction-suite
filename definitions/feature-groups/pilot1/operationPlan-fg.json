@@ -1,0 +1,97 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/operation_plan",
+  "name": "operation_plan",
+  "title": "Plan for the operation",
+  "description": "Plan/Schedule for the operation",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "ServiceRequest",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationPlan",
+  "fhirSearch": "?patient={{Patient}}&category=http://snomed.info/sct|387713003",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "plannedStartTime",
+  "feature": [
+    {
+      "name": "planId",
+      "title": "Surgery plan identifier",
+      "description": "Id of the plan record",
+      "dataType": "id",
+      "fhirPath": "ServiceRequest.id"
+    },
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "ServiceRequest.subject"
+    },
+    {
+      "name": "plannedStartTime",
+      "title": "Planned time for surgery",
+      "description": "Planned time for surgery",
+      "dataType": "dateTime",
+      "fhirPath": "ServiceRequest.occurrencePeriod.start"
+    },
+    {
+      "name": "plannedEndTime",
+      "title": "Planned end time for surgery",
+      "description": "Planned end time for surgery",
+      "dataType": "dateTime",
+      "fhirPath": "ServiceRequest.occurrencePeriod.end"
+    },
+    {
+      "name": "timeOfAddingToQueue",
+      "title": "Time that this patient is added to the operation queue",
+      "description": "Time that this patient is added to the operation queue",
+      "dataType": "dateTime",
+      "fhirPath": "ServiceRequest.authoredOn"
+    },
+    {
+      "name": "code",
+      "title": "Planned surgery procedure code",
+      "description": "Code for the main procedure for the planned operation",
+      "dataType": "code",
+      "fhirPath": "ServiceRequest.code.coding.first().code"
+    },
+    {
+      "name": "otherProcedureCodes",
+      "title": "Other surgical procedures planned for the operation",
+      "description": "Other surgical procedures planned for the operation",
+      "dataType": "code",
+      "isArray": true,
+      "fhirPath": "ServiceRequest.orderDetail.select(coding.code.first())"
+    },
+    {
+      "name": "requester",
+      "title": "Requester practitioner",
+      "description": "Identifier of the decision maker for this planned operation",
+      "dataType": "id",
+      "fhirPath": "ServiceRequest.requester"
+    },
+    {
+      "name": "plannedSurgeons",
+      "title": "Surgeons that are planned to take role",
+      "description": "Identifier of surgeons that are planned to take role",
+      "dataType": "id",
+      "fhirPath": "ServiceRequest.performer"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of this encounter",
+      "dataType": "id",
+      "fhirPath": "ServiceRequest.encounter"
+    },
+    {
+      "name": "location",
+      "title": "Operating room",
+      "description": "Unique id of the operating room that this operation is planned for",
+      "dataType": "id",
+      "fhirPath": "ServiceRequest.locationReference"
+    }
+  ]
+}

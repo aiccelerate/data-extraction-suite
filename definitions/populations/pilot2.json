@@ -1,0 +1,25 @@
+{
+  "url": "https://aiccelerate.eu/cohorts/pilot2/parkinson_cohort",
+  "name": "parkinson_cohort",
+  "title": "Patients diagnosed with parkinson",
+  "description": "Patients diagnosed with parkinson (ICD-10 G20 code)",
+  "version": "0.1",
+  "date": "2022-04-21T00:00:00",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "entityType": ["Patient"],
+  "eligibilityCriteria": [
+    {
+      "fhirSearch": "?",
+      "description": "All patients with a parkinson diagnosis (ICD-10 G20)",
+      "filter": [
+        {
+          "resourceType": "Condition",
+          "fhirSearch": "?code=http://hl7.org/fhir/sid/icd-10|G20&patient={{Patient}}",
+          "entities": ["Condition.subject"],
+          "eventTime": "Condition.onsetDateTime"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/enrollment_phase",
+  "name": "enrollment_phase",
+  "title": "Enrollment Phase Details",
+  "description": "Information about the enrollment phase during surgery",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationPhaseDetails",
+  "fhirSearch": "?patient={{Patient}}&category=http://snomed.info/sct|305408004",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startTime",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "startTime",
+      "title": "Time when patient has done self enrollment",
+      "description": "Time when patient has done self enrollment",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Time when a patient is called for surgery",
+      "description": "Time when a patient is called for surgery",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.end"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the surgery encounter this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.encounter"
+    },
+    {
+      "name": "duration",
+      "title": "Duration of enrollment phase",
+      "description": "Duration of enrollment phase",
+      "dataType": "integer",
+      "fhirPath": "utl:getDurationAsQuantityObject(Procedure.performedPeriod.start, Procedure.performedPeriod.end).value"
+    }
+  ]
+}

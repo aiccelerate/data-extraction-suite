@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/common/body_weight",
+  "name": "body_weight",
+  "title": "Body Weight",
+  "description": "Body Weight",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/bodyweight",
+  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|29463-7",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of observation",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "value",
+      "title": "Body Weight",
+      "description": "Body Weight in grams",
+      "dataType": "decimal",
+      "fhirPath": "iif(Observation.valueQuantity.code = 'kg', Observation.valueQuantity.value * 1000, iif(Observation.valueQuantity.code = 'g', Observation.valueQuantity.value, Observation.valueQuantity.value * 453.59237))"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

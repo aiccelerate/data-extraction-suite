@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/operation_flag",
+  "name": "operation_flag",
+  "title": "Operation Flag",
+  "description": "Administrative or clinical warnings about the planned operation e.g. day case surgery, overnight stay, etc",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Flag",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationFlag",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Flag.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time that this assessment is done",
+      "dataType": "dateTime",
+      "fhirPath": "Flag.period.start"
+    },
+    {
+      "name": "code",
+      "title": "Code for the flag",
+      "description": "SNOMED-CT or custom code for the flag",
+      "dataType": "code",
+      "fhirPath": "Flag.code.coding.first().code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this study is done",
+      "dataType": "id",
+      "fhirPath": "DiagnosticReport.encounter"
+    }
+  ]
+}

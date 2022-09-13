@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/urgency_classification",
+  "name": "urgency_classification",
+  "title": "Treatment Urgency Classification",
+  "description": "Urgency classification of patient before surgery",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationUrgency",
+  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|34000-0",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time of assessment",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "value",
+      "title": "Assessment result",
+      "description": "Specific AICCELERATE code (R1 | R2 | R3 | P1 | P2 | P3 | H) indicating the assessment result",
+      "dataType": "code",
+      "fhirPath": "Observation.valueCodeableConcept.code.coding.where(system='https://aiccelerate.eu/fhir/CodeSystem/intervention-urgency-codes').first().code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/icu_stay",
+  "name": "icu_stay",
+  "title": "Intensive Care Unit (ICU) Stay",
+  "description": "Intensive Care Unit (ICU) Stay",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Encounter",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationEpisodeEncounter",
+  "fhirSearch": "?patient={{Patient}}&type=http://snomed.info/sct|305351004&status=finished",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Encounter.subject"
+    },
+    {
+      "name": "startTime",
+      "title": "Encounter start time ",
+      "description": "Encounter start time",
+      "dataType": "dateTime",
+      "fhirPath": "Encounter.period.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Encounter end time ",
+      "description": "Encounter end time",
+      "dataType": "dateTime",
+      "fhirPath": "Encounter.period.end"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of this encounter",
+      "dataType": "id",
+      "fhirPath": "Encounter.id"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode of care identifier",
+      "description": "Unique identifier for the main episode (OperationEpisode) that this ICU stay takes place",
+      "dataType": "id",
+      "fhirPath": "Encounter.episodeOfCare"
+    },
+    {
+      "name": "location",
+      "title": "ICU unit",
+      "description": "Unique id of the ICU Unit that this operation takes place",
+      "dataType": "id",
+      "fhirPath": "Encounter.location.location"
+    },
+    {
+      "name": "duration",
+      "title": "Duration in ICU",
+      "description": "Duration in hours in ICU",
+      "dataType": "integer",
+      "fhirPath": "utl:getPeriod(Encounter.period.start, Encounter.period.end, 'hours')"
+    }
+  ]
+}

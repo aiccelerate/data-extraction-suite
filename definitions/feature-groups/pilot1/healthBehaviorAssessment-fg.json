@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/health_behavior_assessment",
+  "name": "health_behavior_assessment",
+  "title": "Health Behavior Assessment (Smoking status, etc)",
+  "description": "Assessment of health behaviors like smoking status, alcohol use, ",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-HealthBehaviourAssessment",
+  "fhirSearch": "?patient={{Patient}}&category=http://terminology.hl7.org/CodeSystem/observation-category|social-history",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Behavior assessment time",
+      "description": "Time that this behavioral information is taken or valid",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Code for the behavior ",
+      "description": "LOINC code indicating the behavior (72166-2 -> smoking, 88031-0 -> other nicotin, 11331-6 -> alcohol, 11343-1 -> illicit drug)",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://loinc.org').first().code"
+    },
+    {
+      "name": "value",
+      "title": "Frequency of the behavior",
+      "description": "SNOMED-CT or LOINC code indicating the behavior frequency",
+      "dataType": "code",
+      "fhirPath": "Observation.valueCodeableConcept.code.coding.where(system='http://loinc.org' or system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

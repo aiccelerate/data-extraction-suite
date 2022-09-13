@@ -1,0 +1,68 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/gcs",
+  "name": "gcs",
+  "title": "Glasgow Coma Scale (GCS)",
+  "description": "Glasgow Coma Scale (GCS) Observation",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-GlascowComaScaleObservation",
+  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|9269-2",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time of assessment",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "totalGcs",
+      "title": "Total GCS score",
+      "description": "Total GCS score (Range: 3-15)",
+      "dataType": "integer",
+      "fhirPath": "Observation.valueQuantity.value.toInteger()"
+    },
+    {
+      "name": "eyeOpening",
+      "title": "GCS Eye opening score",
+      "description": "GCS eye opening (Range:1-4)",
+      "dataType": "integer",
+      "fhirPath": "Observation.component.where(code.coding.where(system='http://loinc.org' and code='9267-6').exists()).valueQuantity.value.toInteger()"
+    },
+    {
+      "name": "verbalResponse",
+      "title": "GCS Verbal Response score",
+      "description": "GCS verbal response (Range: 1-5)",
+      "dataType": "integer",
+      "fhirPath": "Observation.component.where(code.coding.where(system='http://loinc.org' and code='9270-0').exists()).valueQuantity.value.toInteger()"
+    },
+    {
+      "name": "motorResponse",
+      "title": "GCS Motor Response score",
+      "description": "GCS motor response (Range: 1-6)",
+      "dataType": "integer",
+      "fhirPath": "Observation.component.where(code.coding.where(system='http://loinc.org' and code='9268-4').exists()).valueQuantity.value.toInteger()"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

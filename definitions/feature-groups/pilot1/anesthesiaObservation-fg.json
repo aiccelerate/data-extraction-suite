@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/anesthesia_observation",
+  "name": "anesthesia_observation",
+  "title": "Observation related with anesthesia",
+  "description": "Represents a observation and parameter related with anesthesia during the operation",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-AnesthesiaObservation",
+  "fhirSearch": "?patient={{Patient}}&_profile=https://aiccelerate.eu/fhir/StructureDefinition/AIC-AnesthesiaObservation",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time of assessment",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "code",
+      "title": "Code for the observation",
+      "description": "LOINC, SNOMED-CT or custom code for the anesthesia parameter",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://loinc.org' or system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/anesthesia-parameters').first().code"
+    },
+    {
+      "name": "value",
+      "title": "Measurement value",
+      "description": "Measurement value",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}

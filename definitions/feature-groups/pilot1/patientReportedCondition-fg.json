@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/patient_reported_condition",
+  "name": "patient_reported_condition",
+  "title": "Patient reported condition",
+  "description": "Patient reported condition",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Condition",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PatientReportedCondition",
+  "fhirSearch": "?patient={{Patient}}&asserter:type=Patient",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Condition.subject"
+    },
+    {
+      "name": "time",
+      "title": "Time of the evaluation",
+      "description": "Time of the evaluation",
+      "dataType": "dateTime",
+      "fhirPath": "Condition.recordedDate"
+    },
+    {
+      "name": "code",
+      "title": "Condition code",
+      "description": "SNOMED-CT code for the condition",
+      "dataType": "code",
+      "fhirPath": "Condition.code.coding.where(system='http://snomed.info/sct').code.first()"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this diagnosis is done",
+      "dataType": "id",
+      "fhirPath": "Condition.encounter"
+    }
+  ]
+}

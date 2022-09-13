@@ -1,0 +1,126 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/medication_used",
+  "name": "medication_used",
+  "title": "Used Medications",
+  "description": "Parkinson related medications used by patient",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "MedicationStatement",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationUsed",
+  "fhirSearch": "?patient={{Patient}}&status=active,completed,unknown,on-hold",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startDate",
+  "periodEnd": "endDate",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "MedicationStatement.subject"
+    },
+    {
+      "name": "startDate",
+      "title": "Medication start date",
+      "description": "Medication start date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.start"
+    },
+    {
+      "name": "endDate",
+      "title": "Medication end date",
+      "description": "Medication end date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.end"
+    },
+    {
+      "name": "atcCode",
+      "title": "ATC code for the medication",
+      "description": "ATC code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code"
+    },
+    {
+      "name": "atcCodeWith4Digits",
+      "title": "First 4 digits of ATC code for the medication",
+      "description": "First 4 digits of ATC code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.substring(0,4)"
+    },
+    {
+      "name": "isLevodopa",
+      "title": "Is Levodopa",
+      "description": "Whether this medication is levodopa or not",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code = 'N04BA01'"
+    },
+    {
+      "name": "isOtherParkinsonMedication",
+      "title": "Is other parkinson medication",
+      "description": "Whether this medication is other parkinson medication",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04B')"
+    },
+    {
+      "name": "isDopamineAgonist",
+      "title": "Is dopamine agonist",
+      "description": "Whether this medication is dopamine agonist",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04BC')"
+    },
+    {
+      "name": "isAntidepressant",
+      "title": "Is antidepressant",
+      "description": "Whether this medication is Antidepressant",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.substring(0,5).subsetOf('N06AA' | 'N06AB' | 'N06AF' | 'N06AG' | 'N06AX')"
+    },
+    {
+      "name": "isBenzodiazepines",
+      "title": "Is benzodiazepines",
+      "description": "Whether this medication is benzodiazepines",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N05CD')"
+    },
+    {
+      "name": "isAnticholinesteraseInhibitors",
+      "title": "Is Anticholinesterase inhibitors",
+      "description": "Whether this medication is Anticholinesterase inhibitors",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N06DA')"
+    },
+    {
+      "name": "isAntipsychotics",
+      "title": "Is Antipsychotics",
+      "description": "Whether this medication is Antipsychotics",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N05A')"
+    },
+    {
+      "name": "isPainkillers",
+      "title": "Is Painkillers",
+      "description": "Whether this medication is Painkillers",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N02')"
+    },
+    {
+      "name": "isConstipationMedication",
+      "title": "Is Constipation medication",
+      "description": "Whether this medication is Constipation medication",
+      "dataType": "boolean",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('A06A')"
+    },
+    {
+      "name": "levodopaEquivalentDose",
+      "title": "Levodopa Equivalent Dose",
+      "description": "Levodopa equivalent dose calculated from the dose taken for the medication (in mg)",
+      "dataType": "decimal",
+      "precondition": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04B')",
+      "fhirPath": "MedicationStatement.dosage.select(timing.repeat.period * doseAndRate.doseQuantity.value).agg:sum()"
+    }
+  ]
+}

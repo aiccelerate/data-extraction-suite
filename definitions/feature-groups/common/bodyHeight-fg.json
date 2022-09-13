@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/common/body_height",
+  "name": "body_height",
+  "title": "Body Height",
+  "description": "Body Height",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/bodyheight",
+  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|8302-2",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of observation",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "value",
+      "title": "Body Height",
+      "description": "Body Height in cm",
+      "dataType": "decimal",
+      "fhirPath": "iif(Observation.valueQuantity.code = 'cm', Observation.valueQuantity.value, Observation.valueQuantity.value * 2.54)"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter"
+    }
+  ]
+}
