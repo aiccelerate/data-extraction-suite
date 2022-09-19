@@ -15,6 +15,7 @@
   },
   "timestamp": "startDate",
   "periodEnd": "endDate",
+  "temporalGrouping": "d",
   "feature": [
     {
       "name": "pid",
@@ -51,14 +52,6 @@
       "dataType": "decimal",
       "precondition": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04B')",
       "fhirPath": "MedicationStatement.dosage.select(timing.repeat.period * doseAndRate.doseQuantity.value).agg:sum()"
-    },
-    {
-      "name": "numOfDaysUsed",
-      "title": "Number of days medication used",
-      "description": "Number of days medication used",
-      "dataType": "decimal",
-      "precondition": "MedicationStatement.effectivePeriod.end.exists()",
-      "fhirPath": "utl:getPeriod(MedicationStatement.effectivePeriod.start, MedicationStatement.effectivePeriod.end, 'days')"
     }
   ]
 }

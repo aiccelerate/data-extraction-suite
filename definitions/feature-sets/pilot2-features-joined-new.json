@@ -1,5 +1,5 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot2_features_joined",
+  "url": "https://aiccelerate.eu/feature-sets/pilot2_features_joined_new",
   "name": "pilot2_features_joined",
   "title": "Feature set for AICCELERATE pilot 2",
   "description": "Feature set for AICCELERATE pilot 2",
@@ -20,7 +20,7 @@
       "join": {"type": "past"},
       "feature": [
         {
-          "name": "numOfMonthsDiagnosedParkinson",
+          "name": "numOfMonthsSinceDiagnosis",
           "description": "Number of months passed from parkinson diagnosis to current encounter",
           "valueExpr": {
             "fhirPath": "utl:getPeriod(%eligibilityEventTime, date, 'months')",
@@ -111,7 +111,7 @@
           "name": "hasDementia",
           "description": "Whether patient has dementia or not until that time point. ICD-10 Codes: F00-F09, F10.73, G30, G31",
           "valueExpr": {
-            "fhirPath": "icd10Code.startsWith('F0') or icd10Code.subsetOf('F10.73' | 'G30' | 'G31')",
+            "fhirPath": "icd10Code.startsWith('F0') or (icd10Code.exists() and icd10Code.subsetOf('F10.73' | 'G30' | 'G31'))",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -124,7 +124,7 @@
           "name": "hasPsychosis",
           "description": "Whether patient has psychosis or not until that time point. ICD-10 Codes: F20-29, F10.59, F16.79, F31.2, F31.5, F32.3, F10.5, F11.5, F19.5",
           "valueExpr": {
-            "fhirPath": "icd10Code.startsWith('F2') or icd10Code.subsetOf('F10.59' | 'F16.79' | 'F31.2' | 'F31.5' | 'F32.3' | 'F10.5' | 'F11.5' | 'F19.5')",
+            "fhirPath": "icd10Code.startsWith('F2') or (icd10Code.exists() and icd10Code.subsetOf('F10.59' | 'F16.79' | 'F31.2' | 'F31.5' | 'F32.3' | 'F10.5' | 'F11.5' | 'F19.5'))",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -155,7 +155,7 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count"]
+              "aggOp": ["any", "count_true"]
             }
           ]
         },
@@ -168,7 +168,7 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count"]
+              "aggOp": ["any", "count_true"]
             }
           ]
         },
@@ -176,12 +176,12 @@
           "name": "fractures",
           "description": "Whether patient has fracture and number of fracture until that time point. ICD-10 Codes: S02, S12, S22, S32, S42, S52, S62, S72, S82, S92",
           "valueExpr": {
-            "fhirPath": "icd10Code.substring(0,2).subsetOf(S02 | S12 | S22 | S32 | S42 | S52 | S62 | S72 | S82 | S92)",
+            "fhirPath": "icd10Code.exists() and icd10Code.substring(0,2).subsetOf(S02 | S12 | S22 | S32 | S42 | S52 | S62 | S72 | S82 | S92)",
             "dataType": "boolean"
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count"]
+              "aggOp": ["any", "count_true"]
             }
           ]
         },
@@ -194,7 +194,7 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count"]
+              "aggOp": ["any", "count_true"]
             }
           ]
         },
@@ -215,7 +215,7 @@
           "name": "hasCongestiveHeartFailure",
           "description": "Whether patient has congestive heart failure or not until that time point. ICD-10 Codes:  I09.9, I11.0, I13.0, I13.2, I25.5, I42.0, I42.5 - I42.9, I43.x, I50.x, P29.0",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('I09.9' | 'I11.0' | 'I13.0' | 'I13.2' | 'I25.5' | 'I42.0' | 'P29.0') or icd10Code.matches('I42\\.[5-9]') or icd10Code.startsWith('I43') or icd10Code.startsWith('I50')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('I09.9' | 'I11.0' | 'I13.0' | 'I13.2' | 'I25.5' | 'I42.0' | 'P29.0')) or icd10Code.matches('I42\\.[5-9]') or icd10Code.startsWith('I43') or icd10Code.startsWith('I50')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -228,7 +228,7 @@
           "name": "hasPeripheralVascularDisease",
           "description": "Whether patient has Peripheral vascular disease or not until that time point. ICD-10 Codes:  I70.x, I71.x, I73.1, I73.8, I73.9, I77.1, I79.0, I79.2, K55.1, K55.8, K55.9, Z95.8, Z95.9",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('I73.1' | 'I73.8' | 'I73.9' | 'I77.1' | 'I79.0' | 'I79.2' | 'K55.1' | 'K55.8' | 'K55.9' | 'Z95.8' | 'Z95.9') or icd10Code.startsWith('I70') or icd10Code.startsWith('I71')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('I73.1' | 'I73.8' | 'I73.9' | 'I77.1' | 'I79.0' | 'I79.2' | 'K55.1' | 'K55.8' | 'K55.9' | 'Z95.8' | 'Z95.9')) or icd10Code.startsWith('I70') or icd10Code.startsWith('I71')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -267,7 +267,7 @@
           "name": "hasRheumatoidArthritisVascularDiseases",
           "description": "Whether patient has Rheumatoid arthritis/collagen vascular diseases (L94.0, L94.1, L94.3, M05.x, M06.x, M08.x, M12.0, M12.3, M30.x, M31.0 - M31.3, M32.x - M35.x, M45.x, M46.1, M46.8, M46.9)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('L94.0' | 'L94.1' | 'L94.3' | 'M12.0' | 'M12.3' | 'M46.1' | 'M46.8' | 'M46.9') or icd10Code.startsWith('M05') or icd10Code.startsWith('M06') or icd10Code.startsWith('M08') or icd10Code.startsWith('M30') or icd10Code.matches('M31\\.[0-3]') or icd10Code.startsWith('M32') or or icd10Code.startsWith('M33') or icd10Code.startsWith('M34') or icd10Code.startsWith('M35') or icd10Code.startsWith('M45')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('L94.0' | 'L94.1' | 'L94.3' | 'M12.0' | 'M12.3' | 'M46.1' | 'M46.8' | 'M46.9')) or icd10Code.startsWith('M05') or icd10Code.startsWith('M06') or icd10Code.startsWith('M08') or icd10Code.startsWith('M30') or icd10Code.matches('M31\\.[0-3]') or icd10Code.startsWith('M32') or or icd10Code.startsWith('M33') or icd10Code.startsWith('M34') or icd10Code.startsWith('M35') or icd10Code.startsWith('M45')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -293,7 +293,7 @@
           "name": "hasMildLiverDisease",
           "description": "Whether patient has Mild liver disease (B18.x, K70.0 - K70.3, K70.9, K71.3 - K71.5, K71.7, K73.x, K74.x, K76.0, K76.2 - K76.4, K76.8, K76.9, Z94.4)",
           "valueExpr": {
-            "fhirPath": "icd10Code.startsWith('B18') or icd10Code.subsetOf('K70.0' | 'K70.1' | 'K70.2' | 'K70.3' | 'K70.9' | 'K71.3' | 'K71.4' | 'K71.5' | 'K71.7' | 'K76.0' | 'K76.2' | 'K76.3' | 'K76.4' | 'K76.8' | 'K76.9' | 'Z94.4') or icd10Code.startsWith('K73') or icd10Code.startsWith('K74')",
+            "fhirPath": "icd10Code.startsWith('B18') or (icd10Code.exists() and icd10Code.subsetOf('K70.0' | 'K70.1' | 'K70.2' | 'K70.3' | 'K70.9' | 'K71.3' | 'K71.4' | 'K71.5' | 'K71.7' | 'K76.0' | 'K76.2' | 'K76.3' | 'K76.4' | 'K76.8' | 'K76.9' | 'Z94.4')) or icd10Code.startsWith('K73') or icd10Code.startsWith('K74')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -306,7 +306,7 @@
           "name": "hasDiabetesWithoutChronicComplication",
           "description": "Whether patient has Diabetes without chronic complication (E10.0, E10.1, E10.6, E10.8, E10.9, E11.0, E11.1, E11.6, E11.8, E11.9, E12.0, E12.1, E12.6, E12.8, E12.9, E13.0, E13.1, E13.6, E13.8, E13.9, E14.0, E14.1, E14.6, E14.8, E14.9)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('E10.0' | 'E10.1' | 'E10.6' | 'E10.8' | 'E10.9' | 'E11.0' | 'E11.1' | 'E11.6' | 'E11.8' | 'E11.9' | 'E12.0' | 'E12.1' | 'E12.6' | 'E12.8' | 'E12.9' | 'E13.0' | 'E13.1' | 'E13.6' | 'E13.8' | 'E13.9' | 'E14.0' | 'E14.1' | 'E14.6' | 'E14.8' | 'E14.9')",
+            "fhirPath": "icd10Code.exists() and icd10Code.subsetOf('E10.0' | 'E10.1' | 'E10.6' | 'E10.8' | 'E10.9' | 'E11.0' | 'E11.1' | 'E11.6' | 'E11.8' | 'E11.9' | 'E12.0' | 'E12.1' | 'E12.6' | 'E12.8' | 'E12.9' | 'E13.0' | 'E13.1' | 'E13.6' | 'E13.8' | 'E13.9' | 'E14.0' | 'E14.1' | 'E14.6' | 'E14.8' | 'E14.9')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -332,7 +332,7 @@
           "name": "hasHemiplegiaOrParaplegia",
           "description": "Whether patient has Hemiplegia or paraplegia (G04.1, G11.4, G80.1, G80.2, G81.x, G82.x, G83.0 - G83.4, G83.9)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('G04.1' | 'G11.4' | 'G80.1' | 'G80.2' | 'G83.9') or icd10Code.startsWith('G81') or icd10Code.startsWith('G82') or icd10Code.matches('G83\\.[0-4]')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('G04.1' | 'G11.4' | 'G80.1' | 'G80.2' | 'G83.9')) or icd10Code.startsWith('G81') or icd10Code.startsWith('G82') or icd10Code.matches('G83\\.[0-4]')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -345,7 +345,7 @@
           "name": "hasRenalDisease",
           "description": "Whether patient has Renal disease (I12.0, I13.1, N03.2 - N03.7, N05.2 - N05.7, N18.x, N19.x, N25.0, Z49.0 - Z49.2, Z94.0, Z99.2)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('I12.0' | 'I13.1' | ' N25.0' | 'Z94.0' | 'Z99.2') or icd10Code.matches('N03\\.[2-7]') or icd10Code.matches('N05\\.[2-7]') or icd10Code.startsWith('N18') or icd10Code.startsWith('N19') or icd10Code.matches('Z49\\.[0-2]')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('I12.0' | 'I13.1' | ' N25.0' | 'Z94.0' | 'Z99.2')) or icd10Code.matches('N03\\.[2-7]') or icd10Code.matches('N05\\.[2-7]') or icd10Code.startsWith('N18') or icd10Code.startsWith('N19') or icd10Code.matches('Z49\\.[0-2]')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -371,7 +371,7 @@
           "name": "hasModerateOrSevereLiverDisease",
           "description": "Whether patient has Moderate or severe liver disease (I85.0, I85.9, I86.4, I98.2, K70.4, K71.1, K72.1, K72.9, K76.5, K76.6, K76.7)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('I85.0' | 'I85.9' |  'I86.4' |  'I98.2' |  'K70.4' |  'K71.1' | 'K72.1' | 'K72.9' | 'K76.5' | 'K76.6' | 'K76.7')",
+            "fhirPath": "icd10Code.exists() and icd10Code.subsetOf('I85.0' | 'I85.9' |  'I86.4' |  'I98.2' |  'K70.4' |  'K71.1' | 'K72.1' | 'K72.9' | 'K76.5' | 'K76.6' | 'K76.7')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -514,7 +514,7 @@
           "name": "hasAlcoholAbuse",
           "description": "Whether patient has Alcohol abuse (F10, E52, G62.1, I42.6, K29.2, K70.0, K70.3, K70.9, T51.x, Z50.2, Z71.4, Z72.1)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('F10' | 'E52' | 'G62.1' | 'I42.6' | 'K29.2' | 'K70.0' | 'K70.3' | 'K70.9' | 'Z50.2' | 'Z71.4' | 'Z72.1') or icd10Code.startsWith('T51')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('F10' | 'E52' | 'G62.1' | 'I42.6' | 'K29.2' | 'K70.0' | 'K70.3' | 'K70.9' | 'Z50.2' | 'Z71.4' | 'Z72.1')) or icd10Code.startsWith('T51')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -527,7 +527,7 @@
           "name": "hasDrugAbuse",
           "description": "Whether patient has Drug abuse (F11.x - F16.x, F18.x, F19.x, Z71.5, Z72.2)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('Z71.5' | 'Z72.2') or icd10Code.matches('F1[12345689](\\..*)?')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('Z71.5' | 'Z72.2')) or icd10Code.matches('F1[12345689](\\..*)?')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -540,7 +540,7 @@
           "name": "hasDepression",
           "description": "Whether patient has Depression (F20.4, F31.3 - F31.5, F32.x, F33.x, F34.1, F41.2, F43.2)",
           "valueExpr": {
-            "fhirPath": "icd10Code.subsetOf('F20.4' | 'F34.1' | 'F41.2' | 'F43.2') or icd10Code.matches('F1[3-5](\\..*)?') or icd10Code.startsWith('F32') or icd10Code.startsWith('F33')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('F20.4' | 'F34.1' | 'F41.2' | 'F43.2')) or icd10Code.matches('F1[3-5](\\..*)?') or icd10Code.startsWith('F32') or icd10Code.startsWith('F33')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -552,14 +552,14 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other_assessment",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other_assessment2",
       "join": {
         "type": "past",
         "duration": "6mo"
       },
       "feature": [
         {
-          "name": "assessmentScore",
+          "name": "score",
           "description": "Last assessment score within the last 6 months",
           "temporalAgg": [
             {
@@ -570,14 +570,14 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor_symptoms",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor_symptom",
       "join": {
         "type": "past",
         "duration": "6mo"
       },
       "feature": [
         {
-          "name": "symptomScore",
+          "name": "score",
           "description": "Last, average and maximum tremor symptom score in the last 6 months",
           "temporalAgg": [
             {
@@ -586,8 +586,8 @@
           ]
         },
         {
-          "name": "isSymptomSeen",
-          "description": "Whether tremor seen in last 6 months",
+          "name": "isSeen",
+          "description": "Whether symptom seen in last 6 months",
           "temporalAgg": [
             {
               "aggOp": ["any"]
@@ -597,14 +597,14 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/tremor_symptom",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor_symptom",
       "join": {
         "type": "past",
         "duration": "6mo"
       },
       "feature": [
         {
-          "name": "symptomScore",
+          "name": "score",
           "description": "Last, average and maximum tremor symptom score in the last 6 months",
           "temporalAgg": [
             {
@@ -613,466 +613,7 @@
           ]
         },
         {
-          "name": "isSymptomSeen",
-          "description": "Whether tremor seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/dyskinesia_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/wearing_off_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/freezingofgait_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/fluctuations_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/postural_balance_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/bradykinesia_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/dystonia_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/stiffness_rigidity_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/offtime_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/sweating_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nocturia_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nausea_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/dizziness_fainting_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/constipation_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/pain_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/sleep_disorder_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
-          "description": "Whether symptom seen in last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/daytime_sleepiness_symptom",
-      "join": {
-        "type": "past",
-        "duration": "6mo"
-      },
-      "feature": [
-        {
-          "name": "symptomScore",
-          "description": "Last, average and maximum symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
-        },
-        {
-          "name": "isSymptomSeen",
+          "name": "isSeen",
           "description": "Whether symptom seen in last 6 months",
           "temporalAgg": [
             {
@@ -1116,19 +657,6 @@
           ]
         },
         {
-          "name": "hasLevodopa",
-          "description": "Whether patient has levodopa or not within this period. ATC Code: N04BA01",
-          "valueExpr": {
-            "fhirPath": "atcCode='N04BA01'",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        },
-        {
           "name": "hasOtherParkinsonMedication",
           "description": "Whether patient has other parkinson medication or not within this period. ATC Code: under N04B",
           "valueExpr": {
@@ -1155,20 +683,32 @@
           ]
         },
         {
-          "name": "hasAntidepressant",
-          "description": "Whether patient has antidepressant or not within this period. ATC Code: N06AA,N06AB,N06AF,N06AG,N06AX",
+          "name": "dailyLevodopaEquivalentDose",
+          "description": "Daily avg levodopa equivalent dose for each last 6 months calculated from the dose taken for the medication (in mg)",
           "valueExpr": {
-            "fhirPath": "atcCode.substring(0,5).subsetOf('N06AA' | 'N06AB' | 'N06AF' | 'N06AG' | 'N06AX')",
-            "dataType": "boolean"
+            "fhirPath": "levodopaEquivalentDose / 30",
+            "dataType": "decimal"
           },
           "temporalAgg": [
             {
-              "aggOp": ["any"]
+              "lastN": 6,
+              "windowPeriod": "mo",
+              "windowSize": 1,
+              "aggOp": ["sum"]
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+      "join": {
+        "type": "past",
+        "duration": "3mo"
+      },
+      "feature": [
         {
-          "name": "hasBenzodiazepines",
+          "name": "hasBenzodiazepinesRecently",
           "description": "Whether patient has benzodiazepines or not within this period. ATC Code: under N05CD",
           "valueExpr": {
             "fhirPath": "atcCode.startsWith('N05CD')",
@@ -1181,7 +721,7 @@
           ]
         },
         {
-          "name": "hasAnticholinesteraseInhibitors",
+          "name": "hasAnticholinesteraseInhibitorsRecently",
           "description": "Whether patient has anticholinesterase inhibitors or not within this period. ATC Code: under under N06DA",
           "valueExpr": {
             "fhirPath": "atcCode.startsWith('N06DA')",
@@ -1194,20 +734,7 @@
           ]
         },
         {
-          "name": "hasAntipsychotics",
-          "description": "Whether patient has antipsychotics or not within this period. ATC Code: under under N05A",
-          "valueExpr": {
-            "fhirPath": "atcCode.startsWith('N05A')",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        },
-        {
-          "name": "hasPainkillers",
+          "name": "hasPainkillersRecently",
           "description": "Whether patient has painkillers or not within this period. ATC Code: under under N02",
           "valueExpr": {
             "fhirPath": "atcCode.startsWith('N02')",
@@ -1220,10 +747,32 @@
           ]
         },
         {
-          "name": "hasConstipationMedication",
+          "name": "hasConstipationMedicationRecently",
           "description": "Whether patient has constipation medication or not within this period. ATC Code: under under A06A",
           "valueExpr": {
-            "fhirPath": "atcCode.startsWith(' A06A')",
+            "fhirPath": "atcCode.startsWith('A06A')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+      "join": {
+        "type": "past",
+        "duration": "12mo"
+      },
+      "feature": [
+        {
+          "name": "hasAntidepressantLastYear",
+          "description": "Whether patient has antidepressant or not within this period. ATC Code: N06AA,N06AB,N06AF,N06AG,N06AX",
+          "valueExpr": {
+            "fhirPath": "atcCode.substring(0,5).subsetOf('N06AA' | 'N06AB' | 'N06AF' | 'N06AG' | 'N06AX')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -1233,15 +782,36 @@
           ]
         },
         {
-          "name": "totalLevodopaEquivalentDose",
-          "description": "Total levodopa equivalent dose calculated from the dose taken for the medication (in mg)",
+          "name": "hasAntipsychoticsLastYear",
+          "description": "Whether patient has antipsychotics or not within this period. ATC Code: under under N05A",
           "valueExpr": {
-            "fhirPath": "levodopaEquivalentDose * numOfDaysUsed",
-            "dataType": "decimal"
+            "fhirPath": "atcCode.startsWith('N05A')",
+            "dataType": "boolean"
           },
           "temporalAgg": [
             {
-              "aggOp": ["sum"]
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "hasAnticholinesteraseInhibitors",
+          "description": "Whether patient has anticholinesterase inhibitors any time until this time point. ATC Code: under under N06DA",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N06DA')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
             }
           ]
         }
@@ -1255,7 +825,7 @@
       },
       "feature": [
         {
-          "name": "deepBrainStimulatorUsed",
+          "name": "deepBrainStimulator",
           "description": "Whether deep brain stimulator device is used in this period",
           "valueExpr": {
             "fhirPath": "code='deep-brain-stimulator'",
@@ -1347,6 +917,63 @@
           "temporalAgg": [
             {
               "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device_used",
+      "join": {
+        "type": "future",
+        "duration": "12mo"
+      },
+      "feature": [
+        {
+          "name": "deepBrainStimulator",
+          "description": "Whether deep brain stimulator device is used in the next periods",
+          "valueExpr": {
+            "fhirPath": "code='deep-brain-stimulator'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 2,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "levodopaInfusionPumpUsed",
+          "description": "Whether Levodopa infusion pump device is used in the next periods",
+          "valueExpr": {
+            "fhirPath": "code='levodopa-infusion-pump'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 2,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "apomorphinePumpUsed",
+          "description": "Whether Apomorphine pump device is used in the next periods",
+          "valueExpr": {
+            "fhirPath": "code='apomorfine-pump'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 2,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "aggOp": ["any"]
             }
           ]
         }

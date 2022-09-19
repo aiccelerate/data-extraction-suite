@@ -15,34 +15,35 @@
   },
   "timestamp": "startDate",
   "periodEnd": "endDate",
+  "temporalGrouping": "mo",
   "feature": [
     {
       "name": "pid",
       "title": "Patient identifier",
       "description": "Patient identifier",
       "dataType": "id",
-      "fhirPath": "MedicationStatement.subject"
+      "fhirPath": "DeviceUseStatement.subject"
     },
     {
       "name": "startDate",
       "title": "Start date for use of device",
       "description": "Medication start date",
       "dataType": "date",
-      "fhirPath": "MedicationStatement.effectivePeriod.start.toDate()"
+      "fhirPath": "DeviceUseStatement.timingPeriod.start.toDate()"
     },
     {
       "name": "endDate",
       "title": "End date for use of device",
       "description": "Medication end date",
       "dataType": "date",
-      "fhirPath": "MedicationStatement.effectivePeriod.end.toDate()"
+      "fhirPath": "DeviceUseStatement.timingPeriod.end.toDate()"
     },
     {
       "name": "code",
       "title": "Code for the device used",
       "description": "Code for the device used (deep-brain-stimulator | levodopa-infusion-pump | apomorfine-pump)",
       "dataType": "code",
-      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code"
+      "fhirPath": "DeviceUseStatement.device.identifier.value"
     }
   ]
 }

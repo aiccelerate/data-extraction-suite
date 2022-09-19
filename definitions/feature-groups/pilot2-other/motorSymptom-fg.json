@@ -1,0 +1,111 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/motor_symptom",
+  "name": "motor_symptom",
+  "title": "Parkinson Motor Symptom Assessment",
+  "description": "Assessment of a Parkinson Motor Symptom or in general all motor symptoms (existence and numeric evaluation)",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonMotorObservation",
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/parkinson-motor-symptoms",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "pivot": {
+    "name": "code",
+    "description": "Motor symptoms evaluated as features (Symptom code in SNOMED-CT or custom)",
+    "values": [
+      {
+        "name":"total",
+        "value": "267082004"
+      },
+      {
+        "name":"tremor",
+        "value": "26079004"
+      },
+      {
+        "name":"wearing_off",
+        "value": "427488005"
+      },
+      {
+        "name":"freezing_of_gait",
+        "value": "443544006"
+      },
+      {
+        "name":"postural_balance",
+        "value": "416240000"
+      },
+      {
+        "name":"bradykinesia",
+        "value": "399317006"
+      },
+      {
+        "name":"stiffness_rigidity",
+        "value": "271587009"
+      },
+      {
+        "name":"dystonia",
+        "value": "15802004"
+      },
+      {
+        "name":"immobility",
+        "value": "102491009"
+      },
+      {
+        "name":"off_time",
+        "value": "off-time"
+      },
+      {
+        "name":"fluctuations",
+        "value": "fluctuations"
+      }
+    ]
+  },
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date",
+      "description": "Assessment date of symptom(s)",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Symptom code",
+      "description": "Code for the motor symptom",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms').first().code"
+    },
+    {
+      "name": "method",
+      "title": "Assessment method",
+      "description": "Code for the assessment method used (e.g. updrs3)",
+      "dataType": "code",
+      "fhirPath": "Observation.method.coding.where(system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods').first().code"
+    },
+    {
+      "name": "isSeen",
+      "title": "Is symptom(s) seen",
+      "description": "Whether symptom is seen during the last period",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean or Observation.valueQuantity.value != 0"
+    },
+    {
+      "name": "score",
+      "title": "Symptom score",
+      "description": "Symptom score (e.g. Total UPDRS-3 score; Range: 0-108)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    }
+  ]
+}
