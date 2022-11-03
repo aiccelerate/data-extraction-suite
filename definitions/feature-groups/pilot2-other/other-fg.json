@@ -1,0 +1,384 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/other",
+  "name": "other",
+  "title": "Other cognitive, behavioral, physical assessments",
+  "description": "Other cognitive, behavioral or physical assessments related with Parkinson",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonCognitiveBehavioralAssessment",
+  "context": [
+    {
+      "name": "assessmentContext",
+      "description": "Range and cut-off scores as well as corresponding cognitive or behavioral concept it is measuring.",
+      "item": [
+        {
+          "key": "72106-8",
+          "description": "MMSE total score",
+          "content": {
+            "range": [0, 30],
+            "cutoff": [true, 28, false],
+            "concept": "cognition"
+          }
+        },
+        {
+          "key": "72172-0",
+          "description": "MoCA total score",
+          "content": {
+            "range": [0, 30],
+            "cutoff": [true, 26, false],
+            "concept": "cognition"
+          }
+        },
+        {
+          "key": "pd-cfrs",
+          "description":"The Parkinson's Disease - Cognitive Functional Rating Scale (PD-CFRS)",
+          "content": {
+            "range": [0,24],
+            "cutoff": [false, 2, true],
+            "concept": "cognition"
+          }
+        },
+        {
+          "key": "pd-mci",
+          "description":"Parkinson's Disease–Mild Cognitive Impairment (PD-MCI)",
+          "content": {
+            "range": [0,30],
+            "concept": "cognition"
+          }
+        },
+        {
+          "key": "57048-1",
+          "description": "Activity of Daily Living (ADL)",
+          "content": {
+            "range": [0, 5],
+            "cutoff": [false, 0, true],
+            "concept": "functional_dependence"
+          }
+        },
+        {
+          "key": "sas",
+          "description":"Starkstein Apathy Scale (SAS) score",
+          "content": {
+            "range": [0,42],
+            "cutoff": [false, 0, true],
+            "concept": "apathy"
+          }
+        },
+        {
+          "key": "273830002",
+          "description":"The State-Trait Anxiety Inventory (STAi-Y1,2) score",
+          "content": {
+            "range": [0,80],
+            "cutoff": [false, 40, true],
+            "concept": "anxiety"
+          }
+        },
+        {
+          "key": "pas",
+          "description":"Parkinson Anxiety Scale (PAS) score",
+          "content": {
+            "range": [0,60],
+            "cutoff": [false, 0, true],
+            "concept": "anxiety"
+          }
+        },
+        {
+          "key": "89209-1",
+          "description": "Beck Depression Inventory II total score (BDI2)",
+          "content": {
+            "range": [0,63],
+            "cutoff": [false, 14, true],
+            "concept": "depression"
+          }
+        },
+        {
+          "key": "bis-11",
+          "description":"Barratt Impulsiveness Scale-11 score",
+          "content": {
+            "range": [30,120],
+            "cutoff": [false, 60, true],
+            "concept": "impulsivity"
+          }
+        },
+        {
+          "key": "sogs",
+          "description":"The South Oaks Gambling Screen (SOGS) score",
+          "content": {
+            "range": [0,40],
+            "cutoff": [false, 5, true],
+            "concept": "gambling"
+          }
+        },
+        {
+          "key": "quip-rs",
+          "description":"Impulsive-Compulsive Disorders in PD-Rating Scale (QUIP-RS) score",
+          "content": {
+            "range": [0,112],
+            "cutoff": [false, 10, true],
+            "concept": "impulsive_compulsiveness"
+          }
+        },
+        {
+          "key": "npi",
+          "description":"Neuropsychological Inventory (NPI)",
+          "content": {
+            "range": [0,144],
+            "cutoff": [false, 0, true],
+            "concept": "psychopathology"
+          }
+        },
+        {
+          "key": "tmt-a",
+          "description":"Trial Making Test Part A (TMT-A) Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "attention"
+          }
+        },
+        {
+          "key": "tmt-b",
+          "description":"Trial Making Test Part B (TMT-B) Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "attention"
+          }
+        },
+        {
+          "key": "tmt",
+          "description":"Trial Making Test total Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "attention"
+          }
+        },
+        {
+          "key": "sdmt",
+          "description":"Symbol Digit Modality Test (oral form) (SDMT) Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "attention"
+          }
+        },
+        {
+          "key": "verb-flu-a",
+          "description":"Verbal Fluency Test - Alternate form Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "attention"
+          }
+        },
+        {
+          "key": "verb-flu-si",
+          "description":"Verbal Fluency Test - Shifting index Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "attention"
+          }
+        },
+        {
+          "key": "stroop-t",
+          "description":"Stroop Test- time Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "executive"
+          }
+        },
+        {
+          "key": "stroop-e",
+          "description":"Stroop Test - error Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "executive"
+          }
+        },
+        {
+          "key": "cdt",
+          "description":"Clock Drowing Test (CDT) Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "executive"
+          }
+        },
+        {
+          "key": "verb-flu-ph",
+          "description":"Verbal Fluency Test- Phonemic Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "executive"
+          }
+        },
+        {
+          "key": "rocf-c",
+          "description":"Rey–Osterrieth complex figure test(ROCF)-copy Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "visuospatial"
+          }
+        },
+        {
+          "key": "bjlot",
+          "description":"Benton Judgment of Line Orientation Test (BJLOT) Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "visuospatial"
+          }
+        },
+        {
+          "key": "vosp",
+          "description":"Visual Object and Space Perception Battery (VOSP) (Incomplete Letters) ZScore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "visuospatial"
+          }
+        },
+        {
+          "key": "wpat",
+          "description":"Word paired associated test (WPAT) Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "memory"
+          }
+        },
+        {
+          "key": "rcof-d",
+          "description":"Rey–Osterrieth complex figure test(ROCF) delayed recall Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "memory"
+          }
+        },
+        {
+          "key": "bab-t",
+          "description":"Prose memory test Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "memory"
+          }
+        },
+        {
+          "key": "bnt",
+          "description":"Boston Naming test Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "language"
+          }
+        },
+        {
+          "key": "verb-flu-s",
+          "description":"Verbal Fluency Test- Semantic form Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "language"
+          }
+        },
+        {
+          "key": "fazekas",
+          "description":"Fazekas score, Radiology",
+          "content": {
+            "cutoff": [false, 1, true],
+            "concept": "vascular_degeneration"
+          }
+        },
+        {
+          "key": "mta",
+          "description":"Scheltens scale/MTA score, radiology",
+          "content": {
+            "cutoff": [false, 1, true],
+            "concept": "atrophy"
+          }
+        },
+        {
+          "key": "gca",
+          "description":"Global cortical atrophy score",
+          "content": {
+            "cutoff": [false, 1, true],
+            "concept": "atrophy"
+          }
+        },
+        {
+          "key": "77714-4",
+          "description":"Hoehn&Yahn scale",
+          "content": {
+            "cutoff": [false, 3, true],
+            "concept": "stage"
+          }
+        },
+        {
+          "key": "pdq-39",
+          "description":"Parkinson Disease Questionnaire ",
+          "content": {
+            "range": [0,100],
+            "cutoff": [false, 0, true],
+            "concept": "QoL"
+          }
+        }
+      ]
+    }
+  ],
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/parkinson-cognitive-behavioral-assessments",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date ",
+      "description": "Assessment date",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Assessment type",
+      "description": "Code for the assessment type e.g. 72106-8 -> MMSE, 72172-0 -> MOCA",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-cognitive-behavioral-assessments' or system='http://loinc.org').code.first()"
+    },
+    {
+      "name": "name",
+      "title": "Assessment name",
+      "description": "Name for the assessment e.g. MMSE, MoCA, Activity of Daily Livings-ADL",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-cognitive-behavioral-assessments' or system='http://loinc.org').display.first()"
+    },
+    {
+      "name": "concept",
+      "title": "Cognitive or behavioral domain under assessment",
+      "description": "Cognitive or behavioral domain that is assessed with this assessment e.g. cognition, anxiety, etc.",
+      "dataType": "code",
+      "fhirPath": "fst:getContext(%assessmentContext, %code).concept"
+    },
+    {
+      "name": "score",
+      "title": "Score of the assessment",
+      "description": "Numeric value of the assessment",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    },
+    {
+      "name": "scoreScaled",
+      "title": "Scaled score of the assessment",
+      "description": "Scaled numeric value of the assessment (min-max normalization)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value.fst:rescale(fst:getContext(%assessmentContext, %code).range)"
+    },
+    {
+      "name": "problemExists",
+      "title": "Whether the cognitive/behavioral problem exists for the target domain",
+      "description": "Whether the cognitive/behavioral problem exists for the target domain",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean or %score.fst:categorize(fst:getContext(%assessmentContext, %code).cutoff)"
+    }
+  ]
+}

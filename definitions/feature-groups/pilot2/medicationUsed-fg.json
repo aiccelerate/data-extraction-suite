@@ -56,7 +56,7 @@
       "title": "Is Levodopa",
       "description": "Whether this medication is levodopa or not",
       "dataType": "boolean",
-      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code = 'N04BA01'"
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04BA')"
     },
     {
       "name": "isOtherParkinsonMedication",
@@ -120,7 +120,7 @@
       "description": "Levodopa equivalent dose calculated from the dose taken for the medication (in mg)",
       "dataType": "decimal",
       "precondition": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04B')",
-      "fhirPath": "MedicationStatement.dosage.select(timing.repeat.period * doseAndRate.doseQuantity.value).agg:sum()"
+      "fhirPath": "MedicationStatement.dosage.select(timing.repeat.frequency.nav:orElse(1) * doseAndRate.doseQuantity.value).agg:sum()"
     }
   ]
 }

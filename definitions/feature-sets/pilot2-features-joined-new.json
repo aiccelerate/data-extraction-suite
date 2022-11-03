@@ -2,7 +2,7 @@
   "url": "https://aiccelerate.eu/feature-sets/pilot2_features_joined_new",
   "name": "pilot2_features_joined",
   "title": "Feature set for AICCELERATE pilot 2",
-  "description": "Feature set for AICCELERATE pilot 2",
+  "description": "Feature set for Parkinson disease - Predicting progression to advance stage and cognitive impairment",
   "version": "0.1",
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
@@ -44,8 +44,8 @@
           }
         },
         {
-          "name": "ageOfOnset",
-          "description": "Age when parkinson is diagnosed/onset",
+          "name": "ageOfDiagnosis",
+          "description": "Age when parkinson is diagnosed",
           "valueExpr": {
             "fhirPath": "utl:getPeriod(birthDate, %eligibilityEventTime, 'years')",
             "dataType": "integer"
@@ -53,6 +53,7 @@
         }
       ]
     },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/condition2",
       "join": {"type": "past"},
@@ -155,7 +156,7 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count_true"]
+              "aggOp": ["any"]
             }
           ]
         },
@@ -168,7 +169,7 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count_true"]
+              "aggOp": ["any"]
             }
           ]
         },
@@ -181,7 +182,7 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count_true"]
+              "aggOp": ["any"]
             }
           ]
         },
@@ -194,7 +195,7 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["any", "count_true"]
+              "aggOp": ["any"]
             }
           ]
         },
@@ -551,8 +552,14 @@
         }
       ]
     },
+
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other_assessment2",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "MMSE",
+        "description": "MMSE total score",
+        "fhirPath": "code='72106-8'"
+      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -560,17 +567,21 @@
       "feature": [
         {
           "name": "score",
-          "description": "Last assessment score within the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last"]
-            }
-          ]
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
         }
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor_symptom",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "MoCA",
+        "description": "MoCA total score",
+        "fhirPath": "code='72172-0'"
+      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -578,16 +589,19 @@
       "feature": [
         {
           "name": "score",
-          "description": "Last, average and maximum tremor symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
+          "windowFunc": ["delta","rate"]
         },
         {
-          "name": "isSeen",
-          "description": "Whether symptom seen in last 6 months",
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "lessThan25",
+          "description": "Moca total score is less than 25",
+          "valueExpr": {
+            "fhirPath": "score < 25",
+            "dataType": "boolean"
+          },
           "temporalAgg": [
             {
               "aggOp": ["any"]
@@ -597,7 +611,12 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor_symptom",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "PD_CFRS",
+        "description": "PD-CFRS total score",
+        "fhirPath": "code='pd-cfrs'"
+      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -605,16 +624,100 @@
       "feature": [
         {
           "name": "score",
-          "description": "Last, average and maximum tremor symptom score in the last 6 months",
-          "temporalAgg": [
-            {
-              "aggOp": ["last", "avg", "max"]
-            }
-          ]
+          "windowFunc": ["delta","rate"]
         },
         {
-          "name": "isSeen",
-          "description": "Whether symptom seen in last 6 months",
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "PD_MCI",
+        "description": "PD-MCI total score",
+        "fhirPath": "code='pd-mci'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last assessment score within the period",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last assessment score within the period",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "PDQ_39",
+        "description": "PDQ-39 total score",
+        "fhirPath": "code='pdq-39'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last assessment score within the period",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last assessment score within the period",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "hoehn_yahr",
+        "description": "Modified Hoehn & Yahr scale",
+        "fhirPath": "code='77714-4'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last assessment score within the period",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "apathy",
+        "description": "Assessments regarding apathy",
+        "fhirPath": "concept='apathy'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
           "temporalAgg": [
             {
               "aggOp": ["any"]
@@ -624,7 +727,524 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "anxiety",
+        "description": "Assessments regarding anxiety",
+        "fhirPath": "concept='anxiety'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "depression",
+        "description": "Assessments regarding depression",
+        "fhirPath": "concept='depression'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "impulsivity",
+        "description": "Assessments regarding impulsivity",
+        "fhirPath": "concept='impulsivity'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "gambling",
+        "description": "Assessments regarding depression",
+        "fhirPath": "concept='gambling'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "impulsive_compulsiveness",
+        "description": "Assessments regarding impulsive compulsiveness",
+        "fhirPath": "concept='impulsive_compulsiveness'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "psychopathology",
+        "description": "Assessments regarding psychiatric problems",
+        "fhirPath": "concept='psychopathology'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "attention",
+        "description": "Assessments regarding attentive domain of cognition",
+        "fhirPath": "concept='attention'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg"]
+            }
+          ],
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "executive",
+        "description": "Assessments regarding executive domain of cognition",
+        "fhirPath": "concept='executive'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg"]
+            }
+          ],
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "visuospatial",
+        "description": "Assessments regarding visuospatial domain of cognition",
+        "fhirPath": "concept='visuospatial'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg"]
+            }
+          ],
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "memory",
+        "description": "Assessments regarding memory domain of cognition",
+        "fhirPath": "concept='memory'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg"]
+            }
+          ],
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "language",
+        "description": "Assessments regarding language domain of cognition",
+        "fhirPath": "concept='language'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg"]
+            }
+          ],
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "vascular_degeneration",
+        "description": "Assessments regarding vascular degeneration",
+        "fhirPath": "concept='vascular_degeneration'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "atrophy",
+        "description": "Assessments regarding atrophy",
+        "fhirPath": "concept='atrophy'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "onState",
+        "description": "Motor symptoms during on state of Parkinson",
+        "fhirPath": "isOnState"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "offState",
+        "description": "Motor symptoms during off state of Parkinson",
+        "fhirPath": "isOnState.not()"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "advanceSymptoms",
+        "description": "Motor symptoms (dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
+        "fhirPath": "code='9748009' or code='off-time' or code='fluctuations'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether any advance symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "filter": {
+        "name": "onState",
+        "description": "Non-motor symptoms during on state of Parkinson",
+        "fhirPath": "isOnState"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "filter": {
+        "name": "offState",
+        "description": "Non-motor symptoms during off state of Parkinson",
+        "fhirPath": "isOnState.not()"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -681,27 +1301,11 @@
               "aggOp": ["any"]
             }
           ]
-        },
-        {
-          "name": "dailyLevodopaEquivalentDose",
-          "description": "Daily avg levodopa equivalent dose for each last 6 months calculated from the dose taken for the medication (in mg)",
-          "valueExpr": {
-            "fhirPath": "levodopaEquivalentDose / 30",
-            "dataType": "decimal"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 6,
-              "windowPeriod": "mo",
-              "windowSize": 1,
-              "aggOp": ["sum"]
-            }
-          ]
         }
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
       "join": {
         "type": "past",
         "duration": "3mo"
@@ -762,7 +1366,7 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
       "join": {
         "type": "past",
         "duration": "12mo"
@@ -797,7 +1401,7 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
       "join": {
         "type": "past"
       },
@@ -818,15 +1422,69 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device_used",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/levodopa",
       "join": {
         "type": "past",
         "duration": "6mo"
       },
       "feature": [
         {
+          "name": "frequency_d_sum",
+          "temporalAgg": [
+            {
+              "aggOp": ["last", "avg"]
+            }
+          ],
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "5OrMore",
+          "description": "Whether levodopa is used 5 times or more within a day in this period",
+          "valueExpr": {
+            "fhirPath": "frequency_d_sum > 4",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "dose_d_sum",
+          "temporalAgg": [
+            {
+              "aggOp": ["last", "avg"]
+            }
+          ],
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device",
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "treatment",
+          "description": "Whether any advance parkinson device is started to be used in this period",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
           "name": "deepBrainStimulator",
-          "description": "Whether deep brain stimulator device is used in this period",
+          "description": "Whether deep brain stimulator device is started to be used in this period",
           "valueExpr": {
             "fhirPath": "code='deep-brain-stimulator'",
             "dataType": "boolean"
@@ -839,7 +1497,7 @@
         },
         {
           "name": "levodopaInfusionPumpUsed",
-          "description": "Whether Levodopa infusion pump device is used in this period",
+          "description": "Whether Levodopa infusion pump device is started to be used in this period",
           "valueExpr": {
             "fhirPath": "code='levodopa-infusion-pump'",
             "dataType": "boolean"
@@ -852,7 +1510,7 @@
         },
         {
           "name": "apomorphinePumpUsed",
-          "description": "Whether Apomorphine pump device is used in this period",
+          "description": "Whether Apomorphine pump device is started to be used in this period",
           "valueExpr": {
             "fhirPath": "code='apomorfine-pump'",
             "dataType": "boolean"
@@ -865,6 +1523,28 @@
         }
       ]
     },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device",
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "treatment",
+          "description": "Whether any advance parkinson device is started to be used in the past",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/encounter",
       "join": {
@@ -922,62 +1602,279 @@
         }
       ]
     },
+
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device_used",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device",
       "join": {
-        "type": "future",
-        "duration": "12mo"
+        "type": "future"
       },
       "feature": [
         {
-          "name": "deepBrainStimulator",
-          "description": "Whether deep brain stimulator device is used in the next periods",
+          "name": "treatment",
+          "description": "Whether any advance parkinson device is started to be used in the next period",
           "valueExpr": {
-            "fhirPath": "code='deep-brain-stimulator'",
+            "fhirPath": "code.exists()",
             "dataType": "boolean"
           },
           "temporalAgg": [
             {
-              "lastN": 2,
+              "lastN": 4,
               "windowPeriod": "mo",
               "windowSize": 6,
-              "aggOp": ["any"]
-            }
-          ]
-        },
-        {
-          "name": "levodopaInfusionPumpUsed",
-          "description": "Whether Levodopa infusion pump device is used in the next periods",
-          "valueExpr": {
-            "fhirPath": "code='levodopa-infusion-pump'",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 2,
-              "windowPeriod": "mo",
-              "windowSize": 6,
-              "aggOp": ["any"]
-            }
-          ]
-        },
-        {
-          "name": "apomorphinePumpUsed",
-          "description": "Whether Apomorphine pump device is used in the next periods",
-          "valueExpr": {
-            "fhirPath": "code='apomorfine-pump'",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 2,
-              "windowPeriod": "mo",
-              "windowSize": 6,
+              "extending": "multiplicative",
               "aggOp": ["any"]
             }
           ]
         }
       ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/levodopa",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "5OrMore",
+          "description": "Whether levodopa is used 5 times or more within a day in next period",
+          "valueExpr": {
+            "fhirPath": "frequency > 4",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "advanceSymptoms",
+        "description": "Motor symptoms (dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
+        "fhirPath": "code='9748009' or code='off-time' or code='fluctuations'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/condition2",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "hasDementia",
+          "description": "Whether patient has diagnosed dementia or not in next period. ICD-10 Codes: F00-F09, F10.73, G30, G31",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('F0') or (icd10Code.exists() and icd10Code.subsetOf('F10.73' | 'G30' | 'G31'))",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "hasAnticholinesteraseInhibitors",
+          "description": "Whether patient has anticholinesterase inhibitors or memantine within next period. ATC Code: under under N06DA or N06DX",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N06DA') or atcCode.startsWith('N06DX')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "MoCA",
+        "description": "MoCA total score",
+        "fhirPath": "code='72172-0'"
+      },
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "lessThan25",
+          "description":"MoCA-score less than 25 may indicate dementia",
+          "valueExpr": {
+            "fhirPath": "score < 25",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "combinedFeature": [
+    {
+      "name": "inAdvancedStage",
+      "description": "Whether patient is within advance stage of Parkinson (modified delphi criteria) in this period",
+      "isOutcome": false,
+      "combinedFeatures": [
+        {
+          "alias": "deviceAidedTreatment",
+          "featureNamePattern": "device_treatment_any"
+        },
+        {
+          "alias": "usingLevodopa5OrMore",
+          "featureNamePattern": "levodopa_5OrMore_p6mo_any"
+        },
+        {
+          "alias": "advanceSymptoms",
+          "featureNamePattern": "motor_advanceSymptoms_isSeen_p6mo_any"
+        },
+        {
+          "alias": "hasDementia",
+          "featureNamePattern": "condition2_hasDementia_any"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "deviceAidedTreatment or (usingLevodopa5OrMore and (advanceSymptoms or hasDementia))",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "inAdvancedStage",
+      "description": "Whether patient is passed to the advance stage of Parkinson (modified delphi criteria) in next period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "alreadyInAdvanceStage",
+          "featureNamePattern": "inAdvancedStage"
+        },
+        {
+          "alias": "deviceAidedTreatment",
+          "featureNamePattern": "device_treatment_*"
+        },
+        {
+          "alias": "usingLevodopa5OrMore",
+          "featureNamePattern": "levodopa_5OrMore_*"
+        },
+        {
+          "alias": "advanceSymptoms",
+          "featureNamePattern": "motor_advanceSymptoms_isSeen_*"
+        },
+        {
+          "alias": "hasDementia",
+          "featureNamePattern": "condition2_hasDementia_*"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "alreadyInAdvanceStage.not() and (deviceAidedTreatment or (usingLevodopa5OrMore and (advanceSymptoms or hasDementia)))",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "hasCognitiveImpairment",
+      "description": "Whether patient has cognitive impairment in this period",
+      "isOutcome": false,
+      "combinedFeatures": [
+        {
+          "alias": "diagnosedDementia",
+          "featureNamePattern": "condition2_hasDementia_any"
+        },
+        {
+          "alias": "usingAnticholinesteraseInhibitors",
+          "featureNamePattern": "medication_hasAnticholinesteraseInhibitorsRecently_any"
+        },
+        {
+          "alias": "mocaLessThan25",
+          "featureNamePattern": "other_MoCA_lessThan25_p6mo_any"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "diagnosedDementia or usingAnticholinesteraseInhibitors or mocaLessThan25",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "hasCognitiveImpairment",
+      "description": "Whether patient has cognitive impairment in next period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "hasAlreadyCognitiveImpairment",
+          "featureNamePattern": "hasCognitiveImpairment"
+        },
+        {
+          "alias": "diagnosedDementia",
+          "featureNamePattern": "condition2_hasDementia_*"
+        },
+        {
+          "alias": "usingAnticholinesteraseInhibitors",
+          "featureNamePattern": "medication_hasAnticholinesteraseInhibitors_*"
+        },
+        {
+          "alias": "mocaLessThan25",
+          "featureNamePattern": "other_MoCA_lessThan25_*"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "hasAlreadyCognitiveImpairment.not() and (diagnosedDementia or usingAnticholinesteraseInhibitors or mocaLessThan25)",
+        "dataType": "boolean"
+      }
     }
   ]
 }

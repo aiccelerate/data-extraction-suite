@@ -1,0 +1,297 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+  "name": "nonmotor",
+  "title": "Parkinson Non-Motor Symptom Assessment",
+  "description": "Assessment of a Parkinson Non-Motor Symptom or in general all motor symptoms (existence and numeric evaluation)",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonNonMotorSymptomAssessment",
+  "context": [
+    {
+      "name": "minMaxValues",
+      "description": "Minimum and maximum values for numeric assessments and cut-off scores to convert them to boolean symptom existence.",
+      "item": [
+        {
+          "key": "non-motor-symptoms:nms",
+          "description":"Non-motor symptom assessment in general with MDS-NMS",
+          "content": {
+            "range": [0, 334],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "non-motor-symptoms:nmss",
+          "description":"Non-motor symptom assessment in general with MDS-NMSS",
+          "content": {
+            "range": [0, 360],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "39898005:nms",
+          "description":"Assessment of Sleep disorder by MDS-NMS (Part K - subtotal score)",
+          "content": {
+            "range": [0, 96],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "39898005:nmss",
+          "description":"Assessment of sleep disorder by MDS-NMSS (Domain 2- subtotal score)",
+          "content": {
+            "range": [0, 48],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "713567005:nms",
+          "description":"Assessment of daytime sleepiness by MDS-NMS (Part K3.3)",
+          "content": {
+            "range": [0, 16],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "713567005:nmss",
+          "description":"Assessment of daytime sleepiness by MDS-NMSS (Domain 2.3)",
+          "content": {
+            "range": [0, 12],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "713567005:mds-updrs",
+          "description":"Assessment of daytime sleepiness by MDS-UPDRS (Question 1.8)",
+          "content": {
+            "range": [0, 4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "404640003:nms",
+          "description":"Assessment of dizziness/fainting by MDS-NMS (Part G)",
+          "content": {
+            "range": [0, 32],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "404640003:nmss",
+          "description":"Assessment of dizziness/fainting by MDS-NMSS (Question 2.4)",
+          "content": {
+            "range": [0, 12],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "404640003:mds-nms",
+          "description":"Assessment of dizziness/fainting by MDS-NMS (G1-2 Frequency [likert  0-4], Severity [likert  0-4]; Frequency x severity; total score (sum of 1-2 Frequency x severity scores))",
+          "content": {
+            "range": [0, 16],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "404640003:mds-updrs",
+          "description":"Assessment of dizziness/fainting by MDS-UPDRS (Question 1.12)",
+          "content": {
+            "range": [0, 4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "415690000:nms",
+          "description":"Assessment of sweating by MDS-NMS (Part M5)",
+          "content": {
+            "range": [0, 16],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "139394000:mds-nms",
+          "description":"Assessment of nocturia/pollacisuria by MDS-NMS (H1,2,3 Frequency [likert  0-4], Severity [likert  0-4]; Frequency x severity; total score (sum of 1-3 Frequency x severity scores))",
+          "content": {
+            "range": [0, 48],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "422587007:nms",
+          "description":"Assessment of nausea/gastroparesis by NMS (??????)",
+          "content": {
+            "range": [0, 48],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "422587007:mds-nms",
+          "description":"Assessment of nausea/gastroparesis by MDS-NMS (Part J)",
+          "content": {
+            "range": [0, 48],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "14760008:nms",
+          "description":"Assessment of constipation by NMS (????)",
+          "content": {
+            "range": [0, 16],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "14760008:mds-nms",
+          "description":"Assessment of constipation by MDS-NMS (Part J.4)",
+          "content": {
+            "range": [0, 16],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "22253000:nms",
+          "description":"Assessment of pain by NMS (Part L)",
+          "content": {
+            "range": [0, 60],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "22253000:mds-nms",
+          "description":"Assessment of pain by MDS-NMS (Part L1-4)",
+          "content": {
+            "range": [0, 64],
+            "cutoff": [false, 0, true]
+          }
+        }
+      ]
+    }
+  ],
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/parkinson-non-motor-symptoms",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "pivot": {
+    "name": "code",
+    "description": "Motor symptoms evaluated as features (Symptom code in SNOMED-CT or custom)",
+    "values": [
+      {
+        "name":"total",
+        "value": "non-motor-symptoms"
+      },
+      {
+        "name":"language_difficulty",
+        "value": "286366005"
+      },
+      {
+        "name":"sleep_disorder",
+        "value": "39898005"
+      },
+      {
+        "name":"quality_of_sleep",
+        "value": "248254009"
+      },
+      {
+        "name":"daytime_sleepiness",
+        "value": "713567005"
+      },
+      {
+        "name":"dizziness",
+        "value": "404640003"
+      },
+      {
+        "name":"sweating",
+        "value": "415690000"
+      },
+      {
+        "name":"nocturia",
+        "value": "139394000"
+      },
+      {
+        "name":"nausea",
+        "value": "422587007"
+      },
+      {
+        "name":"constipation",
+        "value": "14760008"
+      },
+      {
+        "name":"pain",
+        "value": "22253000"
+      },
+      {
+        "name":"normal_cognition",
+        "value": "449888003"
+      },
+      {
+        "name":"psychiatric_problem",
+        "value": "75864003"
+      },
+      {
+        "name":"impulse_control_disorder",
+        "value": "66347000"
+      }
+    ]
+  },
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date",
+      "description": "Assessment date of symptom(s)",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Symptom code",
+      "description": "Code for the symptom",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms').first().code"
+    },
+    {
+      "name": "method",
+      "title": "Assessment method",
+      "description": "Code for the assessment method used (e.g. sleep disorder --> calculated from NMS, Part K, Range: 0-96, or NMSS, Domain 2, Range: 0-48)",
+      "dataType": "code",
+      "fhirPath": "Observation.method.coding.where(system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods').first().code"
+    },
+    {
+      "name": "isOnState",
+      "title": "Is Patient On State",
+      "description": "Whether patient is on state during this assessment",
+      "dataType": "boolean",
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://snomed.info/sct' and code='105724001')).first().valueCodeableConcept.coding.exists(system='http://snomed.info/sct' and code='420862001')"
+    },
+    {
+      "name": "isSeen",
+      "title": "Is symptom(s) seen",
+      "description": "Whether symptom is seen during the last period",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean or Observation.valueQuantity.value.fst:categorize(fst:getContext(%minMaxValues, %code & ':' & %method).cutoff)"
+    },
+    {
+      "name": "score",
+      "title": "Symptom score",
+      "description": "Symptom score (e.g. NMS score)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    },
+    {
+      "name": "scoreScaled",
+      "title": "Symptom assessment score with min-max normalization",
+      "description": "Symptom assessment score with min-max normalization",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value.fst:rescale(fst:getContext(%minMaxValues, %code & ':' & %method).range)"
+    }
+  ]
+}

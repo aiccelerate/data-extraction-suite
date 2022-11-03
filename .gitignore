@@ -104,5 +104,6 @@ $RECYCLE.BIN/
 
 /logs
 data-catalog/
+datasets/
 *.sql
 *.csv

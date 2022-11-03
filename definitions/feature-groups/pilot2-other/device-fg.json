@@ -1,0 +1,49 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/device",
+  "name": "device",
+  "title": "Used Parkinson Related Devices",
+  "description": "Parkinson related devices used by patient",
+  "version": "0.1",
+  "date": "2022-06-02",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "DeviceUseStatement",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonRelatedDeviceUsed",
+  "fhirSearch": "?patient={{Patient}}&status=active,completed",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startDate",
+  "periodEnd": "endDate",
+  "temporalGrouping": "mo",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "DeviceUseStatement.subject"
+    },
+    {
+      "name": "startDate",
+      "title": "Start date for use of device",
+      "description": "Medication start date",
+      "dataType": "date",
+      "fhirPath": "DeviceUseStatement.timingPeriod.start.toDate()"
+    },
+    {
+      "name": "endDate",
+      "title": "End date for use of device",
+      "description": "Medication end date",
+      "dataType": "date",
+      "fhirPath": "DeviceUseStatement.timingPeriod.end.toDate()"
+    },
+    {
+      "name": "code",
+      "title": "Code for the device used",
+      "description": "Code for the device used (deep-brain-stimulator | levodopa-infusion-pump | apomorfine-pump)",
+      "dataType": "code",
+      "fhirPath": "DeviceUseStatement.device.identifier.value"
+    }
+  ]
+}

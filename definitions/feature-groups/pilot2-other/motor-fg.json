@@ -1,0 +1,241 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+  "name": "motor",
+  "title": "Parkinson Motor Symptom Assessment",
+  "description": "Assessment of a Parkinson Motor Symptom or in general all motor symptoms (existence and/or numeric assessment score)",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonMotorObservation",
+  "context": [
+    {
+      "name": "minMaxValues",
+      "description": "Minimum and maximum values for numeric assessments and cut-off scores to convert them to boolean symptom existence.",
+      "item": [
+        {
+          "key": "267082004:updrs3",
+          "description":"Motor Symptoms assessment in general with UPDRS3",
+          "content": {
+            "range": [0, 108],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "267082004:mds-updrs3",
+          "description":"Motor Symptoms assessment in general with MDS-UPDRS3",
+          "content": {
+            "range": [0,132],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "267082004:updrs4",
+          "description":"Motor Symptoms assessment in general with MDS-UPDRS4",
+          "content": {
+            "range": [0,24],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "26079004:updrs3",
+          "description":"Tremor assessment score with MDS-UPDRS3 (part III, questions 3.15-3.18)",
+          "content": {
+            "range": [0,40],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "9748009:updrs4",
+          "description":"Dyskinesia assessment score with MDS-UPDRS4 (Question 4.1)",
+          "content": {
+            "range": [0,4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "443544006:nfog-q",
+          "description":"Freezing of gait assessment score with NFOG-Q",
+          "content": {
+            "range": [0,16],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "416240000:mds-updrs3",
+          "description":"Postural balance assessment score with MDS-UPDRS3 (Question 3.12)",
+          "content": {
+            "range": [0,4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "399317006:updrs3",
+          "description":"Bradykinesia assessment score with UPDRS3 (Question 3.10 Gait)",
+          "content": {
+            "range": [0,4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "399317006:mds-updrs",
+          "description":"Bradykinesia assessment score with MDS-UPDRS (Question 3.14 Global spontaneity of movement)",
+          "content": {
+            "range": [0,4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "271587009:updrs3",
+          "description":"Stiffness/Rigidity assessment score with UPDRS3 (Question 3.3 a-b)",
+          "content": {
+            "range": [0,20],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "15802004:mds-updrs",
+          "description":"Dystonia assessment score with MDS-UPDRS score (Question 4.6)",
+          "content": {
+            "range": [0,4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "off-time:mds-updrs",
+          "description":"Time spent in off state with MDS-UPDRS (Question 4.3)",
+          "content": {
+            "range": [0,4],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "fluctuations:mds-updrs",
+          "description":"Assessment of fluctuations with MDS-UPDRS (Functional impact of fluctuation -Question 4.4 and Question 4.5 time predictability of MOTOR FLUCTUATIONS --> MDS-UPDRS score -  (Functional impact of fluctuation -Question 4.4 and Question 4.5 time predictability of MOTOR FLUCTUATIONS ) -> Sum of their scores)",
+          "content": {
+            "range": [0,8],
+            "cutoff": [false, 0, true]
+          }
+        }
+      ]
+    }
+  ],
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/parkinson-motor-symptoms",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "pivot": {
+    "name": "code",
+    "description": "Motor symptoms evaluated as features (Symptom code in SNOMED-CT or custom)",
+    "values": [
+      {
+        "name":"total",
+        "value": "267082004"
+      },
+      {
+        "name":"tremor",
+        "value": "26079004"
+      },
+      {
+        "name":"dyskinesia",
+        "value": "9748009"
+      },
+      {
+        "name":"wearing_off",
+        "value": "427488005"
+      },
+      {
+        "name":"freezing_of_gait",
+        "value": "443544006"
+      },
+      {
+        "name":"postural_balance",
+        "value": "416240000"
+      },
+      {
+        "name":"bradykinesia",
+        "value": "399317006"
+      },
+      {
+        "name":"stiffness_rigidity",
+        "value": "271587009"
+      },
+      {
+        "name":"dystonia",
+        "value": "15802004"
+      },
+      {
+        "name":"immobility",
+        "value": "102491009"
+      },
+      {
+        "name":"off_time",
+        "value": "off-time"
+      },
+      {
+        "name":"fluctuations",
+        "value": "fluctuations"
+      }
+    ]
+  },
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date",
+      "description": "Assessment date of symptom(s)",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Symptom code",
+      "description": "Code for the motor symptom",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms').first().code"
+    },
+    {
+      "name": "method",
+      "title": "Assessment method",
+      "description": "Code for the assessment method used (e.g. updrs3)",
+      "dataType": "code",
+      "fhirPath": "Observation.method.coding.where(system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods').first().code"
+    },
+    {
+      "name": "isOnState",
+      "title": "Is Patient On State",
+      "description": "Whether patient is on state during this assessment",
+      "dataType": "boolean",
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://snomed.info/sct' and code='105724001')).first().valueCodeableConcept.coding.exists(system='http://snomed.info/sct' and code='420862001')"
+    },
+    {
+      "name": "isSeen",
+      "title": "Is symptom(s) seen",
+      "description": "Whether symptom is seen during the last period",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean or Observation.valueQuantity.value.fst:categorize(fst:getContext(%minMaxValues, %code & ':' & %method).cutoff)"
+    },
+    {
+      "name": "score",
+      "title": "Symptom assessment score",
+      "description": "Symptom assessment score (e.g. Total UPDRS-3 score; Range: 0-108)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    },
+    {
+      "name": "scoreScaled",
+      "title": "Symptom assessment score with min-max normalization",
+      "description": "Symptom assessment score with min-max normalization",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value.fst:rescale(fst:getContext(%minMaxValues, %code & ':' & %method).range)"
+    }
+  ]
+}

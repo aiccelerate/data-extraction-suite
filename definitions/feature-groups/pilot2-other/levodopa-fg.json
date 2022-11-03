@@ -1,15 +1,15 @@
 {
-  "url": "https://aiccelerate.eu/feature-groups/pilot2/medication_used2",
-  "name": "medication_used2",
-  "title": "Used Medications",
-  "description": "Parkinson related medications used by patient",
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/levodopa",
+  "name": "levodopa",
+  "title": "Features Related with Levodopa Usage",
+  "description": "Features related with Levodopa and related medications (including Levodopa) usage in Parkinson.",
   "version": "0.1",
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "MedicationStatement",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationUsed",
-  "fhirSearch": "?patient={{Patient}}&status=active,completed,unknown,on-hold",
+  "fhirSearch": "?patient={{Patient}}&status=active,completed,unknown,on-hold&code:below=http://www.whocc.no/atc|N04B",
   "entities": {
     "pid": "Patient"
   },
@@ -39,19 +39,20 @@
       "fhirPath": "MedicationStatement.effectivePeriod.end"
     },
     {
-      "name": "atcCode",
-      "title": "ATC code for the medication",
-      "description": "ATC code for the medication",
-      "dataType": "code",
-      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code"
+      "name": "frequency",
+      "title": "Frequency of levodopa intake per day",
+      "description": "Frequency of levodopa intake per day",
+      "dataType": "integer",
+      "fhirPath": "MedicationStatement.dosage.select(timing.repeat.frequency.nav:orElse(1)).agg:sum()",
+      "aggOp": ["sum"]
     },
     {
-      "name": "levodopaEquivalentDose",
-      "title": "Levodopa Equivalent Dose",
-      "description": "Levodopa equivalent dose calculated from the dose taken for the medication (in mg)",
+      "name": "dose",
+      "title": "Levodopa Equivalent Dose per day",
+      "description": "Levodopa equivalent dose calculated from the dose taken for the medication (in mg) per day",
       "dataType": "decimal",
-      "precondition": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code.startsWith('N04B')",
-      "fhirPath": "MedicationStatement.dosage.select(timing.repeat.period * doseAndRate.doseQuantity.value).agg:sum()"
+      "fhirPath": "MedicationStatement.dosage.select(timing.repeat.frequency.nav:orElse(1) * doseAndRate.doseQuantity.value).agg:sum()",
+      "aggOp": ["sum"]
     }
   ]
 }
