@@ -1050,7 +1050,7 @@
       },
       "feature": [
         {
-          "name": "scoreScaled",
+          "name": "score",
           "windowFunc": ["delta","rate"]
         },
         {
@@ -1069,6 +1069,28 @@
         "name": "atrophy",
         "description": "Assessments regarding atrophy",
         "fhirPath": "concept='atrophy'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "problemExists",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "filter": {
+        "name": "impairedCognition",
+        "description": "Existence of impaired cognition",
+        "fhirPath": "concept='cognition'"
       },
       "join": {
         "type": "past",
@@ -1155,6 +1177,130 @@
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
       "filter": {
+        "name": "wearingOff",
+        "description": "Existence of wearing off",
+        "fhirPath": "code='427488005'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "updrs3On",
+        "description": "UPDRS Part 3 Total Score during on state",
+        "fhirPath": "isOnState and code='77720-1'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "updrs3Off",
+        "description": "UPDRS Part 3 Total Score during off state",
+        "fhirPath": "isOnState.not() and code='77720-1'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "updrs4On",
+        "description": "UPDRS Part 4 Total Score during on state",
+        "fhirPath": "isOnState and code='77721-9'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "updrs4Off",
+        "description": "UPDRS Part 4 Total Score during off state",
+        "fhirPath": "isOnState.not() and code='77721-9'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "description": "Last symptom score within the period.",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "scoreScaled",
+          "description": "Last symptom score (scaled) within the period.",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
         "name": "advanceSymptoms",
         "description": "Motor symptoms (dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
         "fhirPath": "code='9748009' or code='off-time' or code='fluctuations'",
@@ -1176,13 +1322,9 @@
         }
       ]
     },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
-      "filter": {
-        "name": "onState",
-        "description": "Non-motor symptoms during on state of Parkinson",
-        "fhirPath": "isOnState"
-      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -1212,9 +1354,10 @@
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
       "filter": {
-        "name": "offState",
-        "description": "Non-motor symptoms during off state of Parkinson",
-        "fhirPath": "isOnState.not()"
+        "name": "scale",
+        "description": "Non-motor symptom evaluation(MDS-NMS or MDS-NMSS)",
+        "fhirPath": "code='non-motor-symptoms'",
+        "applyPivoting": false
       },
       "join": {
         "type": "past",
@@ -1230,7 +1373,70 @@
           "name": "scoreScaled",
           "description": "Last symptom score (scaled) within the period.",
           "windowFunc": ["delta","rate"]
-        },
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "filter": {
+        "name": "speechDisorder",
+        "description": "Existence of speech disorder",
+        "fhirPath": "code='286366005'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "filter": {
+        "name": "orthocasticHypotension",
+        "description": "Existence of Orthocastic Hypotension",
+        "fhirPath": "code='28651003'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "filter": {
+        "name": "hallucination",
+        "description": "Existence of hallucinations",
+        "fhirPath": "code='7011001'",
+        "applyPivoting": false
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
         {
           "name": "isSeen",
           "description": "Whether symptom seen within the period",
@@ -1408,9 +1614,9 @@
       "feature": [
         {
           "name": "hasAnticholinesteraseInhibitors",
-          "description": "Whether patient has anticholinesterase inhibitors any time until this time point. ATC Code: under under N06DA",
+          "description": "Whether patient has anticholinesterase inhibitors or memantine any time until this time point. ATC Code: under under N06DA",
           "valueExpr": {
-            "fhirPath": "atcCode.startsWith('N06DA')",
+            "fhirPath": "atcCode.startsWith('N06DA') or atcCode.startsWith('N06DX')",
             "dataType": "boolean"
           },
           "temporalAgg": [

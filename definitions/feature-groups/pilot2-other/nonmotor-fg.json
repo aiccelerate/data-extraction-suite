@@ -87,14 +87,6 @@
           }
         },
         {
-          "key": "404640003:mds-nms",
-          "description":"Assessment of dizziness/fainting by MDS-NMS (G1-2 Frequency [likert  0-4], Severity [likert  0-4]; Frequency x severity; total score (sum of 1-2 Frequency x severity scores))",
-          "content": {
-            "range": [0, 16],
-            "cutoff": [false, 0, true]
-          }
-        },
-        {
           "key": "404640003:mds-updrs",
           "description":"Assessment of dizziness/fainting by MDS-UPDRS (Question 1.12)",
           "content": {
@@ -120,15 +112,7 @@
         },
         {
           "key": "422587007:nms",
-          "description":"Assessment of nausea/gastroparesis by NMS (??????)",
-          "content": {
-            "range": [0, 48],
-            "cutoff": [false, 0, true]
-          }
-        },
-        {
-          "key": "422587007:mds-nms",
-          "description":"Assessment of nausea/gastroparesis by MDS-NMS (Part J)",
+          "description":"Assessment of nausea/gastroparesis by MDS-NMS (PartJ Q1-3)",
           "content": {
             "range": [0, 48],
             "cutoff": [false, 0, true]
@@ -136,15 +120,7 @@
         },
         {
           "key": "14760008:nms",
-          "description":"Assessment of constipation by NMS (????)",
-          "content": {
-            "range": [0, 16],
-            "cutoff": [false, 0, true]
-          }
-        },
-        {
-          "key": "14760008:mds-nms",
-          "description":"Assessment of constipation by MDS-NMS (Part J.4)",
+          "description":"Assessment of constipation by MDS-NMS (Part J Q4)",
           "content": {
             "range": [0, 16],
             "cutoff": [false, 0, true]
@@ -152,14 +128,6 @@
         },
         {
           "key": "22253000:nms",
-          "description":"Assessment of pain by NMS (Part L)",
-          "content": {
-            "range": [0, 60],
-            "cutoff": [false, 0, true]
-          }
-        },
-        {
-          "key": "22253000:mds-nms",
           "description":"Assessment of pain by MDS-NMS (Part L1-4)",
           "content": {
             "range": [0, 64],
@@ -176,23 +144,11 @@
   "timestamp": "time",
   "pivot": {
     "name": "code",
-    "description": "Motor symptoms evaluated as features (Symptom code in SNOMED-CT or custom)",
+    "description": "Non motor symptoms evaluated as numeric features (Symptom code in SNOMED-CT or custom)",
     "values": [
-      {
-        "name":"total",
-        "value": "non-motor-symptoms"
-      },
-      {
-        "name":"language_difficulty",
-        "value": "286366005"
-      },
       {
         "name":"sleep_disorder",
         "value": "39898005"
-      },
-      {
-        "name":"quality_of_sleep",
-        "value": "248254009"
       },
       {
         "name":"daytime_sleepiness",
@@ -221,18 +177,6 @@
       {
         "name":"pain",
         "value": "22253000"
-      },
-      {
-        "name":"normal_cognition",
-        "value": "449888003"
-      },
-      {
-        "name":"psychiatric_problem",
-        "value": "75864003"
-      },
-      {
-        "name":"impulse_control_disorder",
-        "value": "66347000"
       }
     ]
   },

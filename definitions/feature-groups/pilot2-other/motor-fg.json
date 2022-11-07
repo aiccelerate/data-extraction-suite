@@ -15,40 +15,40 @@
       "description": "Minimum and maximum values for numeric assessments and cut-off scores to convert them to boolean symptom existence.",
       "item": [
         {
-          "key": "267082004:updrs3",
-          "description":"Motor Symptoms assessment in general with UPDRS3",
+          "key": "77720-1:updrs",
+          "description":"Motor examination - UPDRS Part 3 Total Score",
           "content": {
             "range": [0, 108],
             "cutoff": [false, 0, true]
           }
         },
         {
-          "key": "267082004:mds-updrs3",
-          "description":"Motor Symptoms assessment in general with MDS-UPDRS3",
+          "key": "77720-1:mds-updrs",
+          "description":"Motor examination - MDS-UPDRS Part 3 Total Score",
           "content": {
             "range": [0,132],
             "cutoff": [false, 0, true]
           }
         },
         {
-          "key": "267082004:updrs4",
-          "description":"Motor Symptoms assessment in general with MDS-UPDRS4",
+          "key": "77721-9:mds-updrs",
+          "description":"Motor complications - MDS-UPDRS Part 4 Total Score",
           "content": {
             "range": [0,24],
             "cutoff": [false, 0, true]
           }
         },
         {
-          "key": "26079004:updrs3",
-          "description":"Tremor assessment score with MDS-UPDRS3 (part III, questions 3.15-3.18)",
+          "key": "26079004:mds-updrs",
+          "description":"Tremor assessment score with MDS-UPDRS (part III, questions 3.15-3.18)",
           "content": {
             "range": [0,40],
             "cutoff": [false, 0, true]
           }
         },
         {
-          "key": "9748009:updrs4",
-          "description":"Dyskinesia assessment score with MDS-UPDRS4 (Question 4.1)",
+          "key": "9748009:mds-updrs",
+          "description":"Dyskinesia assessment score with MDS-UPDRS (Part IV Question 4.1)",
           "content": {
             "range": [0,4],
             "cutoff": [false, 0, true]
@@ -63,32 +63,32 @@
           }
         },
         {
-          "key": "416240000:mds-updrs3",
-          "description":"Postural balance assessment score with MDS-UPDRS3 (Question 3.12)",
+          "key": "416240000:mds-updrs",
+          "description":"Postural balance assessment score with MDS-UPDRS (Part III Question 3.12)",
           "content": {
             "range": [0,4],
             "cutoff": [false, 0, true]
           }
         },
         {
-          "key": "399317006:updrs3",
-          "description":"Bradykinesia assessment score with UPDRS3 (Question 3.10 Gait)",
+          "key": "399317006:updrs",
+          "description":"Bradykinesia assessment score with UPDRS (Question 29 and 31)",
           "content": {
-            "range": [0,4],
+            "range": [0,8],
             "cutoff": [false, 0, true]
           }
         },
         {
           "key": "399317006:mds-updrs",
-          "description":"Bradykinesia assessment score with MDS-UPDRS (Question 3.14 Global spontaneity of movement)",
+          "description":"Bradykinesia assessment score with MDS-UPDRS (Question 3.10 Gait and 3.14 Global spontaneity of movement)",
           "content": {
-            "range": [0,4],
+            "range": [0,8],
             "cutoff": [false, 0, true]
           }
         },
         {
-          "key": "271587009:updrs3",
-          "description":"Stiffness/Rigidity assessment score with UPDRS3 (Question 3.3 a-b)",
+          "key": "271587009:mds-updrs",
+          "description":"Stiffness/Rigidity assessment score with MDS-UPDRS (Question 3.3 a-b)",
           "content": {
             "range": [0,20],
             "cutoff": [false, 0, true]
@@ -128,12 +128,8 @@
   "timestamp": "time",
   "pivot": {
     "name": "code",
-    "description": "Motor symptoms evaluated as features (Symptom code in SNOMED-CT or custom)",
+    "description": "Motor symptoms evaluated as both numeric and boolean features (Symptom code in SNOMED-CT or custom)",
     "values": [
-      {
-        "name":"total",
-        "value": "267082004"
-      },
       {
         "name":"tremor",
         "value": "26079004"
@@ -141,10 +137,6 @@
       {
         "name":"dyskinesia",
         "value": "9748009"
-      },
-      {
-        "name":"wearing_off",
-        "value": "427488005"
       },
       {
         "name":"freezing_of_gait",
@@ -165,10 +157,6 @@
       {
         "name":"dystonia",
         "value": "15802004"
-      },
-      {
-        "name":"immobility",
-        "value": "102491009"
       },
       {
         "name":"off_time",
@@ -200,7 +188,7 @@
       "title": "Symptom code",
       "description": "Code for the motor symptom",
       "dataType": "code",
-      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms').first().code"
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms' or system='https://loinc.org').first().code"
     },
     {
       "name": "method",
