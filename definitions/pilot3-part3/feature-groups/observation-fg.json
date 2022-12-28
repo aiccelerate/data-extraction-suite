@@ -1,0 +1,125 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+  "name": "observation",
+  "title": "An assessment/observation",
+  "description": "Represents a numeric assessment/observation done related with AICCELERATE Pilot 3  - Part 3",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PediatricPalliativeCareObservation",
+  "context": [
+    {
+      "name": "assessmentContext",
+      "description": "Range and cut-off scores for different kind of assessments.",
+      "item": [
+        {
+          "key": "pedsql",
+          "description": "Paediatric Quality of Life (PedsQL)",
+          "content": {
+            "range": [0, 100]
+          }
+        },
+        {
+          "key": "pqol",
+          "description":"Child's quality of life perceived by the parents ",
+          "content": {
+            "range": [0,10]
+          }
+        },
+        {
+          "key": "zarit",
+          "description":"Zarit scale of caregiver burden",
+          "content": {
+            "range": [22,110]
+          }
+        },
+        {
+          "key": "38215-0",
+          "description": "Pain score",
+          "content": {
+            "range": [0, 10]
+          }
+        },
+        {
+          "key": "281400004",
+          "description": "Ramsay scale",
+          "content": {
+            "range": [1, 6]
+          }
+        },
+        {
+          "key": "386554004",
+          "description": "Glasgow Coma Scale (GCS)",
+          "content": {
+            "range": [3, 15]
+          }
+        },
+        {
+          "key": "443709007",
+          "description": "Simpson and Reilly pediatric modified Glasgow coma scale",
+          "content": {
+            "range": [3, 15]
+          }
+        },
+        {
+          "key": "dme-c",
+          "description": "Caregiver's emotional discomfort scale ",
+          "content": {
+            "range": [0, 20]
+          }
+        }
+      ]
+    }
+  ],
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/pediatric-palliative-care-assessments",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date ",
+      "description": "Assessment date",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Assessment type",
+      "description": "Code (SNOMED-CT or custom code) for the assessment type e.g. 707621005 -> GMCSF, 281400004 -> Ramsay scale",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/pediatric-assessments' or system='http://loinc.org').code.first()"
+    },
+    {
+      "name": "name",
+      "title": "Assessment name",
+      "description": "Name for the assessment e.g. Zarit Scale, Ramsay Scale, etc",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/pediatric-assessments' or system='http://loinc.org').display.first()"
+    },
+    {
+      "name": "value",
+      "title": "Value of the assessment or measurement",
+      "description": "Numeric value of the assessment or measurement",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    },
+    {
+      "name": "valueScaled",
+      "title": "Scaled score of the assessment",
+      "description": "Scaled numeric value of the assessment (min-max normalization)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value.fst:rescale(fst:getContext(%assessmentContext, %code).range)"
+    }
+  ]
+}

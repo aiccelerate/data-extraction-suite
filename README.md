@@ -10,7 +10,8 @@
 
 ## About
 
-This repository includes the feature and dataset definitions for the pilot use cases of the AICCELERATE project: 
+This repository includes the feature and dataset definitions for the pilot use cases of the AICCELERATE project:
+
 (i) patient flow management in elective and urgent surgical cases and
 perioperative care, 
 

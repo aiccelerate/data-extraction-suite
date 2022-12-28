@@ -1,0 +1,69 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/otherProcedure",
+  "name": "otherProcedure",
+  "title": "Other procedures performed in the surgery",
+  "description": "Other procedures performed in the surgery apart from main surgical procedure",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ProcedureRelatedWithSurgicalWorkflow",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&part-of:type=Procedure",
+  "entities": {
+    "pid": "Patient",
+    "episodeId": "EpisodeOfCare"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "time",
+      "title": "Time of the procedure",
+      "description": "Time of the procedure",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "code",
+      "title": "Procedure code",
+      "description": "Code for the performed procedure",
+      "dataType": "code",
+      "fhirPath": "Procedure.code.coding.where(system='http://hl7.org/fhir/sid/ex-icd-10-procedures').first().code"
+    },
+    {
+      "name": "ccsCategory",
+      "title": "Surgical category",
+      "description": "Category of the operation in terms of Clinical Classifications Software (CCS) for ICD-10-PCS. ",
+      "dataType": "code",
+      "fhirPath": "Procedure.category.coding.where(system='http://hl7.org/fhir/sid/ex-icd-10-procedures-ccs').first().code"
+    },
+    {
+      "name": "isIntubationType",
+      "title": "If this procedure is about intubation type",
+      "description": "If this procedure is about intubation type",
+      "dataType": "boolean",
+      "fhirPath": "Procedure.code.coding.exists(system ='http://snomed.info/sct')"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the surgery encounter this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.encounter.reference"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode identifier",
+      "description": "Identifier of the surgery episode this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.extension('http://hl7.org/fhir/StructureDefinition/workflow-episodeOfCare').valueReference"
+    }
+  ]
+}

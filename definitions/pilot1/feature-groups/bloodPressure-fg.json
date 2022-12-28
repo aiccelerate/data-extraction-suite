@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/bloodpressure",
+  "name": "bloodpressure",
+  "title": "Blood Pressure Measurement",
+  "description": "Represent a blood pressure measurement including systolic and diastolic",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/bp",
+  "fhirSearch": "?patient={{Patient}}&category=http://terminology.hl7.org/CodeSystem/observation-category|vital-signs&code=http://loinc.org|85354-9",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of measurement",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "systolic",
+      "title": "Systolic BP",
+      "description": "Systolic BP value",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.filter(code.coding.exists(system='http://loinc.org' and code='8480-6')).first().valueQuantity.value"
+    },
+    {
+      "name": "diastolic",
+      "title": "Diastolic BP",
+      "description": "Diastolic BP value",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.filter(code.coding.exists(system='http://loinc.org' and code='8462-4')).first().valueQuantity.value"
+    }
+  ]
+}

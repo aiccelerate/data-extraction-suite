@@ -1,0 +1,61 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p3/symptom",
+  "name": "symptom",
+  "title": "Symptom",
+  "description": "Represent a symptom assessment made during home care related with AICCELERATE Pilot 3  - Part 3",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PediatricPalliativeCareSymptom",
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/pediatric-palliative-care-symptoms",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date ",
+      "description": "Assessment date",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Symptom code",
+      "description": "Code (SNOMED-CT) for the symptom type e.g. 170707004 -> Seizures",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct').code.first()"
+    },
+    {
+      "name": "name",
+      "title": "Symptom name",
+      "description": "Name for the symptom e.g. Seizures, etc",
+      "dataType": "code",
+      "fhirPath": "Observation.code.text.nav:orElse(Observation.code.coding.where(system='http://snomed.info/sct').display.first())"
+    },
+    {
+      "name": "frequency",
+      "title": "Frequency of the symptom",
+      "description": "Frequency of the symptom for the given date (not seen | less than usual | same as usual | more than usual)",
+      "dataType": "code",
+      "fhirPath": "Observation.valueCodeableConcept.coding.where(system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "exists",
+      "title": "Whether symptom is seen or not",
+      "description": "Whether symptom is seen or not",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean.nav:orElse(%frequency!='260413007')"
+    }
+  ]
+}

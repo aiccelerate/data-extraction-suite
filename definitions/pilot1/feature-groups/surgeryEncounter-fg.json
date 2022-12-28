@@ -1,0 +1,105 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
+  "name": "surgeryEncounter",
+  "title": "Surgery Encounter",
+  "description": "Represents the encounter for the surgery",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Encounter",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-SurgeryEncounter",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&type=http://snomed.info/sct|305408004",
+  "entities": {
+    "pid": "Patient",
+    "episodeId": "EpisodeOfCare"
+  },
+  "timestamp": "time",
+  "periodEnd": "endTime",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Encounter.subject"
+    },
+    {
+      "name": "time",
+      "title": "Encounter time ",
+      "description": "Encounter time (Patient enrollment time)",
+      "dataType": "dateTime",
+      "fhirPath": "Encounter.period.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Encounter end time ",
+      "description": "Encounter end time (Patient out of operation room)",
+      "dataType": "dateTime",
+      "fhirPath": "Encounter.period.end"
+    },
+    {
+      "name": "specialty",
+      "title": "Specialty of the performed surgery",
+      "description": "SNOMED-CT code for surgical specialty e.g. 394611003 -> Plastic surgery",
+      "dataType": "code",
+      "fhirPath": "Encounter.serviceType.coding.where(system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "priority",
+      "title": "Priority of surgery",
+      "description": "SNOMED-CT code for surgical priority e.g. 274075007 -> Elective surgery",
+      "dataType": "code",
+      "fhirPath": "Encounter.priority.coding.where(system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of this encounter",
+      "dataType": "id",
+      "fhirPath": "Encounter.id"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode of care identifier",
+      "description": "Unique identifier for the main episode (OperationEpisode) that this surgery takes place",
+      "dataType": "id",
+      "fhirPath": "Encounter.episodeOfCare"
+    },
+    {
+      "name": "location",
+      "title": "Operating room",
+      "description": "Unique id of the operating room that this operation takes place",
+      "dataType": "id",
+      "fhirPath": "Encounter.location.location"
+    },
+    {
+      "name": "surgeryPlanId",
+      "title": "Surgery plan identifier",
+      "description": "Id of the plan record that this surgery is based on ",
+      "dataType": "id",
+      "fhirPath": "Encounter.basedOn.reference"
+    },
+    {
+      "name": "isCancelled",
+      "title": "Whether operation is cancelled",
+      "description": "Whether operation is cancelled",
+      "dataType": "boolean",
+      "fhirPath": "Encounter.status = 'cancelled'"
+    },
+    {
+      "name": "cancellationReason",
+      "title": "Cancellation reason",
+      "description": "Reason for cancellation",
+      "dataType": "boolean",
+      "fhirPath": "Encounter.reasonCode.coding.code.first()"
+    },
+    {
+      "name": "duration",
+      "title": "Duration in operation room",
+      "description": "Duration in minutes between entry and exit to/from the operation room",
+      "dataType": "integer",
+      "fhirPath": "Encounter.length.value"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/condition",
+  "name": "condition",
+  "title": "Conditions (Diagnosis)",
+  "description": "Diagnosis for patient",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Condition",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-Condition",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "onsetDate",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Condition.subject"
+    },
+    {
+      "name": "onsetDate",
+      "title": "Condition onset date",
+      "description": "Condition onset date",
+      "dataType": "dateTime",
+      "fhirPath": "Condition.onsetDateTime.toDate()"
+    },
+    {
+      "name": "abatementDate",
+      "title": "Condition abatement date",
+      "description": "Condition abatement date",
+      "dataType": "dateTime",
+      "fhirPath": "Condition.abatementDateTime.toDate()"
+    },
+    {
+      "name": "icd10Code",
+      "title": "Condition code (ICD-10)",
+      "description": "ICD-10 code for the condition",
+      "dataType": "code",
+      "fhirPath": "Condition.code.coding.where(system='http://hl7.org/fhir/sid/icd-10').code.first()"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this diagnosis is done",
+      "dataType": "id",
+      "fhirPath": "Condition.encounter.reference"
+    }
+  ]
+}

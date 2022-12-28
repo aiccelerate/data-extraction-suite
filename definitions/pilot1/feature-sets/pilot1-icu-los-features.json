@@ -1,0 +1,174 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_icu_los",
+  "name": "pilot1_icu_los",
+  "title": "Feature set for AICCELERATE Pilot 1 for predicting Length of Stay in ICU after the surgery",
+  "description": "Feature set for AICCELERATE Pilot 1 for predicting Length of Stay in ICU after the surgery",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "feature-group",
+    "useEndTime": true
+  },
+  "featureGroup": [
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgery_encounter",
+      "feature": [
+        {
+          "name": "duration"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
+      "feature": [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "age",
+          "description": "Age of the patient at reference point",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgery_phase",
+      "feature": [
+        {
+          "name": "ccsCategory"
+        },
+        {
+          "name": "mainProcedureCode"
+        },
+        {
+          "name": "bodySite"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/anesthesia_phase",
+      "feature": [
+        {
+          "name": "anesthesiaType"
+        },
+        {
+          "name": "anesthesiaCode"
+        },
+        {
+          "name": "duration"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/other_procedure",
+      "filter": {
+        "name": "intubation",
+        "fhirPath": "isIntubationType"
+      },
+      "feature": [
+        {
+          "name": "code"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgical_wound_classification",
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/condition",
+      "feature": [
+        {
+          "name": "icd10Code",
+          "description": "Set of ICD-10 diagnosis for patients until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        },
+        {
+          "name": "icd10Code3Digits",
+          "description": "Set of ICD-10 diagnosis (First 3 digits) for patients until that time point",
+          "valueExpr": {
+            "fhirPath": "icd10Code.substring(0,3)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/medication_administered",
+      "join": {
+        "type": "past",
+        "duration": "15d"
+      },
+      "feature": [
+        {
+          "name": "atcCode",
+          "description": "Set of ATC codes for medications administered to patient before or during surgery",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        },
+        {
+          "name": "atcCodeWith4Digits",
+          "description": "Set of ATC codes (first 4 digits) for medications administered to patient before or during surgery",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/lab",
+      "join": {
+        "type": "past",
+        "duration": "15d"
+      },
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
+      "join": {
+        "type": "past",
+        "duration": "1d"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "temporalAgg": [
+            {
+              "lastN": 5,
+              "windowPeriod": "h",
+              "windowSize": 1,
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+  "name": "encounter",
+  "title": "Encounter (Hospital visits/stays)",
+  "description": "Represents the hospitilization encounters (e.g. ward stay, ICU stay) as well as practitioner visits within the pediatric palliative care workflow",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Encounter",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PediatricPalliativeCareEncounter",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "date",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Encounter.subject"
+    },
+    {
+      "name": "date",
+      "title": "Encounter date",
+      "description": "Encounter date",
+      "dataType": "date",
+      "fhirPath": "Encounter.period.start.toDate()"
+    },
+    {
+      "name": "category",
+      "title": "Category of encounter",
+      "description": "Category of encounter (AMB | IMP | VR | EMER | HH)",
+      "dataType": "code",
+      "fhirPath": "Encounter.class.code"
+    },
+    {
+      "name": "type",
+      "title": "Type of encounter",
+      "description": "Type of service given in the of encounter",
+      "dataType": "code",
+      "fhirPath": "Encounter.type.coding.where(system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "lengthOfStay",
+      "title": "Length of hospital stay",
+      "description": "For inpatient encounters, length of stay in terms of days",
+      "dataType": "integer",
+      "fhirPath": "utl:getPeriod(Encounter.period.start, Encounter.period.end, 'days')"
+    },
+    {
+      "name": "dischargeType",
+      "title": "Type of discharge at the end of encounter",
+      "description": "Type of discharge at the end of encounter",
+      "dataType": "code",
+      "fhirPath": "Encounter.hospitalization.dischargeDisposition.coding.where(system='http://terminology.hl7.org/CodeSystem/discharge-disposition').code.first()"
+    }
+  ]
+}

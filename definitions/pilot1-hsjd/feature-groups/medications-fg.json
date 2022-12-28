@@ -1,0 +1,218 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/medications",
+  "name": "medications",
+  "title": "Medication administrations",
+  "description": "Medication administrations within the hospital",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "MedicationAdministration",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationAdministration",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "pivot": {
+    "name": "atcCategory",
+    "description": "Categorization of the medication",
+    "values": [
+      {
+        "name":"metabolism",
+        "value": "A"
+      },
+      {
+        "name":"antithrombotic",
+        "value": "B01"
+      },
+      {
+        "name":"antihemorrhagics",
+        "value": "B02"
+      },
+      {
+        "name":"antianemic",
+        "value": "B03"
+      },
+      {
+        "name":"bloodSubstitutes",
+        "value": "B05"
+      },
+      {
+        "name":"cardiacTherapy",
+        "value": "C01"
+      },
+      {
+        "name":"antihypertensives",
+        "value": "C02"
+      },
+      {
+        "name":"diuretics",
+        "value": "C03"
+      },
+      {
+        "name":"vasoprotectives",
+        "value": "C05"
+      },
+      {
+        "name":"betaBlocking",
+        "value": "C07"
+      },
+      {
+        "name":"reninAngiotensin",
+        "value": "C09"
+      },
+      {
+        "name":"dermatologicals",
+        "value": "D"
+      },
+      {
+        "name":"urinarySex",
+        "value": "G"
+      },
+      {
+        "name":"pituitaryHypothalamic",
+        "value": "H01"
+      },
+      {
+        "name":"corticosteroids",
+        "value": "H02"
+      },
+      {
+        "name":"thyroid",
+        "value": "H03"
+      },
+      {
+        "name":"antibacterials",
+        "value": "J01"
+      },
+      {
+        "name":"antimycotics",
+        "value": "J02"
+      },
+      {
+        "name":"antimycobacterials",
+        "value": "J04"
+      },
+      {
+        "name":"antivirals",
+        "value": "J05"
+      },
+      {
+        "name":"immunoglobulins",
+        "value": "J06"
+      },
+      {
+        "name":"vaccines",
+        "value": "J07"
+      },
+      {
+        "name":"antiinflammatory",
+        "value": "M01"
+      },
+      {
+        "name":"muscleRelaxants",
+        "value": "M03"
+      },
+      {
+        "name":"antigout",
+        "value": "M04"
+      },
+      {
+        "name":"anesthetics",
+        "value": "N01"
+      },
+      {
+        "name":"analgesics",
+        "value": "N02"
+      },
+      {
+        "name":"antiepileptics",
+        "value": "N03"
+      },
+      {
+        "name":"psycholeptics",
+        "value": "N05"
+      },
+      {
+        "name":"psychoanaleptics",
+        "value": "N06"
+      },
+      {
+        "name":"otherNervousSystem",
+        "value": "N07"
+      },
+      {
+        "name":"anthelmintics",
+        "value": "P02"
+      },
+      {
+        "name":"obstructiveAirwayDiseases",
+        "value": "R03"
+      },
+      {
+        "name":"antihistamines",
+        "value": "R06"
+      },
+      {
+        "name":"sensoryOrgans",
+        "value": "S"
+      },
+      {
+        "name":"various",
+        "value": "V"
+      }
+    ]
+  },
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "MedicationAdministration.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time of assessment",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationAdministration.effectiveDateTime.nav:orElse(MedicationAdministration.effectivePeriod.start)"
+    },
+    {
+      "name": "atcCode",
+      "title": "Code for the medication",
+      "description": "ATC or RxNorm code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationAdministration.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').first().code"
+    },
+    {
+      "name": "atcCategory",
+      "title": "Category for the medication",
+      "description": "ATC category for the medication (generally first 3 digits, for some categories like D,S,V,G first digit)",
+      "dataType": "code",
+      "fhirPath": "MedicationAdministration.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').first().code.select(iif($this.exists($this.startsWith('D') or $this.startsWith('S') or $this.startsWith('V') or $this.startsWith('G') or $this.startsWith('A')), $this.substring(0,1), $this.substring(0,3)))"
+    },
+    {
+      "name": "dose",
+      "title": "Dose administered",
+      "description": "Dose administered",
+      "dataType": "decimal",
+      "fhirPath": "MedicationAdministration.dosage.dose.value"
+    },
+    {
+      "name": "doseUnit",
+      "title": "Unit for the dose",
+      "description": "Unit for the dose (UCUM code)",
+      "dataType": "code",
+      "fhirPath": "MedicationAdministration.dosage.dose.code"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode identifier",
+      "description": "Identifier of the surgery episode that this medication is given",
+      "dataType": "id",
+      "fhirPath": "MedicationAdministration.context.reference"
+    }
+  ]
+}

@@ -1,0 +1,729 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot3_p3",
+  "name": "pilot3_p3",
+  "title": "Feature set for AICCELERATE Pilot 3 - Part 3",
+  "description": "Feature set for AICCELERATE Pilot 3 - Part 3 - Optimisation of palliative and chronic paediatric service delivery and patient workflow for Cerebral Palsy patients",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "temporal-windows",
+    "period": "1mo"
+  },
+  "featureGroup": [
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
+      "feature": [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "age",
+          "description": "Age of the patient at reference point",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "homeAddressPostalCode"
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/condition",
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "icd10Code",
+          "description": "Set of ICD-10 diagnosis for patients until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "set"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "icd10Code3Digits",
+          "description": "Set of ICD-10 diagnosis (First 3 digits) for patients until that time point",
+          "valueExpr": {
+            "fhirPath": "icd10Code.substring(0,3)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "set"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasSevereKyphoscoliosis",
+          "description": "Whether patient has severe kyphoscoliosis or not until that time point. ICD-10 Codes: M41.*, G72.9, Q67.5, R69, Q76.49, Q67.5",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('M41') or (icd10Code.exists() and icd10Code.subsetOf('G72.9' | 'Q76.49' | 'Q67.5' | 'R69'))",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasHypotonia",
+          "description": "Whether patient has hypotonia or not until that time point. ICD-10 Codes: P94.2, P91.4, R27.9, G40.419",
+          "valueExpr": {
+            "fhirPath": "icd10Code.exists() and icd10Code.subsetOf('P94.2' | 'P91.4' | 'R27.9' | 'G40.419')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasChronicAspirativeSyndrom",
+          "description": "Whether patient has chronic aspirative syndrom or not until that time point. ICD-10 Codes: T17.81",
+          "valueExpr": {
+            "fhirPath": "icd10Code = 'T17.81'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasOsteoporosis",
+          "description": "Whether patient has Osteoporosis or not until that time point. ICD-10 Codes: M89.9",
+          "valueExpr": {
+            "fhirPath": "icd10Code = M89.9",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasIntellectualDisability",
+          "description": "Whether patient has intellectual disability or not until that time point. ICD-10 Codes: F73, F79, F78",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('F73') or icd10Code.startsWith('F79') or icd10Code.startsWith('F78')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasTracheostomy",
+          "description": "Whether patient has Tracheostomy until that time. ICD-10 Codes: Z93.0",
+          "valueExpr": {
+            "fhirPath": "icd10Code = 'Z93.0'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/condition",
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "hasGastroesophagealReflux",
+          "description": "Whether patient has Gastroesophageal reflux within last period. ICD-10 Codes: K21.9, K21, J69.9, J69.0, J69.8",
+          "valueExpr": {
+            "fhirPath": "icd10Code.exists() and icd10Code.subsetOf('K21.9' | 'K21' | 'J69.9' | 'J69.0' | 'J69.8')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasMalnutrition",
+          "description": "Whether patient has Malnutrition within last period. ICD-10 Codes: R13.10",
+          "valueExpr": {
+            "fhirPath": "icd10Code = 'R13.10'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasSialorrhea",
+          "description": "Whether patient has Sialorrhea within last period. ICD-10 Codes: K11.7",
+          "valueExpr": {
+            "fhirPath": "icd10Code = 'K11.7'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasIrritability",
+          "description": "Whether patient has Irritability within last period. ICD-10 Codes: R45",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('R45')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/condition",
+      "join": {
+        "type": "past",
+        "duration": "3mo"
+      },
+      "feature": [
+        {
+          "name": "hasEpilepsy",
+          "description": "Whether patient has Epilepsy within last period. ICD-10 Codes: G40.90",
+          "valueExpr": {
+            "fhirPath": "icd10Code = 'G40.90'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasPneumonia",
+          "description": "Whether patient has Pneumonia within last period. ICD-10 Codes: J12-J18",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('J1[2-8](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasInfluenza",
+          "description": "Whether patient has Influenza within last period. ICD-10 Codes: J09-J11",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('J09') or icd10Code.startsWith('J10') or icd10Code.startsWith('J11')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasLaryngitisOrAcuteTracheitis",
+          "description": "Whether patient has laryngitis or acute tracheitis within last period. ICD-10 Codes: J04, J05",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('J04') or icd10Code.startsWith('J05')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasLowerRespiratoryInfection",
+          "description": "Whether patient has Lower respiratory infection within last period. ICD-10 Codes: J20, J21, J22, J40, J41, J42, J44, J47, J69, J85, J98, J45.902",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('J20') or icd10Code.startsWith('J21') or icd10Code.startsWith('J22') or icd10Code.startsWith('J40') or icd10Code.startsWith('J41') or icd10Code.startsWith('J42') or icd10Code.startsWith('J44') or icd10Code.startsWith('J47') or icd10Code.startsWith('J69') or icd10Code.startsWith('J85') or icd10Code.startsWith('J98') or icd10Code = 'J45.902'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasOtherRespiratoryDiseases",
+          "description": "Whether patient has Other respiratory diseases within last period. ICD-10 Codes: J80, J90, J91, J93, J96",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('J80') or icd10Code.startsWith('J90') or icd10Code.startsWith('J91') or icd10Code.startsWith('J93') or icd10Code.startsWith('J96')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/procedure",
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "hasVDVP",
+          "description": "Whether patient has VDVP placed until that time point. Codes: 826, 827, 830, 1600",
+          "valueExpr": {
+            "fhirPath": "code = '826' or code='827' or code='830' or code='1600'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasBaclofenPump",
+          "description": "Whether patient has Baclofen pump placed until that time point. ICD-10-PCS Codes: 0JH80VZ, 00HU33Z",
+          "valueExpr": {
+            "fhirPath": "code='0JH80VZ' or code='00HU33Z'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasGastrostomy",
+          "description": "Whether patient has Gastrostomy until that time point. ICD-10-PCS Codes: 0DH60UZ, 0DH63UZ, 0DH64UZ",
+          "valueExpr": {
+            "fhirPath": "code = '0DH60UZ' or code='0DH63UZ' or code='0DH64UZ'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasLaparoscopicAntirefluxSurgery",
+          "description": "Whether patient has Laparoscopic antireflux surgery until that time point. ICD-10-PCS Codes: 0DV14ZZ, 0DV23ZZ, 0DV54ZZ",
+          "valueExpr": {
+            "fhirPath": "code = '0DV14ZZ' or code='0DV23ZZ' or code ='0DV54ZZ'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasNasogastricFeedingTube",
+          "description": "Whether patient has Nasogastric feeding tube until that time point. ICD-10 Codes: 0DH67UZ,  0DH68UZ, 0D9680Z",
+          "valueExpr": {
+            "fhirPath": "code='0DH67UZ' or code='0DH68UZ' or code='0D9680Z'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/procedure",
+      "join": {
+        "type": "past",
+        "duration": "3mo"
+      },
+      "feature": [
+        {
+          "name": "hasNonInvasiveVentilation",
+          "description": "Whether patient has non invasive respiratory ventilation within the last period. ICD-10-PCS Codes: 5A19054",
+          "valueExpr": {
+            "fhirPath": "code = '5A19054'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasInvasiveVentilation",
+          "description": "Whether patient has invasive respiratory ventilation within the last period. ICD-10-PCS Codes: 5A1935Z, 5A1945Z, 5A1955Z",
+          "valueExpr": {
+            "fhirPath": "code='5A1935Z' or code='5A1945Z' or code='5A1955Z'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasOxygenotherapy",
+          "description": "Whether patient has Oxygenotherapy within the last period. ICD-10-PCS Codes: 3E0F7SF",
+          "valueExpr": {
+            "fhirPath": "code='3E0F7SF'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "wk",
+              "windowSize": 1,
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "numOfDaysSedationPumpUsed",
+          "filter": {
+            "fhirPath": "code='462741000'"
+          },
+          "description": "Number of days sedation or analgesia pump is used at home",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/procedure",
+      "filter": {
+        "name": "gastrostomy"
+      },
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "ageProcedureApplied",
+          "temporalAgg": [
+            {
+              "aggOp": ["first"]
+            }
+          ]
+        },
+        {
+          "name": "numOfYearsSince",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(date, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/medication",
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "description": "Number of different medications used by the patient",
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "wk",
+              "windowSize": 1,
+              "aggOp": [
+                "count_distinct"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "join": {
+        "type": "past"
+      },
+      "filter": {
+        "name": "gmfcs",
+        "fhirPath": "code='707621005'"
+      },
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "pedsql",
+        "fhirPath": "code='pedsql'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "12mo"
+      },
+      "feature": [
+        {
+          "name": "value"
+        },
+        {
+          "name": "valueScaled"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "pqol",
+        "fhirPath": "code='pqol'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "value"
+        },
+        {
+          "name": "valueScaled"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "zarit",
+        "fhirPath": "code='zarit'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "value"
+        },
+        {
+          "name": "valueScaled"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "pain",
+        "fhirPath": "code='38215-0'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "value",
+           "temporalAgg": [
+             {
+               "aggOp": ["avg", "max", "min"]
+             }
+           ]
+        },
+        {
+          "name": "valueScaled",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "ramsay",
+        "fhirPath": "code='281400004'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        },
+        {
+          "name": "valueScaled",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "ramsay",
+        "fhirPath": "code='386554004' or code='443709007'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        },
+        {
+          "name": "valueScaled",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "dmec",
+        "fhirPath": "code='dme-c'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "value"
+        },
+        {
+          "name": "valueScaled"
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "filter": {
+        "name": "dmec",
+        "fhirPath": "code='dme-c'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": []
+    }
+  ]
+}

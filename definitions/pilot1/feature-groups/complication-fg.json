@@ -1,0 +1,55 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+  "name": "complication",
+  "title": "Complication",
+  "description": "Complication after surgery",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "AdverseEvent",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ComplicationAfterOperation",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}",
+  "entities": {
+    "pid": "Patient",
+    "episodeId": "EpisodeOfCare"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "AdverseEvent.subject"
+    },
+    {
+      "name": "time",
+      "title": "Time of complication",
+      "description": "Time of complication",
+      "dataType": "dateTime",
+      "fhirPath": "AdverseEvent.date"
+    },
+    {
+      "name": "code",
+      "title": "Code for the complication",
+      "description": "SNOMED-CT Code for the complication",
+      "dataType": "code",
+      "fhirPath": "AdverseEvent.event.coding.where(system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Unique identifier of the encounter that this complication occurs",
+      "dataType": "id",
+      "fhirPath": "AdverseEvent.encounter.reference"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode identifier",
+      "description": "Identifier of the surgery episode this phase is part of",
+      "dataType": "id",
+      "fhirPath": "AdverseEvent.extension('http://hl7.org/fhir/StructureDefinition/workflow-episodeOfCare').valueReference"
+    }
+  ]
+}

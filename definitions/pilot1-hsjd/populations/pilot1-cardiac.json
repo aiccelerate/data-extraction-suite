@@ -1,0 +1,28 @@
+{
+  "url": "https://aiccelerate.eu/cohorts/pilot1/cardiac_surgeries",
+  "name": "cardiac_surgeries",
+  "title": "Cardiac surgeries and patients",
+  "description": "Cardiac surgeries and patients",
+  "version": "0.1",
+  "date": "2022-04-21T00:00:00",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "entityType": ["Patient", "EpisodeOfCare"],
+  "eligibilityCriteria": [
+    {
+      "fhirSearch": "?type=http://snomed.info/sct|736770009&patient={{Patient}}",
+      "description": "Cardiac surgeries and patients",
+      "entities": ["EpisodeOfCare.patient"],
+      "exitTime": "EpisodeOfCare.period.end",
+      "filter": [
+        {
+          "resourceType": "Encounter",
+          "fhirSearch": "?status=finished&type=http://snomed.info/sct|305408004&patient={{Patient}}&episode-of-care={{EpisodeOfCare}}",
+          "entities": ["Encounter.subject", "Encounter.episodeOfCare"],
+          "condition": "Encounter.serviceType.coding.exists(system='http://snomed.info/sct' and code='394603008')",
+          "eventTime": "Encounter.period.end"
+        }
+      ]
+    }
+  ]
+}

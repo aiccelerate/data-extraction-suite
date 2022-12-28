@@ -1,0 +1,65 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
+  "name": "episodes",
+  "title": "Episode of Care for surgery",
+  "description": "Episode of Care for surgery",
+  "version": "0.1",
+  "date": "2022-12-15",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "EpisodeOfCare",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationEpisode",
+  "fhirSearch": "?patient={{Patient}}&_id={{EpisodeOfCare}}&_include=EpisodeOfCare:condition",
+  "entities": {
+    "pid": "Patient",
+    "episodeId": "EpisodeOfCare"
+  },
+  "timestamp": "time",
+  "periodEnd": "endTime",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "EpisodeOfCare.patient"
+    },
+    {
+      "name": "time",
+      "title": "Episode start time",
+      "description": "Episode start time",
+      "dataType": "dateTime",
+      "fhirPath": "EpisodeOfCare.period.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Episode end time ",
+      "description": "Episode end time (Patient discharge)",
+      "dataType": "dateTime",
+      "fhirPath": "EpisodeOfCare.period.end"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode of care identifier",
+      "description": "Unique identifier for the main episode (OperationEpisode)",
+      "dataType": "id",
+      "fhirPath": "EpisodeOfCare.id"
+    },
+    {
+      "name": "preOpDiagnoses",
+      "title": "Pre operative diagnosis for the episode",
+      "description": "Pre operative diagnosis for the episode",
+      "dataType": "code",
+      "isArray": true,
+      "fhirPath": "EpisodeOfCare.diagnosis.where(role.coding.exists(code='pre-op')).select(condition.resolve().code.coding.where(system='http://hl7.org/fhir/sid/icd-10').first().code).distinct()"
+    },
+    {
+      "name": "comorbidityDiagnoses",
+      "title": "Pre operative diagnosis for the episode",
+      "description": "Pre operative diagnosis for the episode",
+      "dataType": "code",
+      "isArray": true,
+      "fhirPath": "EpisodeOfCare.diagnosis.where(role.coding.exists(code='CM')).select(condition.resolve().code.coding.where(system='http://hl7.org/fhir/sid/icd-10').first().code).distinct()"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/surgeries",
+  "name": "surgeries",
+  "title": "Surgery Phase Details",
+  "description": "Information about the surgical procedure performed",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-SurgeryPhaseDetails",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&category=http://snomed.info/sct|387713003",
+  "entities": {
+    "pid": "Patient",
+    "episodeId": "EpisodeOfCare"
+  },
+  "timestamp": "startTime",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "startTime",
+      "title": "Start time for surgery phase",
+      "description": "Start time for surgery phase",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "endTime",
+      "title": "End time for surgery phase",
+      "description": "End time for surgery phase",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.end"
+    },
+    {
+      "name": "ccsCategory",
+      "title": "Surgical category",
+      "description": "Category of the operation in terms of Clinical Classifications Software (CCS) for ICD-10-PCS. ",
+      "dataType": "code",
+      "fhirPath": "Procedure.category.coding.where(system='http://hl7.org/fhir/sid/ex-icd-10-procedures-ccs').first().code"
+    },
+    {
+      "name": "mainProcedureCode",
+      "title": "Code for performed surgical procedure",
+      "description": "Code for the main procedure for the operation",
+      "dataType": "code",
+      "fhirPath": "Procedure.code.coding.where(system='http://hl7.org/fhir/sid/ex-icd-10-procedures').first().code"
+    },
+    {
+      "name": "surgeons",
+      "title": "Surgeons participated to the surgery",
+      "description": "Identifier of the surgeons participated to the surgery",
+      "dataType": "id",
+      "isArray": true,
+      "fhirPath": "Procedure.performer.where(function.code.coding.exists(system='http://snomed.info/sct' and code='304292004')).actor"
+    },
+    {
+      "name": "nurses",
+      "title": "Nurses who takes in the surgery",
+      "description": "Identifier of nurses who takes in the surgery",
+      "dataType": "id",
+      "isArray": true,
+      "fhirPath": "Procedure.performer.where(function.code.coding.exists(system='http://snomed.info/sct' and code='224561008')).actor"
+    },
+    {
+      "name": "bodySite",
+      "title": "Site of the surgery",
+      "description": "Site of the surgery (left | right | both)",
+      "dataType": "code",
+      "fhirPath": "Procedure.bodySite.coding.where(system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the surgery encounter this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.encounter.reference"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode identifier",
+      "description": "Identifier of the surgery episode this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.extension('http://hl7.org/fhir/StructureDefinition/workflow-episodeOfCare').valueReference"
+    },
+    {
+      "name": "duration",
+      "title": "Duration of surgical phase",
+      "description": "Duration of surgical phase in minutes",
+      "dataType": "integer",
+      "fhirPath": "utl:getDurationAsQuantityObject(Procedure.performedPeriod.start, Procedure.performedPeriod.end).value"
+    }
+  ]
+}
