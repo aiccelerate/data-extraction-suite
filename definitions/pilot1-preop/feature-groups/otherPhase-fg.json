@@ -1,0 +1,69 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/otherPhase",
+  "name": "otherPhase",
+  "title": "Details of other phase of surgery",
+  "description": "Information about the other phase (enrollment, transport, cleaning)",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationPhaseDetails",
+  "fhirSearch": "?patient={{Patient}}&category=http://snomed.info/sct|1889001,http://snomed.info/sct|441869008,http://snomed.info/sct|305408004",
+  "entities": {
+    "pid": "Patient",
+    "episodeId": "EpisodeOfCare"
+  },
+  "timestamp": "startTime",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "startTime",
+      "title": "Time when a patient is called for surgery",
+      "description": "Time when a patient is called for surgery",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Time when a patient arrives at the operation room",
+      "description": "Time when a patient arrives at the operation room",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.end"
+    },
+    {
+      "name": "phase",
+      "title": "Surgery phase code",
+      "description": "Surgery phase code",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.category.coding.where(system='http://snomed.info/sct').code"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the surgery encounter this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.encounter.reference"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode identifier",
+      "description": "Identifier of the surgery episode this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.extension('http://hl7.org/fhir/StructureDefinition/workflow-episodeOfCare').valueReference"
+    },
+    {
+      "name": "duration",
+      "title": "Duration of transport phase",
+      "description": "Duration of transport phase in minutes",
+      "dataType": "integer",
+      "fhirPath": "utl:getPeriod(Procedure.performedPeriod.start, Procedure.performedPeriod.end,'min').toInteger()"
+    }
+  ]
+}

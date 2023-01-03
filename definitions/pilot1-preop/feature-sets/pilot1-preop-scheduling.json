@@ -1,0 +1,2092 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_preop_scheduling",
+  "name": "pilot1_preop_scheduling",
+  "title": "Feature set for AICCELERATE Pilot 1 for predicting duration of surgery and its phases as well as length of stays",
+  "description": "Feature set for AICCELERATE Pilot 1 for predicting duration of surgery and its phases as well as length of stays",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "feature-group"
+  },
+  "featureGroup": [
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
+      "feature": [
+        {
+          "name": "specialty"
+        },
+        {
+          "name": "isElective",
+          "description": "Whether surgery is elective",
+          "valueExpr": {
+            "fhirPath": "priority='274075007'",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "duration"
+        },
+        {
+          "name": "location"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/patient",
+      "feature": [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "age",
+          "description": "Age of the patient at that time",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
+      "feature": [
+        {
+          "name": "leadTime",
+          "description": "Length of days until the surgery",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(time, %referenceTimePoint,'d').toInteger()",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "preOpDiagnoses"
+        },
+        {
+          "name": "preOpDiagnoses3Digits",
+          "description": "Set of 3 digit ICD-10 codes for pre-operative diagnoses",
+          "valueExpr": {
+            "fhirPath": "preOpDiagnoses.select($this.substring(0,3))",
+            "dataType": "code",
+            "isArray": true
+          }
+        },
+        {
+          "name": "comorbidityDiagnoses"
+        },
+        {
+          "name": "comorbidityDiagnoses3Digits",
+          "description": "Set of 3 digit ICD-10 codes for comorbidity diagnoses",
+          "valueExpr": {
+            "fhirPath": "comorbidityDiagnoses.select($this.substring(0,3))",
+            "dataType": "code",
+            "isArray": true
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/condition",
+      "filter": {
+        "name": "diagnosis",
+        "fhirPath": "isPatientReported.not()"
+      },
+      "feature": [
+        {
+          "name": "icd10Code",
+          "description": "Set of ICD-10 diagnosis for patients until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        },
+        {
+          "name": "icd10Code3Digits",
+          "description": "Set of ICD-10 diagnosis (first 3 digits) for patients until that time point",
+          "valueExpr": {
+            "fhirPath": "icd10Code.substring(0,3)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        },
+        {
+          "name": "cardiovascular",
+          "description": "Whether patient has been diagnosed with cardiovascular disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "valvular",
+          "description": "Whether patient has been diagnosed with valvular heart disease",
+          "valueExpr": {
+            "fhirPath": "code.matches('I0[5-9](\\..*)?') or code.matches('I3[4-7](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hypertension",
+          "description": "Whether patient has reported hypertension disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I10')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "infarction",
+          "description": "Whether patient has been diagnosed with Myocardial infarction",
+          "valueExpr": {
+            "fhirPath": "code.matches('I2[1-3](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "coronaryArtery",
+          "description": "Whether patient has been diagnosed with coronary artery disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I25')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cardiacInsufficiency",
+          "description": "Whether patient has been diagnosed with cardiac insufficiency",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I50')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "arrhythmia",
+          "description": "Whether patient has been diagnosed with cardiac arrhythmia",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I4')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "congenitalHeartDefect",
+          "description": "Whether patient has been diagnosed with congenital heart defect",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('Q24')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "peripheralVascular",
+          "description": "Whether patient has been diagnosed with circulation diseases in lower extremities",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I99')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "liver",
+          "description": "Whether patient has been diagnosed with liver disease",
+          "valueExpr": {
+            "fhirPath": "code.matches('K7[0-7](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hepaticInsufficiency",
+          "description": "Whether patient has been diagnosed with hepatic insufficiency",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('K72')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "respiratory",
+          "description": "Whether patient has been diagnosed with respiratory disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('J')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "asthma",
+          "description": "Whether patient has been diagnosed with asthma disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('J45')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "copd",
+          "description": "Whether patient has been diagnosed with chronic obstructive pulmonary disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('J44')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "otherLung",
+          "description": "Whether patient has been diagnosed with other lung disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('J98.4')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "homeOxygenTherapy",
+          "description": "Whether patient has been diagnosed with receiving oxygen therapy at home",
+          "valueExpr": {
+            "fhirPath": "code='Z99.81'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "kidney",
+          "description": "Whether patient has been diagnosed with kidney disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('N18')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "renalInsufficiency",
+          "description": "Whether patient has been diagnosed with renal insufficiency",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('N19')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hemodialysis",
+          "description": "Whether patient has been diagnosed with dependency on hemodialysis",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('Z49')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "neurologic",
+          "description": "Whether patient has been diagnosed with neurologic disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('G')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "stroke",
+          "description": "Whether patient has been diagnosed with stroke",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I63')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cerebralHemorrhage",
+          "description": "Whether patient has been diagnosed with cerebral hemorrhage",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I61')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cerebrovascular",
+          "description": "Whether patient has been diagnosed with cerebrovascular disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('I68')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "epilepsy",
+          "description": "Whether patient has been diagnosed with epilepsy disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('G40')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "memoryDisorder",
+          "description": "Whether patient has been diagnosed with memory disorder",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('F06.7')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "multipleSclerosis",
+          "description": "Whether patient has been diagnosed with multiple sclerosis",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('G35')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "parkinson",
+          "description": "Whether patient has been diagnosed with parkinson",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('G20')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "myopathy",
+          "description": "Whether patient has been diagnosed with myopathy",
+          "valueExpr": {
+            "fhirPath": "code.matches('G7[0-3](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "diabetes",
+          "description": "Whether patient has been diagnosed with diabetes",
+          "valueExpr": {
+            "fhirPath": "code.matches('E1[0-4](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "rheumatic",
+          "description": "Whether patient has been diagnosed with rheumatic disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('M79.0')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "fibromyalgia",
+          "description": "Whether patient has been diagnosed with fibromyalgia disease",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('M79.7')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cancer",
+          "description": "Whether patient has been diagnosed with cancer disease",
+          "valueExpr": {
+            "fhirPath": "code.matches('C[0-8][0-9](\\..*)?') or code.matches('C9[0-7](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "thyroid",
+          "description": "Whether patient has been diagnosed with thyroid disease",
+          "valueExpr": {
+            "fhirPath": "code.matches('E0[0-7](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hypothyroidism",
+          "description": "Whether patient has been diagnosed with hypothyroidism",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('E03')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hyperthyroidism",
+          "description": "Whether patient has been diagnosed with hyperthyroidism",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('E05')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "intestinal",
+          "description": "Whether patient has been diagnosed with intestinal",
+          "valueExpr": {
+            "fhirPath": "code.matches('K[0-8][0-9](\\..*)?') or code.matches('K9[0-3](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "ibd",
+          "description": "Whether patient has been diagnosed with inflammatory bowel disease",
+          "valueExpr": {
+            "fhirPath": "code.matches('K5[0-2](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "ostomy",
+          "description": "Whether patient has specified receiving any ostomy procedure",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('Z93')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "migraine",
+          "description": "Whether patient has been diagnosed with any migraine or headache",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('G43')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "bloodDisorder",
+          "description": "Whether patient has been diagnosed with any blood disorder",
+          "valueExpr": {
+            "fhirPath": "code.matches('D[5-8][0-9](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "leukemia",
+          "description": "Whether patient has been diagnosed with any leukemia",
+          "valueExpr": {
+            "fhirPath": "code.matches('C9[1-5](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "anemia",
+          "description": "Whether patient has been diagnosed with any anemia",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('D50')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/condition",
+      "filter": {
+        "name": "reported",
+        "fhirPath": "isPatientReported"
+      },
+      "feature": [
+        {
+          "name": "cardiovascular",
+          "description": "Whether patient has reported cardiovascular disease",
+          "valueExpr": {
+            "fhirPath": "code='49601007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "valvular",
+          "description": "Whether patient has reported valvular heart disease",
+          "valueExpr": {
+            "fhirPath": "code='368009'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hypertension",
+          "description": "Whether patient has reported hypertension disease",
+          "valueExpr": {
+            "fhirPath": "code='38341003'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "infarction",
+          "description": "Whether patient has reported Myocardial infarction",
+          "valueExpr": {
+            "fhirPath": "code='22298006'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "coronaryArtery",
+          "description": "Whether patient has reported coronary artery disease",
+          "valueExpr": {
+            "fhirPath": "code='53741008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cardiacInsufficiency",
+          "description": "Whether patient has reported cardiac insufficiency",
+          "valueExpr": {
+            "fhirPath": "code='84114007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "arrhythmia",
+          "description": "Whether patient has reported cardiac arrhythmia",
+          "valueExpr": {
+            "fhirPath": "code='698247007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "congenitalHeartDefect",
+          "description": "Whether patient has reported congenital heart defect",
+          "valueExpr": {
+            "fhirPath": "code='13213009'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "peripheralVascular",
+          "description": "Whether patient has reported circulation diseases in lower extremities",
+          "valueExpr": {
+            "fhirPath": "code='400047006'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "liver",
+          "description": "Whether patient has reported liver disease",
+          "valueExpr": {
+            "fhirPath": "code='235856003'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hepaticInsufficiency",
+          "description": "Whether patient has reported hepatic insufficiency",
+          "valueExpr": {
+            "fhirPath": "code='59927004'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "lung",
+          "description": "Whether patient has reported lung disease",
+          "valueExpr": {
+            "fhirPath": "code='19829001'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "asthma",
+          "description": "Whether patient has reported asthma disease",
+          "valueExpr": {
+            "fhirPath": "code='195967001'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "copd",
+          "description": "Whether patient has reported chronic obstructive pulmonary disease",
+          "valueExpr": {
+            "fhirPath": "code='13645005'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "otherLung",
+          "description": "Whether patient has reported other lung disease",
+          "valueExpr": {
+            "fhirPath": "code='19829001+74964007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "homeOxygenTherapy",
+          "description": "Whether patient has reported receiving oxygen therapy at home",
+          "valueExpr": {
+            "fhirPath": "code='426990007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "kidney",
+          "description": "Whether patient has reported kidney disease",
+          "valueExpr": {
+            "fhirPath": "code='90708001'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "renalInsufficiency",
+          "description": "Whether patient has reported renal insufficiency",
+          "valueExpr": {
+            "fhirPath": "code='723188008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hemodialysis",
+          "description": "Whether patient has reported hemodialysis condition",
+          "valueExpr": {
+            "fhirPath": "code='331000124109'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "neurologic",
+          "description": "Whether patient has reported neurologic disease",
+          "valueExpr": {
+            "fhirPath": "code='118940003'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "stroke",
+          "description": "Whether patient has reported stroke",
+          "valueExpr": {
+            "fhirPath": "code='230690007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cerebralHemorrhage",
+          "description": "Whether patient has reported cerebral hemorrhage",
+          "valueExpr": {
+            "fhirPath": "code='274100004'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cerebrovascular",
+          "description": "Whether patient has reported cerebrovascular disease",
+          "valueExpr": {
+            "fhirPath": "code='62914000'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "epilepsy",
+          "description": "Whether patient has reported epilepsy disease",
+          "valueExpr": {
+            "fhirPath": "code='84757009'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "memoryDisorder",
+          "description": "Whether patient has reported memory disorder",
+          "valueExpr": {
+            "fhirPath": "code='386807006'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "multipleSclerosis",
+          "description": "Whether patient has reported multiple sclerosis",
+          "valueExpr": {
+            "fhirPath": "code='24700007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "parkinson",
+          "description": "Whether patient has reported parkinson",
+          "valueExpr": {
+            "fhirPath": "code='49049000'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "myopathy",
+          "description": "Whether patient has reported myopathy",
+          "valueExpr": {
+            "fhirPath": "code='129565002'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "diabetes",
+          "description": "Whether patient has reported diabetes",
+          "valueExpr": {
+            "fhirPath": "code='73211009'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "diabetesWithDietTherapy",
+          "description": "Whether patient has reported diabetes with diet therapy",
+          "valueExpr": {
+            "fhirPath": "code='170745003'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "diabetesWithMedicationTherapy",
+          "description": "Whether patient has reported diabetes with oral medication therapy",
+          "valueExpr": {
+            "fhirPath": "code='170746002'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "diabetesWithInsulinTherapy",
+          "description": "Whether patient has reported diabetes with insulin therapy",
+          "valueExpr": {
+            "fhirPath": "code='170747006'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "rheumatic",
+          "description": "Whether patient has reported rheumatic disease",
+          "valueExpr": {
+            "fhirPath": "code='69896004'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "fibromyalgia",
+          "description": "Whether patient has reported fibromyalgia disease",
+          "valueExpr": {
+            "fhirPath": "code='203082005'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "cancer",
+          "description": "Whether patient has reported cancer disease",
+          "valueExpr": {
+            "fhirPath": "code='363346000'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "thyroid",
+          "description": "Whether patient has reported thyroid disease",
+          "valueExpr": {
+            "fhirPath": "code='14304000'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hypothyroidism",
+          "description": "Whether patient has reported hypothyroidism",
+          "valueExpr": {
+            "fhirPath": "code='40930008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hyperthyroidism",
+          "description": "Whether patient has reported hyperthyroidism",
+          "valueExpr": {
+            "fhirPath": "code='34486009'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "intestinal",
+          "description": "Whether patient has reported intestinal",
+          "valueExpr": {
+            "fhirPath": "code='85919009'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "ibd",
+          "description": "Whether patient has reported inflammatory bowel disease",
+          "valueExpr": {
+            "fhirPath": "code='24526004'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "ostomy",
+          "description": "Whether patient has reported any ostomy procedure",
+          "valueExpr": {
+            "fhirPath": "code='170903008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "migraine",
+          "description": "Whether patient has reported any migraine or headache",
+          "valueExpr": {
+            "fhirPath": "code='128187005'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "bloodDisorder",
+          "description": "Whether patient has reported any blood disorder",
+          "valueExpr": {
+            "fhirPath": "code='414022008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "leukemia",
+          "description": "Whether patient has reported any leukemia",
+          "valueExpr": {
+            "fhirPath": "code='93143009'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "anemia",
+          "description": "Whether patient has reported any anemia",
+          "valueExpr": {
+            "fhirPath": "code='271737000'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "thrombocytopenic",
+          "description": "Whether patient has reported any Thrombocytopenic disorder",
+          "valueExpr": {
+            "fhirPath": "code='302215000'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "bleedingTendency",
+          "description": "Whether patient has reported any Thrombocytopenic disorder",
+          "valueExpr": {
+            "fhirPath": "code='64779008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "bleedingSensitivity",
+          "description": "Whether patient has reported usually more sensitive to bleeding wounds",
+          "valueExpr": {
+            "fhirPath": "code='366219004'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "venousThrombosis",
+          "description": "Whether patient has reported venous thrombosis disorder",
+          "valueExpr": {
+            "fhirPath": "code='111293003'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "pulmanoryEmbolism",
+          "description": "Whether patient has reported Pulmanory Embolism",
+          "valueExpr": {
+            "fhirPath": "code='59282003'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/urgencyClassification",
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/bloodGroup",
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/asaClassification",
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/pregnancyStatus",
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/healthBehavior",
+      "join": {
+        "type": "past",
+        "duration": "3mo"
+      },
+      "pivot": {
+        "name": "code",
+        "description": "Health behaviours included in this dataset",
+        "values": [
+          {
+            "name":"smoking",
+            "value": "72166-2"
+          },
+          {
+            "name":"nicotin",
+            "value": "88031-0"
+          },
+          {
+            "name":"alcohol",
+            "value": "11331-6"
+          },
+          {
+            "name":"illicitDrug",
+            "value": "11343-1"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "frequency"
+        },
+        {
+          "name": "current",
+          "valueExpr": {
+            "fhirPath": "frequency='449868002' or frequency='428041000124106' or frequency='428071000124103' or frequency='428061000124105' or frequency='LA28391-3' or frequency='LA28392-1'",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "former",
+          "valueExpr": {
+            "fhirPath": "frequency='8517006' or frequency='77176002' or frequency='LA28393-9'",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "never",
+          "valueExpr": {
+            "fhirPath": "frequency='266919005' or frequency='LA4519-0'",
+            "dataType": "boolean"
+          }
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/operationFlag",
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "isDcs",
+          "description": "Is day case surgery",
+          "valueExpr": {
+            "fhirPath": "code='day-case-surgery'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasSomeoneToPickup",
+          "description": "Day surgery: patient has an adult relative or other friend who will pick him/her up from the hospital",
+          "valueExpr": {
+            "fhirPath": "code='has-relative-to-pick'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasAdultFollowUp",
+          "description": "Day surgery: patient has adult follow-up until the next morning",
+          "valueExpr": {
+            "fhirPath": "code='has-adult-follow-up'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasForeignObject",
+          "description": "Whether patient has foreign objects in his/her body like piercing, tattoo, dental prothesis, denture or pivot tooth",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('737286006' | '879862001' | '341000119102' | '366248005')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasAbroadHosp",
+          "description": "Whether patient has hospitalization abroad over the past year",
+          "valueExpr": {
+            "fhirPath": "code='hospitilized-abroad'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "isBreastfeeding",
+          "description": "Whether patient is breastfeeding",
+          "valueExpr": {
+            "fhirPath": "code='169741004'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasAntibioticOrAnticoagulantTherapy",
+          "description": "Whether patient is receiving antibiotic, anticoagulant, anticoagulant prophylaxis medication therapy before surgery",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('281789004' | '421728001' | '182764009')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasSpecialDrugTherapy",
+          "description": "Whether patient has specific drug therapy before surgery",
+          "valueExpr": {
+            "fhirPath": "code = '416608005'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasDependentInAdl",
+          "description": "Whether patient is dependent to someone in activities of daily living (existence of falls, mobility, washing, toilet, dressing dependence, etc)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('129839007' | '710803000' | '433035000' | '313420001' | '704444008')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "isAmbulationRestricted",
+          "description": "Whether patient ambulation restrictions",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('8510008:42752001=29857009' | '8510008:42752001=10601006' | '8510008:42752001=267036007' | '8510008:42752001=238131007' | '8510008:42752001=44695005' | '8510008:42752001=404684003' | 'reduced-mobility-u100' | 'reduced-mobility-u1000' | 'reduced-mobility-o1000')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "needAidsWhileWalking",
+          "description": "Whether patient aids or appliances like cructh, rollator, wheelchain, other while walking",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('443663000' | '165255004' | '225612007' | '365112008')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "impairedSensory",
+          "description": "Whether patient has impaired sensory function or communication (e.g. deaf, impaired hearing, speech comphrehension/production, visual handicap, etc) ",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('232325008' | '343087000' | '112089001' | '267095009' | '95677002')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/preoperativeRiskFactor",
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "hasDrugAllergy",
+          "description": "Whether patient has medication or drug allergies (adverse drug reaction, Hemolytic anemia, skin reaction, etc",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('62014003' | '81711008' | '62014003+366667001' | '609328004') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasRiskyDiseaseOrTreatment",
+          "description": "Whether patient has a disease or treatment that is a risk for surgery (e.g. rare diseases, tendency for trombosis, disorder of coagulation, immune deficiency, other)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('439127006' | '64779008' | '234532001' | 'rare-disease' | '281694009') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasRiskForBloodProducts",
+          "description": "Whether patient has matters to be considered in the administration of blood products (e.g. Finding of blood group antibody titer, blood transfusion finding)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('365646008' | '250373003') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasSpecialTreatments",
+          "description": "Whether patient has treatments requiring special attention",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('attention-medication' | 'attention-treatment') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasTransplantsOrArtificialMaterials",
+          "description": "Whether patient has any transplants or artificial materials in his/her body (e.g.  transplant organ, pacemaker, defibrillator, other electronic, prosthetic heart valve, stents, occlusion devices, prothesis, implants, catheter, electrodes, other foreign objects)   )",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('737294004' | '441509002' | '397578001' | '737277001' | '408708000' | '722810000' | '1156073005' | '16470007' | '303274001') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasMicrobeTransmissionRisk",
+          "description": "Whether patient has risk of microbe transmission (e.g. airborne, droplet, touch, carrier state, exposure requiring secretion/excretion)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('416380006' | '461551000124100' | '420193003' | '24800002' | '444107005') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasTreatmentLimitation",
+          "description": "Whether patient has treatment limitations or deviations (due to patients' living will, treatment restrictions, deviations on vaccination)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('182890002' | 'restriction-treatment' | '1002253002') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasBehavioralRisk",
+          "description": "Whether patient has behavioral risk (e.g. Violence, intoxicant addiction, other)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('182890002' | 'restriction-treatment' | '1002253002') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasOtherRisk",
+          "description": "Whether patient has other risks (e.g. abnormal anatomy, dialysis therapy, family history thrombosis, communication problems)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('118956008' | '385971003' | '737350008' | '310247005') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasAdverseReactionDuringPreviousAnesthesia",
+          "description": "Whether patient experience adverse reaction in previous anesthesia (e.g. integrity of skin, difficulty in breathing tube insertion, nausea, prolonged postoperative pain, family history of anesthetic adverse reactionss)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('366667001:255234002=399097000' | '718446005' | '422587007:255234002=387713003' | '107401000119105' | '57177007:246090004=419914000') and hasRisk",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/preoperativeSymptom",
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "hasChestPain",
+          "description": "Whether patient has chest pain before surgery (at rest, walking, hard exercises)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('29857009' | '81953000' | '29857009+426899007' | '9267009') and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasSleepDisorder",
+          "description": "Whether patient has sleep related problem (snoring, sleep disorder, breathing difficulties during sleep, sleep apnea, sleep apnea during CPAP)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('39898005' | '111489007' | '72863001' | '73430006' | '73430006:371881003=229308003') and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasBreathingProblem",
+          "description": "Whether patient has breathing problems/dyspnea (at rest, during exercise, during infection)",
+          "valueExpr": {
+            "fhirPath": "code.subsetOf('267036007' | '60845006' | '267036007:371881003=870595007' | '161941007' | '267036007:371881003=40733004') and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasSecretoryDisturbance",
+          "description": "Whether patient has secretory disturbance",
+          "valueExpr": {
+            "fhirPath": "code='59140005' and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasObstructedDefecation",
+          "description": "Whether patient has difficulty in ability to defecate",
+          "valueExpr": {
+            "fhirPath": "code='300378004' and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasMicturitionDisturbance",
+          "description": "Whether patient has difficulty passing urine",
+          "valueExpr": {
+            "fhirPath": "code='102835006' and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasNasalDischarge",
+          "description": "Whether patient has rhinorrhoea/cough/mucosity",
+          "valueExpr": {
+            "fhirPath": "code='64531003' and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hasEndocarditisProphylaxis",
+          "description": "Whether patient has  prophylaxis against infective endocarditis",
+          "valueExpr": {
+            "fhirPath": "code='426931009' and isExist",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgery",
+      "feature": [
+        {
+          "name": "mainProcedureCode"
+        },
+        {
+          "name": "mainProcedure2Digits",
+          "valueExpr": {
+            "fhirPath": "mainProcedureCode.substring(0,2)",
+            "dataType": "code"
+          }
+        },
+        {
+          "name": "mainProcedure3Digits",
+          "valueExpr": {
+            "fhirPath": "mainProcedureCode.substring(0,3)",
+            "dataType": "code"
+          }
+        },
+        {
+          "name": "duration"
+        },
+        {
+          "name": "primarySurgeon",
+          "valueExpr": {
+            "fhirPath": "surgeons.first()",
+            "dataType": "code"
+          }
+        },
+        {
+          "name": "numOfSurgeons",
+          "valueExpr": {
+            "fhirPath": "surgeons.count()",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "numOfNurses",
+          "valueExpr": {
+            "fhirPath": "nurses.count()",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/anesthesiaPhase",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "anesthesiaType"
+        },
+        {
+          "name": "anesthesiaCode"
+        },
+        {
+          "name": "duration"
+        },
+        {
+          "name": "anesthesiologist"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/otherPhase",
+      "join": {
+        "type": "future"
+      },
+      "pivot": {
+        "name": "phase",
+        "description": "Other phases of surgery",
+        "values": [
+          {
+            "name": "enrollment",
+            "description": "Period between enrollement to calling to surgery",
+            "value": "305408004"
+          },
+          {
+            "name": "transport",
+            "description": "Period between calling to patient arrives at operating room",
+            "value": "1889001"
+          },
+          {
+            "name": "cleaning",
+            "description": "Cleaning of surgery room",
+            "value": "441869008"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "duration"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/otherProcedure",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "intubation",
+        "fhirPath": "isIntubationType"
+      },
+      "feature": [
+        {
+          "name": "code"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/otherProcedure",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "intubation",
+        "fhirPath": "isIntubationType.not()"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "description": "Set of NOMESCO codes for other surgical procedures as well as the number of them",
+          "temporalAgg": [
+            {
+              "aggOp": ["set", "count"]
+            }
+          ]
+        },
+        {
+          "name": "code2Digits",
+          "description": "Set of other surgical procedures with 2 digits NOMESCO codes",
+          "valueExpr": {
+            "fhirPath": "code.substring(0,2)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        },
+        {
+          "name": "code3Digits",
+          "description": "Set of other surgical procedures with 3 digits NOMESCO codes",
+          "valueExpr": {
+            "fhirPath": "code.substring(0,3)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/encounter",
+      "join": {
+        "type": "future"
+      },
+      "pivot": {
+        "name": "encounterType",
+        "description": "Type of the encounter",
+        "values": [
+          {
+            "name": "wardStay",
+            "description": "Patient staying at ward",
+            "value": "305354007"
+          },
+          {
+            "name": "icuStay",
+            "description": "Patient staying at ICU",
+            "value": "305351004"
+          },
+          {
+            "name": "pacuStay",
+            "description": "Patient staying at PACU",
+            "value": "398068008"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "duration",
+          "description": "Total duration of stay at specific location until discharge",
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "los",
+          "description": "Length of total stay in hospital (number of days) after surgery",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, endTime,'d').toInteger()",
+            "dataType": "integer"
+          }
+        }
+      ]
+    }
+  ]
+}

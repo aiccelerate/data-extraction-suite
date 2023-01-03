@@ -1,0 +1,83 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/preoperativeRiskFactor",
+  "name": "preoperativeRiskFactor",
+  "title": "Preoperative Risk Factor",
+  "description": "Repesents a risk factor evaluated before operation e.g. tendency for thrombosis",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PreoperativeRiskFactor",
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/preoperative-risk-factors",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startTime",
+  "periodEnd": "endTime",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "startTime",
+      "title": "Start time for the risk",
+      "description": "Start time for the risk",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectivePeriod.start"
+    },
+    {
+      "name": "endTime",
+      "title": "End time of the risk if it is no longer valid",
+      "description": "End time of the risk if it is no longer valid",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectivePeriod.end"
+    },
+    {
+      "name": "code",
+      "title": "The type of risk",
+      "description": "Code indicating the type of the risk",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/preoperative-risk-factors').first().code"
+    },
+    {
+      "name": "hasRisk",
+      "title": "Patient has the risk",
+      "description": "Whether patient has the risk or not.",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean"
+    },
+    {
+      "name": "isCritical",
+      "title": "If risk is critical",
+      "description": "If risk is critical or not",
+      "dataType": "boolean",
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://snomed.info/sct' and code='246112005')).valueBoolean"
+    },
+    {
+      "name": "isPermanent",
+      "title": "If risk is permanent",
+      "description": "If risk is permanent or not",
+      "dataType": "boolean",
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://snomed.info/sct' and code='260868000')).valueBoolean"
+    },
+    {
+      "name": "certainty",
+      "title": "Certainty of risk",
+      "description": "Certainty of risk",
+      "dataType": "code",
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://snomed.info/sct' and code='246103008')).valueCodeableConcept.coding.code.first()"
+    },
+    {
+      "name": "encounterId",
+      "title": "Encounter identifier",
+      "description": "Identifier of the encounter that this assessment is done",
+      "dataType": "id",
+      "fhirPath": "Observation.encounter.reference"
+    }
+  ]
+}

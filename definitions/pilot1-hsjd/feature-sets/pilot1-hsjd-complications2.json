@@ -1,6 +1,6 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_complications2",
-  "name": "pilot1_hsjd_complications2",
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_complications",
+  "name": "pilot1_hsjd_complications",
   "title": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
   "description": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
   "version": "0.1",
@@ -13,21 +13,21 @@
   },
   "featureGroup": [
     {
-      "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
-      "feature": [
-        {
-          "name": "gender"
-        },
-        {
-          "name": "age",
-          "description": "Age of the patient at that time",
-          "valueExpr": {
-            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
-            "dataType": "integer"
-          }
+    "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
+    "feature": [
+      {
+        "name": "gender"
+      },
+      {
+        "name": "age",
+        "description": "Age of the patient at that time",
+        "valueExpr": {
+          "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+          "dataType": "integer"
         }
-      ]
-    },
+      }
+    ]
+  },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
       "feature": [
@@ -739,6 +739,7 @@
         }
       ]
     },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/medications",
       "join": {

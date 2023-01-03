@@ -1,0 +1,18 @@
+{
+  "url": "https://aiccelerate.eu/cohorts/pilot1/surgeries",
+  "name": "surgeries",
+  "title": "Surgeries and patients",
+  "description": "Surgical episode of cares and patients",
+  "version": "0.1",
+  "date": "2022-04-21T00:00:00",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "entityType": ["Patient", "EpisodeOfCare"],
+  "eligibilityCriteria": [
+    {
+      "fhirSearch": "?type=http://snomed.info/sct|736770009&patient={{Patient}}",
+      "description": "Surgeries and patients",
+      "entities": ["EpisodeOfCare.patient"]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/medicationUsed",
+  "name": "medicationUsed",
+  "title": "Used Medications",
+  "description": "Represents the information about medications currently used or being used by patient",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "MedicationStatement",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationUsed",
+  "fhirSearch": "?patient={{Patient}}&status=active,completed,unknown,on-hold",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startDate",
+  "periodEnd": "endDate",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "MedicationStatement.subject"
+    },
+    {
+      "name": "startDate",
+      "title": "Medication start date",
+      "description": "Medication start date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.start"
+    },
+    {
+      "name": "endDate",
+      "title": "Medication end date",
+      "description": "Medication end date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.end"
+    },
+    {
+      "name": "atcCode",
+      "title": "ATC code for the medication",
+      "description": "ATC code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code"
+    },
+    {
+      "name": "frequencyPerDay",
+      "title": "Frequency of medication per day",
+      "description": "How many times per day the medication is taken. ",
+      "dataType": "integer",
+      "fhirPath": "MedicationStatement.dosage.timing.repeat.frequency"
+    },
+    {
+      "name": "dose",
+      "title": "Dose per usage",
+      "description": "Dose per usage",
+      "dataType": "decimal",
+      "fhirPath": "MedicationStatement.dosage.doseAndRate.doseQuantity.value"
+    },
+    {
+      "name": "doseUnit",
+      "title": "Unit of dose",
+      "description": "Unit of dose",
+      "dataType": "code",
+      "fhirPath": "MedicationStatement.dosage.doseAndRate.doseQuantity.unit"
+    }
+  ]
+}
