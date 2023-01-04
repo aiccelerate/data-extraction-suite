@@ -41,7 +41,7 @@
       "name": "phase",
       "title": "Surgery phase code",
       "description": "Surgery phase code",
-      "dataType": "dateTime",
+      "dataType": "code",
       "fhirPath": "Procedure.category.coding.where(system='http://snomed.info/sct').code"
     },
     {

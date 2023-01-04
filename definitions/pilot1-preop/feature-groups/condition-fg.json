@@ -55,7 +55,7 @@
       "name": "isPatientReported",
       "title": "Patient reported",
       "description": "Whether condition is patient reported",
-      "dataType": "code",
+      "dataType": "boolean",
       "fhirPath": "Condition.asserter.reference.startsWith('Patient/')"
     },
     {

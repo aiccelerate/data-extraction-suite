@@ -11,7 +11,8 @@
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-AnesthesiaPhaseDetails",
   "fhirSearch": "?patient={{Patient}}&category=http://snomed.info/sct|399097000",
   "entities": {
-    "pid": "Patient"
+    "pid": "Patient",
+    "episodeId": "EpisodeOfCare"
   },
   "timestamp": "startTime",
   "feature": [
@@ -56,6 +57,13 @@
       "description": "Identifier of the anesthesiologist",
       "dataType": "id",
       "fhirPath": "Procedure.performer.where(function.code.coding.exists(system='http://snomed.info/sct' and code='88189002')).actor"
+    },
+    {
+      "name": "episodeId",
+      "title": "Episode identifier",
+      "description": "Identifier of the surgery episode this phase is part of",
+      "dataType": "id",
+      "fhirPath": "Procedure.extension('http://hl7.org/fhir/StructureDefinition/workflow-episodeOfCare').valueReference"
     },
     {
       "name": "encounterId",

@@ -94,7 +94,7 @@
       },
       "feature": [
         {
-          "name": "icd10Code",
+          "name": "code",
           "description": "Set of ICD-10 diagnosis for patients until that time point",
           "temporalAgg": [
             {
@@ -103,10 +103,10 @@
           ]
         },
         {
-          "name": "icd10Code3Digits",
+          "name": "code3Digits",
           "description": "Set of ICD-10 diagnosis (first 3 digits) for patients until that time point",
           "valueExpr": {
-            "fhirPath": "icd10Code.substring(0,3)",
+            "fhirPath": "code.substring(0,3)",
             "dataType": "code"
           },
           "temporalAgg": [
