@@ -15,6 +15,7 @@
     "episodeId": "EpisodeOfCare"
   },
   "timestamp": "startTime",
+  "periodEnd" : "endTime",
   "feature": [
     {
       "name": "pid",
@@ -49,7 +50,7 @@
       "title": "Code for performed surgical procedure",
       "description": "Code for the main procedure for the operation",
       "dataType": "code",
-      "fhirPath": "Procedure.code.coding.where(system='http://hl7.org/fhir/sid/ex-icd-10-procedures').first().code"
+      "fhirPath": "Procedure.code.coding.where(system='urn:oid:1.2.246.537.6.2').first().code"
     },
     {
       "name": "surgeons",
@@ -57,7 +58,7 @@
       "description": "Identifier of the surgeons participated to the surgery",
       "dataType": "id",
       "isArray": true,
-      "fhirPath": "Procedure.performer.where(function.code.coding.exists(system='http://snomed.info/sct' and code='304292004')).actor"
+      "fhirPath": "Procedure.performer.where(function.coding.exists(system='http://snomed.info/sct' and code='304292004')).actor.reference"
     },
     {
       "name": "nurses",
@@ -65,7 +66,7 @@
       "description": "Identifier of nurses who takes in the surgery",
       "dataType": "id",
       "isArray": true,
-      "fhirPath": "Procedure.performer.where(function.code.coding.exists(system='http://snomed.info/sct' and code='224561008')).actor"
+      "fhirPath": "Procedure.performer.where(function.coding.exists(system='http://snomed.info/sct' and code='224561008')).actor.reference"
     },
     {
       "name": "bodySite",

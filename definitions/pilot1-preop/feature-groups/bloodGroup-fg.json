@@ -34,7 +34,7 @@
       "title": "Assessment result",
       "description": "SNOMED-CT code indicating the blood group",
       "dataType": "code",
-      "fhirPath": "Observation.valueCodeableConcept.code.coding.where(system='http://snomed.info/sct').first().code"
+      "fhirPath": "Observation.valueCodeableConcept.coding.where(system='http://snomed.info/sct').first().code"
     },
     {
       "name": "encounterId",

@@ -1875,6 +1875,9 @@
 
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgery",
+      "join": {
+        "type": "future"
+      },
       "feature": [
         {
           "name": "mainProcedureCode"
@@ -1992,7 +1995,7 @@
         "type": "future"
       },
       "filter": {
-        "name": "intubation",
+        "name": "surgical",
         "fhirPath": "isIntubationType.not()"
       },
       "feature": [

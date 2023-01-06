@@ -68,8 +68,8 @@
     },
     {
       "name": "duration",
-      "title": "Duration in ICU",
-      "description": "Duration in hours in ICU",
+      "title": "Duration of stay",
+      "description": "Duration in hours for the ICU or ward or PACU stay",
       "dataType": "integer",
       "fhirPath": "utl:getPeriod(Encounter.period.start, Encounter.period.end, 'hours')"
     }
