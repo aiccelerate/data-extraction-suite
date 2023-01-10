@@ -142,44 +142,7 @@
     "pid": "Patient"
   },
   "timestamp": "time",
-  "pivot": {
-    "name": "code",
-    "description": "Non motor symptoms evaluated as numeric features (Symptom code in SNOMED-CT or custom)",
-    "values": [
-      {
-        "name":"sleep_disorder",
-        "value": "39898005"
-      },
-      {
-        "name":"daytime_sleepiness",
-        "value": "713567005"
-      },
-      {
-        "name":"dizziness",
-        "value": "404640003"
-      },
-      {
-        "name":"sweating",
-        "value": "415690000"
-      },
-      {
-        "name":"nocturia",
-        "value": "139394000"
-      },
-      {
-        "name":"nausea",
-        "value": "422587007"
-      },
-      {
-        "name":"constipation",
-        "value": "14760008"
-      },
-      {
-        "name":"pain",
-        "value": "22253000"
-      }
-    ]
-  },
+
   "feature": [
     {
       "name": "pid",

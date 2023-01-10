@@ -7,7 +7,7 @@
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
-  "featureSet": "https://aiccelerate.eu/feature-sets/pilot2_features_joined_new",
+  "featureSet": "https://aiccelerate.eu/feature-sets/pilot2_advanced_parkinson",
   "population": "https://aiccelerate.eu/cohorts/pilot2/parkinson_cohort",
   "agentSettings": [
     {

@@ -1,8 +1,8 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot2_features_joined_new",
-  "name": "pilot2_features_joined",
-  "title": "Feature set for AICCELERATE pilot 2",
-  "description": "Feature set for Parkinson disease - Predicting progression to advance stage and cognitive impairment",
+  "url": "https://aiccelerate.eu/feature-sets/pilot2_advanced_parkinson",
+  "name": "pilot2_advanced_parkinson",
+  "title": "Feature set for AICCELERATE pilot 2 - Predicting Advance Parkinson Disease",
+  "description": "Feature set for Parkinson disease - Predicting progression to advance stage for Parkinson Disease",
   "version": "0.1",
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
@@ -228,7 +228,7 @@
           "name": "hasRheumatoidArthritisVascularDiseases",
           "description": "Whether patient has Rheumatoid arthritis/collagen vascular diseases (L94.0, L94.1, L94.3, M05.x, M06.x, M08.x, M12.0, M12.3, M30.x, M31.0 - M31.3, M32.x - M35.x, M45.x, M46.1, M46.8, M46.9)",
           "valueExpr": {
-            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('L94.0' | 'L94.1' | 'L94.3' | 'M12.0' | 'M12.3' | 'M46.1' | 'M46.8' | 'M46.9')) or icd10Code.startsWith('M05') or icd10Code.startsWith('M06') or icd10Code.startsWith('M08') or icd10Code.startsWith('M30') or icd10Code.matches('M31\\.[0-3]') or icd10Code.startsWith('M32') or or icd10Code.startsWith('M33') or icd10Code.startsWith('M34') or icd10Code.startsWith('M35') or icd10Code.startsWith('M45')",
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('L94.0' | 'L94.1' | 'L94.3' | 'M12.0' | 'M12.3' | 'M46.1' | 'M46.8' | 'M46.9')) or icd10Code.startsWith('M05') or icd10Code.startsWith('M06') or icd10Code.startsWith('M08') or icd10Code.startsWith('M30') or icd10Code.matches('M31\\.[0-3]') or icd10Code.startsWith('M32') or icd10Code.startsWith('M33') or icd10Code.startsWith('M34') or icd10Code.startsWith('M35') or icd10Code.startsWith('M45')",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -611,19 +611,6 @@
         {
           "name": "scoreScaled",
           "windowFunc": ["delta","rate"]
-        },
-        {
-          "name": "lessThan26",
-          "description": "Moca total score is less than 26",
-          "valueExpr": {
-            "fhirPath": "score < 26",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
         }
       ]
     },
@@ -1168,6 +1155,48 @@
         "description": "Motor symptoms during on state of Parkinson",
         "fhirPath": "isOnState"
       },
+      "pivot": {
+        "name": "code",
+        "description": "Motor symptoms evaluated as both numeric and boolean features (Symptom code in SNOMED-CT or custom)",
+        "values": [
+          {
+            "name":"tremor",
+            "value": "26079004"
+          },
+          {
+            "name":"dyskinesia",
+            "value": "9748009"
+          },
+          {
+            "name":"freezing_of_gait",
+            "value": "443544006"
+          },
+          {
+            "name":"postural_balance",
+            "value": "416240000"
+          },
+          {
+            "name":"bradykinesia",
+            "value": "399317006"
+          },
+          {
+            "name":"stiffness_rigidity",
+            "value": "271587009"
+          },
+          {
+            "name":"dystonia",
+            "value": "15802004"
+          },
+          {
+            "name":"off_time",
+            "value": "off-time"
+          },
+          {
+            "name":"fluctuations",
+            "value": "fluctuations"
+          }
+        ]
+      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -1201,6 +1230,48 @@
         "description": "Motor symptoms during off state of Parkinson",
         "fhirPath": "isOnState.not()"
       },
+      "pivot": {
+        "name": "code",
+        "description": "Motor symptoms evaluated as both numeric and boolean features (Symptom code in SNOMED-CT or custom)",
+        "values": [
+          {
+            "name":"tremor",
+            "value": "26079004"
+          },
+          {
+            "name":"dyskinesia",
+            "value": "9748009"
+          },
+          {
+            "name":"freezing_of_gait",
+            "value": "443544006"
+          },
+          {
+            "name":"postural_balance",
+            "value": "416240000"
+          },
+          {
+            "name":"bradykinesia",
+            "value": "399317006"
+          },
+          {
+            "name":"stiffness_rigidity",
+            "value": "271587009"
+          },
+          {
+            "name":"dystonia",
+            "value": "15802004"
+          },
+          {
+            "name":"off_time",
+            "value": "off-time"
+          },
+          {
+            "name":"fluctuations",
+            "value": "fluctuations"
+          }
+        ]
+      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -1232,8 +1303,7 @@
       "filter": {
         "name": "wearingOff",
         "description": "Existence of wearing off",
-        "fhirPath": "code='427488005'",
-        "applyPivoting": false
+        "fhirPath": "code='427488005'"
       },
       "join": {
         "type": "past",
@@ -1256,8 +1326,7 @@
       "filter": {
         "name": "updrs3On",
         "description": "UPDRS Part 3 Total Score during on state",
-        "fhirPath": "isOnState and code='77720-1'",
-        "applyPivoting": false
+        "fhirPath": "isOnState and code='77720-1'"
       },
       "join": {
         "type": "past",
@@ -1281,8 +1350,7 @@
       "filter": {
         "name": "updrs3Off",
         "description": "UPDRS Part 3 Total Score during off state",
-        "fhirPath": "isOnState.not() and code='77720-1'",
-        "applyPivoting": false
+        "fhirPath": "isOnState.not() and code='77720-1'"
       },
       "join": {
         "type": "past",
@@ -1306,8 +1374,7 @@
       "filter": {
         "name": "updrs4On",
         "description": "UPDRS Part 4 Total Score during on state",
-        "fhirPath": "isOnState and code='77721-9'",
-        "applyPivoting": false
+        "fhirPath": "isOnState and code='77721-9'"
       },
       "join": {
         "type": "past",
@@ -1331,8 +1398,7 @@
       "filter": {
         "name": "updrs4Off",
         "description": "UPDRS Part 4 Total Score during off state",
-        "fhirPath": "isOnState.not() and code='77721-9'",
-        "applyPivoting": false
+        "fhirPath": "isOnState.not() and code='77721-9'"
       },
       "join": {
         "type": "past",
@@ -1356,8 +1422,7 @@
       "filter": {
         "name": "advanceSymptoms",
         "description": "Motor symptoms (dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
-        "fhirPath": "code='9748009' or code='off-time' or code='fluctuations'",
-        "applyPivoting": false
+        "fhirPath": "code='9748009' or code='off-time' or code='fluctuations'"
       },
       "join": {
         "type": "past",
@@ -1378,6 +1443,44 @@
 
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "pivot": {
+        "name": "code",
+        "description": "Non motor symptoms evaluated as numeric features (Symptom code in SNOMED-CT or custom)",
+        "values": [
+          {
+            "name":"sleep_disorder",
+            "value": "39898005"
+          },
+          {
+            "name":"daytime_sleepiness",
+            "value": "713567005"
+          },
+          {
+            "name":"dizziness",
+            "value": "404640003"
+          },
+          {
+            "name":"sweating",
+            "value": "415690000"
+          },
+          {
+            "name":"nocturia",
+            "value": "139394000"
+          },
+          {
+            "name":"nausea",
+            "value": "422587007"
+          },
+          {
+            "name":"constipation",
+            "value": "14760008"
+          },
+          {
+            "name":"pain",
+            "value": "22253000"
+          }
+        ]
+      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -1409,8 +1512,7 @@
       "filter": {
         "name": "scale",
         "description": "Non-motor symptom evaluation(MDS-NMS or MDS-NMSS)",
-        "fhirPath": "code='non-motor-symptoms'",
-        "applyPivoting": false
+        "fhirPath": "code='non-motor-symptoms'"
       },
       "join": {
         "type": "past",
@@ -1434,8 +1536,7 @@
       "filter": {
         "name": "speechDisorder",
         "description": "Existence of speech disorder",
-        "fhirPath": "code='286366005'",
-        "applyPivoting": false
+        "fhirPath": "code='286366005'"
       },
       "join": {
         "type": "past",
@@ -1458,8 +1559,7 @@
       "filter": {
         "name": "orthocasticHypotension",
         "description": "Existence of Orthocastic Hypotension",
-        "fhirPath": "code='28651003'",
-        "applyPivoting": false
+        "fhirPath": "code='28651003'"
       },
       "join": {
         "type": "past",
@@ -1482,8 +1582,7 @@
       "filter": {
         "name": "hallucination",
         "description": "Existence of hallucinations",
-        "fhirPath": "code='7011001'",
-        "applyPivoting": false
+        "fhirPath": "code='7011001'"
       },
       "join": {
         "type": "past",
@@ -1560,16 +1659,7 @@
               "aggOp": ["any"]
             }
           ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
-      "join": {
-        "type": "past",
-        "duration": "3mo"
-      },
-      "feature": [
+        },
         {
           "name": "hasBenzodiazepinesRecently",
           "description": "Whether patient has benzodiazepines or not within this period. ATC Code: under N05CD",
@@ -1582,7 +1672,16 @@
               "aggOp": ["any"]
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
+      "join": {
+        "type": "past",
+        "duration": "3mo"
+      },
+      "feature": [
         {
           "name": "hasAnticholinesteraseInhibitorsRecently",
           "description": "Whether patient has anticholinesterase inhibitors or not within this period. ATC Code: under under N06DA",
@@ -1660,32 +1759,12 @@
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
-      "join": {
-        "type": "past"
-      },
-      "feature": [
-        {
-          "name": "hasAnticholinesteraseInhibitors",
-          "description": "Whether patient has anticholinesterase inhibitors or memantine any time until this time point. ATC Code: under under N06DA",
-          "valueExpr": {
-            "fhirPath": "atcCode.startsWith('N06DA') or atcCode.startsWith('N06DX')",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/levodopa",
       "join": {
         "type": "past",
         "duration": "6mo"
       },
+      "temporalGrouping": "d",
       "feature": [
         {
           "name": "frequency_d_sum",
@@ -1845,6 +1924,7 @@
       "join": {
         "type": "future"
       },
+      "temporalGrouping": "d",
       "feature": [
         {
           "name": "5OrMore",
@@ -1945,38 +2025,6 @@
           ]
         }
       ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
-      "filter": {
-        "name": "MoCA",
-        "description": "MoCA total score",
-        "fhirPath": "code='72172-0'"
-      },
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "lessThan26",
-          "description":"MoCA-score less than 26 may indicate dementia",
-          "valueExpr": {
-            "fhirPath": "score < 26",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 4,
-              "windowPeriod": "mo",
-              "windowSize": 6,
-              "extending": "multiplicative",
-              "aggOp": [
-                "any"
-              ]
-            }
-          ]
-        }
-      ]
     }
   ],
   "combinedFeature": [
@@ -1999,7 +2047,7 @@
         },
         {
           "alias": "hasDementia",
-          "featureNamePattern": "condition2_hasDementia_any"
+          "featureNamePattern": "condition_hasDementia_any"
         }
       ],
       "valueExpr": {
@@ -2026,61 +2074,11 @@
         },
         {
           "alias": "hasDementia",
-          "featureNamePattern": "condition2_hasDementia_*"
+          "featureNamePattern": "condition_hasDementia_*"
         }
       ],
       "valueExpr": {
         "fhirPath": "alreadyInAdvanceStage.not() and (usingLevodopa5OrMore and (advanceSymptoms or hasDementia))",
-        "dataType": "boolean"
-      }
-    },
-    {
-      "name": "hasCognitiveImpairment",
-      "description": "Whether patient has cognitive impairment in this period",
-      "isOutcome": false,
-      "combinedFeatures": [
-        {
-          "alias": "diagnosedDementia",
-          "featureNamePattern": "condition2_hasDementia_any"
-        },
-        {
-          "alias": "usingAnticholinesteraseInhibitors",
-          "featureNamePattern": "medication_hasAnticholinesteraseInhibitorsRecently_any"
-        },
-        {
-          "alias": "mocaLessThan25",
-          "featureNamePattern": "other_MoCA_lessThan25_p6mo_any"
-        }
-      ],
-      "valueExpr": {
-        "fhirPath": "diagnosedDementia or usingAnticholinesteraseInhibitors or mocaLessThan25",
-        "dataType": "boolean"
-      }
-    },
-    {
-      "name": "hasCognitiveImpairment",
-      "description": "Whether patient has cognitive impairment in next period",
-      "isOutcome": true,
-      "combinedFeatures": [
-        {
-          "alias": "hasAlreadyCognitiveImpairment",
-          "featureNamePattern": "hasCognitiveImpairment"
-        },
-        {
-          "alias": "diagnosedDementia",
-          "featureNamePattern": "condition2_hasDementia_*"
-        },
-        {
-          "alias": "usingAnticholinesteraseInhibitors",
-          "featureNamePattern": "medication_hasAnticholinesteraseInhibitors_*"
-        },
-        {
-          "alias": "mocaLessThan25",
-          "featureNamePattern": "other_MoCA_lessThan25_*"
-        }
-      ],
-      "valueExpr": {
-        "fhirPath": "hasAlreadyCognitiveImpairment.not() and (diagnosedDementia or usingAnticholinesteraseInhibitors or mocaLessThan25)",
         "dataType": "boolean"
       }
     }

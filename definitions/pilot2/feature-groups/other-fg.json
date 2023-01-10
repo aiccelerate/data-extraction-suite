@@ -81,7 +81,7 @@
           "description":"Starkstein Apathy Scale (SAS) score",
           "content": {
             "range": [0,42],
-            "cutoff": [false, 0, true],
+            "cutoff": [false, 13, true],
             "concept": "apathy"
           }
         },

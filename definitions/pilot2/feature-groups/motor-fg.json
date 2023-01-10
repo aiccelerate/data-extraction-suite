@@ -126,48 +126,6 @@
     "pid": "Patient"
   },
   "timestamp": "time",
-  "pivot": {
-    "name": "code",
-    "description": "Motor symptoms evaluated as both numeric and boolean features (Symptom code in SNOMED-CT or custom)",
-    "values": [
-      {
-        "name":"tremor",
-        "value": "26079004"
-      },
-      {
-        "name":"dyskinesia",
-        "value": "9748009"
-      },
-      {
-        "name":"freezing_of_gait",
-        "value": "443544006"
-      },
-      {
-        "name":"postural_balance",
-        "value": "416240000"
-      },
-      {
-        "name":"bradykinesia",
-        "value": "399317006"
-      },
-      {
-        "name":"stiffness_rigidity",
-        "value": "271587009"
-      },
-      {
-        "name":"dystonia",
-        "value": "15802004"
-      },
-      {
-        "name":"off_time",
-        "value": "off-time"
-      },
-      {
-        "name":"fluctuations",
-        "value": "fluctuations"
-      }
-    ]
-  },
   "feature": [
     {
       "name": "pid",

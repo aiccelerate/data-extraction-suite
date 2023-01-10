@@ -1,8 +1,8 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot2_features_joined_new",
-  "name": "pilot2_features_joined",
-  "title": "Feature set for AICCELERATE pilot 2",
-  "description": "Feature set for Parkinson disease - Predicting progression to advance stage and cognitive impairment",
+  "url": "https://aiccelerate.eu/feature-sets/pilot2_mci",
+  "name": "pilot2_mci",
+  "title": "Feature set for AICCELERATE pilot 2 for predicting progressing MCI to Dementia",
+  "description": "Feature set for Parkinson disease - Predicting Mild cognitive impairment (MCI) to Dementia",
   "version": "0.1",
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
@@ -108,10 +108,23 @@
           ]
         },
         {
-          "name": "hasDementia",
+          "name": "hasParkinsonDementia",
+          "description": "Whether patient has parkinson dementia or not until that time point. ICD-10 Codes: F02.3*",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('F02.3')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasOtherDementia",
           "description": "Whether patient has dementia or not until that time point. ICD-10 Codes: F00-F09, F10.73, G30, G31",
           "valueExpr": {
-            "fhirPath": "icd10Code.startsWith('F0') or (icd10Code.exists() and icd10Code.subsetOf('F10.73' | 'G30' | 'G31'))",
+            "fhirPath": "(icd10Code.startsWith('F0') and icd10Code.startsWith('F02.3').not()) or (icd10Code.exists() and icd10Code.subsetOf('F10.73' | 'G30' | 'G31'))",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -569,7 +582,6 @@
         }
       ]
     },
-
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
       "filter": {
@@ -584,11 +596,25 @@
       "feature": [
         {
           "name": "score",
-          "windowFunc": ["delta","rate"]
+          "windowFunc": [
+            "delta",
+            "rate"
+          ]
+        },
+        {
+          "name": "score",
+          "temporalAgg": [
+            {
+              "lastN": 3
+            }
+          ]
         },
         {
           "name": "scoreScaled",
-          "windowFunc": ["delta","rate"]
+          "windowFunc": [
+            "delta",
+            "rate"
+          ]
         }
       ]
     },
@@ -611,19 +637,6 @@
         {
           "name": "scoreScaled",
           "windowFunc": ["delta","rate"]
-        },
-        {
-          "name": "lessThan26",
-          "description": "Moca total score is less than 26",
-          "valueExpr": {
-            "fhirPath": "score < 26",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
-            }
-          ]
         }
       ]
     },
@@ -1841,58 +1854,6 @@
     },
 
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/levodopa",
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "5OrMore",
-          "description": "Whether levodopa is used 5 times or more within a day in next period",
-          "valueExpr": {
-            "fhirPath": "frequency > 4",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 4,
-              "windowPeriod": "mo",
-              "windowSize": 6,
-              "extending": "multiplicative",
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
-      "filter": {
-        "name": "advanceSymptoms",
-        "description": "Motor symptoms (dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
-        "fhirPath": "code='9748009' or code='off-time' or code='fluctuations'",
-        "applyPivoting": false
-      },
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "isSeen",
-          "description": "Whether symptom seen within the period.",
-          "temporalAgg": [
-            {
-              "lastN": 4,
-              "windowPeriod": "mo",
-              "windowSize": 6,
-              "extending": "multiplicative",
-              "aggOp": ["any"]
-            }
-          ]
-        }
-      ]
-    },
-    {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/condition",
       "join": {
         "type": "future"
@@ -1902,15 +1863,14 @@
           "name": "hasDementia",
           "description": "Whether patient has diagnosed dementia or not in next period. ICD-10 Codes: F00-F09, F10.73, G30, G31",
           "valueExpr": {
-            "fhirPath": "icd10Code.startsWith('F0') or (icd10Code.exists() and icd10Code.subsetOf('F10.73' | 'G30' | 'G31'))",
+            "fhirPath": "icd10Code.startsWith('F02.3')",
             "dataType": "boolean"
           },
           "temporalAgg": [
             {
-              "lastN": 4,
+              "lastN": 3,
               "windowPeriod": "mo",
-              "windowSize": 6,
-              "extending": "multiplicative",
+              "windowSize": 12,
               "aggOp": [
                 "any"
               ]
@@ -1918,171 +1878,6 @@
           ]
         }
       ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "hasAnticholinesteraseInhibitors",
-          "description": "Whether patient has anticholinesterase inhibitors or memantine within next period. ATC Code: under under N06DA or N06DX",
-          "valueExpr": {
-            "fhirPath": "atcCode.startsWith('N06DA') or atcCode.startsWith('N06DX')",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 4,
-              "windowPeriod": "mo",
-              "windowSize": 6,
-              "extending": "multiplicative",
-              "aggOp": [
-                "any"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
-      "filter": {
-        "name": "MoCA",
-        "description": "MoCA total score",
-        "fhirPath": "code='72172-0'"
-      },
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "lessThan26",
-          "description":"MoCA-score less than 26 may indicate dementia",
-          "valueExpr": {
-            "fhirPath": "score < 26",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 4,
-              "windowPeriod": "mo",
-              "windowSize": 6,
-              "extending": "multiplicative",
-              "aggOp": [
-                "any"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "combinedFeature": [
-    {
-      "name": "inAdvancedStage",
-      "description": "Whether patient is within advance stage of Parkinson (modified delphi criteria) in this period",
-      "isOutcome": false,
-      "combinedFeatures": [
-        {
-          "alias": "deviceAidedTreatment",
-          "featureNamePattern": "device_treatment_any"
-        },
-        {
-          "alias": "usingLevodopa5OrMore",
-          "featureNamePattern": "levodopa_5OrMore_p6mo_any"
-        },
-        {
-          "alias": "advanceSymptoms",
-          "featureNamePattern": "motor_advanceSymptoms_isSeen_p6mo_any"
-        },
-        {
-          "alias": "hasDementia",
-          "featureNamePattern": "condition2_hasDementia_any"
-        }
-      ],
-      "valueExpr": {
-        "fhirPath": "deviceAidedTreatment or (usingLevodopa5OrMore and (advanceSymptoms or hasDementia))",
-        "dataType": "boolean"
-      }
-    },
-    {
-      "name": "inAdvancedStage",
-      "description": "Whether patient is passed to the advance stage of Parkinson (modified delphi criteria) in next period",
-      "isOutcome": true,
-      "combinedFeatures": [
-        {
-          "alias": "alreadyInAdvanceStage",
-          "featureNamePattern": "inAdvancedStage"
-        },
-        {
-          "alias": "usingLevodopa5OrMore",
-          "featureNamePattern": "levodopa_5OrMore_*"
-        },
-        {
-          "alias": "advanceSymptoms",
-          "featureNamePattern": "motor_advanceSymptoms_isSeen_*"
-        },
-        {
-          "alias": "hasDementia",
-          "featureNamePattern": "condition2_hasDementia_*"
-        }
-      ],
-      "valueExpr": {
-        "fhirPath": "alreadyInAdvanceStage.not() and (usingLevodopa5OrMore and (advanceSymptoms or hasDementia))",
-        "dataType": "boolean"
-      }
-    },
-    {
-      "name": "hasCognitiveImpairment",
-      "description": "Whether patient has cognitive impairment in this period",
-      "isOutcome": false,
-      "combinedFeatures": [
-        {
-          "alias": "diagnosedDementia",
-          "featureNamePattern": "condition2_hasDementia_any"
-        },
-        {
-          "alias": "usingAnticholinesteraseInhibitors",
-          "featureNamePattern": "medication_hasAnticholinesteraseInhibitorsRecently_any"
-        },
-        {
-          "alias": "mocaLessThan25",
-          "featureNamePattern": "other_MoCA_lessThan25_p6mo_any"
-        }
-      ],
-      "valueExpr": {
-        "fhirPath": "diagnosedDementia or usingAnticholinesteraseInhibitors or mocaLessThan25",
-        "dataType": "boolean"
-      }
-    },
-    {
-      "name": "hasCognitiveImpairment",
-      "description": "Whether patient has cognitive impairment in next period",
-      "isOutcome": true,
-      "combinedFeatures": [
-        {
-          "alias": "hasAlreadyCognitiveImpairment",
-          "featureNamePattern": "hasCognitiveImpairment"
-        },
-        {
-          "alias": "diagnosedDementia",
-          "featureNamePattern": "condition2_hasDementia_*"
-        },
-        {
-          "alias": "usingAnticholinesteraseInhibitors",
-          "featureNamePattern": "medication_hasAnticholinesteraseInhibitors_*"
-        },
-        {
-          "alias": "mocaLessThan25",
-          "featureNamePattern": "other_MoCA_lessThan25_*"
-        }
-      ],
-      "valueExpr": {
-        "fhirPath": "hasAlreadyCognitiveImpairment.not() and (diagnosedDementia or usingAnticholinesteraseInhibitors or mocaLessThan25)",
-        "dataType": "boolean"
-      }
     }
   ]
 }

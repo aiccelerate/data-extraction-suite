@@ -15,7 +15,6 @@
   },
   "timestamp": "startDate",
   "periodEnd": "endDate",
-  "temporalGrouping": "d",
   "feature": [
     {
       "name": "pid",

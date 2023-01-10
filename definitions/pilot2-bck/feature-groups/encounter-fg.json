@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/encounter",
+  "name": "encounter",
+  "title": "Encounters (Hospital Visits)",
+  "description": "Encounters (Hospital Visits) in general and in related to Parkinson disease",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Encounter",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonCareEncounter",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "date",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Encounter.subject"
+    },
+    {
+      "name": "date",
+      "title": "Encounter date",
+      "description": "Encounter date",
+      "dataType": "date",
+      "fhirPath": "Encounter.period.start.toDate()"
+    },
+    {
+      "name": "category",
+      "title": "Category of encounter",
+      "description": "Category of encounter (AMB | IMP | VR | EMER | HH)",
+      "dataType": "code",
+      "fhirPath": "Encounter.class.code"
+    },
+    {
+      "name": "type",
+      "title": "Type of encounter",
+      "description": "Type of service given in the of encounter; 225398001: Neurological Assessment, 307808008: Neuropsychological Assessment, 394841004: Other",
+      "dataType": "code",
+      "fhirPath": "Encounter.type.coding.where(system='http://snomed.info/sct').first().code"
+    },
+    {
+      "name": "lengthOfStay",
+      "title": "Length of hospital stay",
+      "description": "For inpatient encounters, length of stay in terms of days",
+      "dataType": "integer",
+      "fhirPath": "utl:getPeriod(Encounter.period.start, Encounter.period.end, 'days')"
+    }
+  ]
+}
