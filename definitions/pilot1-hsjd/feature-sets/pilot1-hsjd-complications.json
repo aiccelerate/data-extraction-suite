@@ -1,6 +1,6 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_complications2",
-  "name": "pilot1_hsjd_complications2",
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_complications",
+  "name": "pilot1_hsjd_complications",
   "title": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
   "description": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
   "version": "0.1",
@@ -9,25 +9,25 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "referenceTimePoints": {
     "method": "temporal-windows",
-    "period": "1d"
+    "period": "8h"
   },
   "featureGroup": [
     {
-      "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
-      "feature": [
-        {
-          "name": "gender"
-        },
-        {
-          "name": "age",
-          "description": "Age of the patient at that time",
-          "valueExpr": {
-            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
-            "dataType": "integer"
-          }
+    "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
+    "feature": [
+      {
+        "name": "gender"
+      },
+      {
+        "name": "age",
+        "description": "Age of the patient at that time",
+        "valueExpr": {
+          "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+          "dataType": "integer"
         }
-      ]
-    },
+      }
+    ]
+  },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
       "feature": [
@@ -745,6 +745,156 @@
         "type": "past",
         "duration": "1d"
       },
+      "pivot": {
+        "name": "atcCategory",
+        "description": "Categorization of the medication",
+        "values": [
+          {
+            "name":"metabolism",
+            "value": "A"
+          },
+          {
+            "name":"antithrombotic",
+            "value": "B01"
+          },
+          {
+            "name":"antihemorrhagics",
+            "value": "B02"
+          },
+          {
+            "name":"antianemic",
+            "value": "B03"
+          },
+          {
+            "name":"bloodSubstitutes",
+            "value": "B05"
+          },
+          {
+            "name":"cardiacTherapy",
+            "value": "C01"
+          },
+          {
+            "name":"antihypertensives",
+            "value": "C02"
+          },
+          {
+            "name":"diuretics",
+            "value": "C03"
+          },
+          {
+            "name":"vasoprotectives",
+            "value": "C05"
+          },
+          {
+            "name":"betaBlocking",
+            "value": "C07"
+          },
+          {
+            "name":"reninAngiotensin",
+            "value": "C09"
+          },
+          {
+            "name":"dermatologicals",
+            "value": "D"
+          },
+          {
+            "name":"urinarySex",
+            "value": "G"
+          },
+          {
+            "name":"pituitaryHypothalamic",
+            "value": "H01"
+          },
+          {
+            "name":"corticosteroids",
+            "value": "H02"
+          },
+          {
+            "name":"thyroid",
+            "value": "H03"
+          },
+          {
+            "name":"antibacterials",
+            "value": "J01"
+          },
+          {
+            "name":"antimycotics",
+            "value": "J02"
+          },
+          {
+            "name":"antimycobacterials",
+            "value": "J04"
+          },
+          {
+            "name":"antivirals",
+            "value": "J05"
+          },
+          {
+            "name":"immunoglobulins",
+            "value": "J06"
+          },
+          {
+            "name":"vaccines",
+            "value": "J07"
+          },
+          {
+            "name":"antiinflammatory",
+            "value": "M01"
+          },
+          {
+            "name":"muscleRelaxants",
+            "value": "M03"
+          },
+          {
+            "name":"antigout",
+            "value": "M04"
+          },
+          {
+            "name":"anesthetics",
+            "value": "N01"
+          },
+          {
+            "name":"analgesics",
+            "value": "N02"
+          },
+          {
+            "name":"antiepileptics",
+            "value": "N03"
+          },
+          {
+            "name":"psycholeptics",
+            "value": "N05"
+          },
+          {
+            "name":"psychoanaleptics",
+            "value": "N06"
+          },
+          {
+            "name":"otherNervousSystem",
+            "value": "N07"
+          },
+          {
+            "name":"anthelmintics",
+            "value": "P02"
+          },
+          {
+            "name":"obstructiveAirwayDiseases",
+            "value": "R03"
+          },
+          {
+            "name":"antihistamines",
+            "value": "R06"
+          },
+          {
+            "name":"sensoryOrgans",
+            "value": "S"
+          },
+          {
+            "name":"various",
+            "value": "V"
+          }
+        ]
+      },
       "feature": [
         {
           "name": "isGiven",
@@ -756,6 +906,67 @@
           "temporalAgg": [
             {
               "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "join": {
+        "type": "past",
+        "duration": "8h"
+      },
+      "filter": {
+        "name": "other",
+        "fhirPath": "code!='397945004'"
+      },
+      "feature": [
+        {
+          "name": "exists",
+          "description": "Whether any complication occurs in the last 8 hours",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "filter": {
+        "name": "other",
+        "fhirPath": "code!='397945004'"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "filter": {
+        "name": "unexpectedICU",
+        "fhirPath": "code='397945004'"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
             }
           ]
         }

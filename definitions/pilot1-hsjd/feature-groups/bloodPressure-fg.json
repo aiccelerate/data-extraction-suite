@@ -34,14 +34,14 @@
       "title": "Systolic BP",
       "description": "Systolic BP value",
       "dataType": "decimal",
-      "fhirPath": "Observation.component.filter(code.coding.exists(system='http://loinc.org' and code='8480-6')).first().valueQuantity.value"
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://loinc.org' and code='8480-6')).first().valueQuantity.value"
     },
     {
       "name": "diastolic",
       "title": "Diastolic BP",
       "description": "Diastolic BP value",
       "dataType": "decimal",
-      "fhirPath": "Observation.component.filter(code.coding.exists(system='http://loinc.org' and code='8462-4')).first().valueQuantity.value"
+      "fhirPath": "Observation.component.where(code.coding.exists(system='http://loinc.org' and code='8462-4')).first().valueQuantity.value"
     }
   ]
 }

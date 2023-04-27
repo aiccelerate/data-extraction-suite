@@ -1,13 +1,13 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_dataset",
-  "name": "pilot1_hsjd_dataset",
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_simple",
+  "name": "pilot1_hsjd_simple",
   "title": "Dataset for AICCELERATE pilot 1 HSJD Use Cases",
   "description": "Dataset for AICCELERATE pilot 1 HSJD Use Cases",
   "version": "0.1",
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
-  "featureSet": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_complications",
+  "featureSet": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_simple",
   "population": "https://aiccelerate.eu/cohorts/pilot1/cardiac_surgeries",
   "agentSettings": [
     {
