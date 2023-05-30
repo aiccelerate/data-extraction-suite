@@ -1,0 +1,1147 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot3_p2_summary",
+  "name": "pilot3_p2_summary",
+  "title": "Feature set for AICCELERATE Pilot 3 - Part 2 - Dataset summary",
+  "description": "Feature set for AICCELERATE Pilot 3 - Part 2 - Dataset summary",
+  "version": "0.1",
+  "date": "2023-05-17",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "feature-group",
+    "description": "Finding out end of each intensive cancer treatment (chemotherapy, radiotherapy, or surgery or combination) period. We assume that if two treatment has less than 3 months between them they belong to the same treatment episode",
+    "useEndTime": true,
+    "featureGroup": [
+      {
+        "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medadm",
+        "useEndTime": false,
+        "filter": {
+          "name": "chemotherapy",
+          "description": "ATC codes related with chemotherapy medications used for this use case",
+          "fhirPath": "code.startsWith('L01') or code = 'L04AA10' or code = 'N03AG01'"
+        }
+      },
+      {
+        "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/procedure",
+        "useEndTime": false,
+        "filter": {
+          "name": "surgery_or_radiotherapy",
+          "description": "Surgery related with cancer or radiotherapies in NOMESCO procedure codes",
+          "fhirPath": "code='AAB00' or code='AAB10' or code='AAE10' or code='AAG00' or code='AAG50' or code='AX099' or code='WF002'"
+        }
+      }
+    ],
+    "period": "3mo",
+    "secondaryTimePoint": [
+      {
+        "name": "maintenancePeriodEnd",
+        "description": "End of cancer treatment maintenance period (after intensive treatment period) calculated based on the end of related medications",
+        "join": {
+          "type": "future"
+        },
+        "sessionWindow": "30d",
+        "initialGap": "30d",
+        "featureGroup": [
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medused",
+            "filter": {
+              "name": "treatment_maintenance_medications",
+              "description": "Cancer treatment medications used during maintenance period",
+              "fhirPath": "code = 'G03BA03' or code = 'G03BA03' or code = 'H03AA01' or code = 'H01BA02' or code = 'H02AB09' or code = 'L02AE02'"
+            }
+          }
+        ]
+      },
+      {
+        "name": "intensiveTreatmentPeriodStart",
+        "description": "Start of intensive cancer treatment period calculated based on related medications or",
+        "join": {
+          "type": "past"
+        },
+        "sessionWindow": "3mo",
+        "featureGroup": [
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medadm",
+            "useEndTime": false,
+            "filter": {
+              "name": "chemotherapy",
+              "description": "ATC codes related with chemotherapy medications used for this use case",
+              "fhirPath": "code.startsWith('L01') or code = 'L04AA10' or code = 'N03AG01'"
+            }
+          },
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/procedure",
+            "useEndTime": false,
+            "filter": {
+              "name": "surgery_or_radiotherapy",
+              "description": "Surgery related with cancer or radiotherapies in NOMESCO procedure codes",
+              "fhirPath": "code='AAB00' or code='AAB10' or code='AAE10' or code='AAG00' or code='AAG50' or code='AX099' or code='WF002'"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "featureGroup": [
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/patient",
+      "feature": [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "age",
+          "description": "Age of the patient at that time (when intensive treatment ends)",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "intensiveTreatmentDuration",
+          "description": "Duration of intensive treatment in terms of days",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%intensiveTreatmentPeriodStart, %referenceTimePoint, 'days')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "maintenanceTreatmentDuration",
+          "description": "Duration of maintenance treatment in terms of days",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, %maintenancePeriodEnd, 'days')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "isDead"
+        },
+        {
+          "name": "ageOfDeath"
+        },
+        {
+          "name": "durationPassUntilDeath",
+          "description": "Number of months until death from the end of treatment",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%referenceTimePoint.toDate(), deceasedDateTime.toDate(), 'months')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "isFirstTreatment",
+          "description": "Whether this is a first treatment or treatment of a relapse",
+          "valueExpr": {
+            "fhirPath": "%previousReferenceTimePoint.exists().not()",
+            "dataType": "boolean"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/condition",
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "description": "Set of ICD-10 diagnosis for patient until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "set"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "code3Digits",
+          "description": "Set of ICD-10 diagnosis (First 3 digits) for patients until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "set"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "code4Digits",
+          "description": "Set of ICD-10 diagnosis (First 4 digits) for patients until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "set"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "code4Digits",
+          "description": "Number of ICD-10 diagnosis (First 4 digits) for patients until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "count_distinct"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/condition",
+      "join": {
+        "type": "past"
+      },
+      "pivot": {
+        "name": "code3Digits",
+        "description": "Categorization of the cancer diagnosis",
+        "values": [
+          {
+            "name": "mprn",
+            "description": "Malignant tumor at peripheral nerves and autonomic nervous system",
+            "value": "C47"
+          },
+          {
+            "name": "mbrain",
+            "description":"Malignant tumor at brain",
+            "value": "C71"
+          },
+          {
+            "name": "mcns",
+            "description":"Malignant tumor at spinal cord or other central nervous system",
+            "value": "C72"
+          },
+          {
+            "name": "moeg",
+            "description":"Malignant tumor at other endocronic glands",
+            "value": "C75"
+          },
+          {
+            "name": "bcmn",
+            "description":"Benign tumor at cerebral meninges",
+            "value": "D32"
+          },
+          {
+            "name": "bbrain",
+            "description":"Benign tumor at brain and other central nervous system",
+            "value": "D33"
+          },
+          {
+            "name": "uncertain",
+            "description":"Neoplasm of uncertain or unknown behaviour of brain and central nervous system",
+            "value": "D43"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "has",
+          "description": "If patient has this type of cancer or not",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/encounter",
+      "join": {
+        "type": "past",
+        "duration": "%intensiveTreatmentPeriodStart"
+      },
+      "feature": [
+        {
+          "name": "numOfVisits",
+          "description": "Number of ambulatory visits during treatment period",
+          "valueExpr": {
+            "fhirPath": "category='AMB' or category='SS'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "count_true"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "numOfEmergencyVisits",
+          "description": "Number of ambulatory visits during treatment period",
+          "valueExpr": {
+            "fhirPath": "category='EMER'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "count_true"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "numOfStays",
+          "description": "Number of hospital stays",
+          "valueExpr": {
+            "fhirPath": "category='IMP'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["count_true"]
+            }
+          ]
+        },
+        {
+          "name": "lengthOfStay",
+          "description": "Total length of hospital stays in terms of days",
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/encounter",
+      "join": {
+        "type": "future",
+        "duration": "%nextReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "numOfVisits",
+          "description": "Number of ambulatory visits during treatment period",
+          "valueExpr": {
+            "fhirPath": "category='AMB' or category='SS'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "count_true"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "numOfEmergencyVisits",
+          "description": "Number of ambulatory visits during treatment period",
+          "valueExpr": {
+            "fhirPath": "code='EMER'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "count_true"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "numOfStays",
+          "description": "Number of hospital stays",
+          "valueExpr": {
+            "fhirPath": "code='IMP'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["count_true"]
+            }
+          ]
+        },
+        {
+          "name": "lengthOfStay",
+          "description": "Total length of hospital stays in terms of days",
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/procedure",
+      "join": {
+        "type": "past",
+        "duration": "%intensiveTreatmentPeriodStart"
+      },
+      "feature": [
+        {
+          "name": "surgery",
+          "description": "Whether patient has cancer treatment surgery in this treatment period and count of it",
+          "valueExpr": {
+            "fhirPath": "code='AAB00' or code='AAB10' or code='AAE10' or code='AAG00'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any",
+                "count_true"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "radiotherapy",
+          "description": "Whether patient has radiotherapy in this treatment period and count of it",
+          "valueExpr": {
+            "fhirPath": "code='AAG50' or code='AX099' or code='WF002'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": [
+                "any",
+                "count_true"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "code",
+          "description": "Procedure codes in this treatment period",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/procedure",
+      "join": {
+        "type": "past",
+        "duration": "%intensiveTreatmentPeriodStart"
+      },
+      "feature": [
+        {
+          "name": "hasBloodTransfusion",
+          "description": "Whether patient has blood transfusion during intensive treatment",
+          "valueExpr": {
+            "fhirPath": "code = 'WW500'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medadm",
+      "join": {
+        "type": "past",
+        "duration": "%intensiveTreatmentPeriodStart"
+      },
+      "feature": [
+        {
+          "name": "time",
+          "description": "Number of chemotherapy sessions in this treatment period",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        },
+        {
+          "name": "code",
+          "description": "Chemotherapy medications given in this period",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medused",
+      "join": {
+        "type": "future",
+        "duration": "%maintenancePeriodEnd"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "description": "Chemotherapy medications given in this period",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medused",
+      "join": {
+        "type": "past",
+        "duration": "%intensiveTreatmentPeriodStart"
+      },
+      "feature": [
+        {
+          "name": "hasInfection",
+          "description": "Whether patient has infection (resolve from medications)",
+          "valueExpr": {
+            "fhirPath": "code.startsWith('J01')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/labresult",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "pivot": {
+        "name": "code",
+        "description": "Important lab results",
+        "values": [
+          {
+            "name": "bLeuk",
+            "description": "Blood WBC values (B-Leuk)",
+            "value": "26464-8"
+          },
+          {
+            "name": "bNeut",
+            "description":"Blood ANC values (B-Neut)",
+            "value": "26499-4"
+          },
+          {
+            "name": "pCRP",
+            "description":"Plasma CRP values (P-CRP)",
+            "value": "1988-5"
+          },
+          {
+            "name": "pNa",
+            "description":"Plasma sodium values (P-Na)",
+            "value": "2951-2"
+          },
+          {
+            "name": "pPi",
+            "description":"Plasma phosphate values (P-Pi)",
+            "value": "2777-1"
+          },
+          {
+            "name": "pK",
+            "description":"Plasma potassium values (P-K)",
+            "value": "2823-3"
+          },
+          {
+            "name": "pMg",
+            "description":"Plasma magnesium values (P-Mg)",
+            "value": "2601-3"
+          },
+          {
+            "name": "bHb",
+            "description":"Blood hemoglobin consentration (B-Hb)",
+            "value": "718-7"
+          },
+          {
+            "name": "bTrom",
+            "description":"Blood patelet concentration (B-Trom)",
+            "value": "26515-7"
+          },
+          {
+            "name": "bAlb",
+            "description":"Plasma albumin level (P-Alb)",
+            "value": "1751-7"
+          },
+          {
+            "name": "pTT",
+            "description":"Plasma tromboplastin level (P-TT)",
+            "value": "14979-9"
+          },
+          {
+            "name": "pKrea",
+            "description":"Plasma creatinine (P-Krea)",
+            "value": "2160-0"
+          },
+          {
+            "name": "pKysC",
+            "description":"Plasma cystatine-C level (P-KysC)",
+            "value": "33863-2"
+          },
+          {
+            "name": "pUrea",
+            "description":"BUN level (P-Urea)",
+            "value": "6299-2"
+          },
+          {
+            "name": "pAlat",
+            "description":"Plasma alanine transferase level (P-ALAT)",
+            "value": "1742-6"
+          },
+          {
+            "name": "pBil",
+            "description":"Plasma bilirubin level (P-Bil)",
+            "value": "1975-2"
+          },
+          {
+            "name": "pBilKj",
+            "description":"Plasma conjugated bilirubin level (P-Bil-kj)",
+            "value": "15152-2"
+          },
+          {
+            "name": "pTSH",
+            "description":"Thyrotropin [Units/volume] in Serum or Plasma (P-TSH)",
+            "value": "3016-3"
+          },
+          {
+            "name": "pT4v",
+            "description":"Thyroxine (T4) [Mass/volume] in Serum or Plasma (P-T4V)",
+            "value": "3026-2"
+          },
+          {
+            "name": "pIGF1",
+            "description":"Insulin-like growth factor-I [Mass/volume] in Serum or Plasma (P-IGF-1)",
+            "value": "2484-4"
+          },
+          {
+            "name": "pACTH",
+            "description":"Corticotropin [Mass/volume] in Plasma (P-ACTH)",
+            "value": "2141-0"
+          },
+          {
+            "name": "sKorsol",
+            "description":"Cortisol [Mass/volume] in Serum or Plasma (S-Korsol)",
+            "value": "2143-6"
+          },
+          {
+            "name": "sFSH",
+            "description":"Follitropin [Units/volume] in Serum or Plasma (S-FSH)",
+            "value": "15067-2"
+          },
+          {
+            "name": "sLH",
+            "description":"Lutropin [Units/volume] in Serum or Plasma (S-LH)",
+            "value": "10501-5"
+          },
+          {
+            "name": "sE2",
+            "description":"Estradiol (E2) [Mass/volume] in Serum or Plasma (S-estradiol)",
+            "value": "2243-4"
+          },
+          {
+            "name": "sAMH",
+            "description":"Mullerian inhibiting substance [Mass/volume] in Serum or Plasma by Immunoassay (S-AMH)",
+            "value": "83104-0"
+          },
+          {
+            "name": "sTestosterone",
+            "description":"Testosterone [Mass/volume] in Serum or Plasma (S-testosterone)",
+            "value": "2986-8"
+          },
+          {
+            "name": "sInhibinB",
+            "description":"Inhibin B [Mass/volume] in Serum or Plasma (S-inhibine-B)",
+            "value": "34319-4"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Statistics for lab result performed in this treatment period",
+          "temporalAgg": [
+            {
+              "aggOp": ["count", "max", "min", "avg", "stddev", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/labresult",
+      "join": {
+        "type": "future",
+        "duration": "%maintenancePeriodEnd"
+      },
+      "pivot": {
+        "name": "code",
+        "description": "Important lab results",
+        "values": [
+          {
+            "name": "bLeuk",
+            "description": "Blood WBC values (B-Leuk)",
+            "value": "26464-8"
+          },
+          {
+            "name": "bNeut",
+            "description":"Blood ANC values (B-Neut)",
+            "value": "26499-4"
+          },
+          {
+            "name": "pCRP",
+            "description":"Plasma CRP values (P-CRP)",
+            "value": "1988-5"
+          },
+          {
+            "name": "pNa",
+            "description":"Plasma sodium values (P-Na)",
+            "value": "2951-2"
+          },
+          {
+            "name": "pPi",
+            "description":"Plasma phosphate values (P-Pi)",
+            "value": "2777-1"
+          },
+          {
+            "name": "pK",
+            "description":"Plasma potassium values (P-K)",
+            "value": "2823-3"
+          },
+          {
+            "name": "pMg",
+            "description":"Plasma magnesium values (P-Mg)",
+            "value": "2601-3"
+          },
+          {
+            "name": "bHb",
+            "description":"Blood hemoglobin consentration (B-Hb)",
+            "value": "718-7"
+          },
+          {
+            "name": "bTrom",
+            "description":"Blood patelet concentration (B-Trom)",
+            "value": "26515-7"
+          },
+          {
+            "name": "bAlb",
+            "description":"Plasma albumin level (P-Alb)",
+            "value": "1751-7"
+          },
+          {
+            "name": "pTT",
+            "description":"Plasma tromboplastin level (P-TT)",
+            "value": "14979-9"
+          },
+          {
+            "name": "pKrea",
+            "description":"Plasma creatinine (P-Krea)",
+            "value": "2160-0"
+          },
+          {
+            "name": "pKysC",
+            "description":"Plasma cystatine-C level (P-KysC)",
+            "value": "33863-2"
+          },
+          {
+            "name": "pUrea",
+            "description":"BUN level (P-Urea)",
+            "value": "6299-2"
+          },
+          {
+            "name": "pAlat",
+            "description":"Plasma alanine transferase level (P-ALAT)",
+            "value": "1742-6"
+          },
+          {
+            "name": "pBil",
+            "description":"Plasma bilirubin level (P-Bil)",
+            "value": "1975-2"
+          },
+          {
+            "name": "pBilKj",
+            "description":"Plasma conjugated bilirubin level (P-Bil-kj)",
+            "value": "15152-2"
+          },
+          {
+            "name": "pTSH",
+            "description":"Thyrotropin [Units/volume] in Serum or Plasma (P-TSH)",
+            "value": "3016-3"
+          },
+          {
+            "name": "pT4v",
+            "description":"Thyroxine (T4) [Mass/volume] in Serum or Plasma (P-T4V)",
+            "value": "3026-2"
+          },
+          {
+            "name": "pIGF1",
+            "description":"Insulin-like growth factor-I [Mass/volume] in Serum or Plasma (P-IGF-1)",
+            "value": "2484-4"
+          },
+          {
+            "name": "pACTH",
+            "description":"Corticotropin [Mass/volume] in Plasma (P-ACTH)",
+            "value": "2141-0"
+          },
+          {
+            "name": "sKorsol",
+            "description":"Cortisol [Mass/volume] in Serum or Plasma (S-Korsol)",
+            "value": "2143-6"
+          },
+          {
+            "name": "sFSH",
+            "description":"Follitropin [Units/volume] in Serum or Plasma (S-FSH)",
+            "value": "15067-2"
+          },
+          {
+            "name": "sLH",
+            "description":"Lutropin [Units/volume] in Serum or Plasma (S-LH)",
+            "value": "10501-5"
+          },
+          {
+            "name": "sE2",
+            "description":"Estradiol (E2) [Mass/volume] in Serum or Plasma (S-estradiol)",
+            "value": "2243-4"
+          },
+          {
+            "name": "sAMH",
+            "description":"Mullerian inhibiting substance [Mass/volume] in Serum or Plasma by Immunoassay (S-AMH)",
+            "value": "83104-0"
+          },
+          {
+            "name": "sTestosterone",
+            "description":"Testosterone [Mass/volume] in Serum or Plasma (S-testosterone)",
+            "value": "2986-8"
+          },
+          {
+            "name": "sInhibinB",
+            "description":"Inhibin B [Mass/volume] in Serum or Plasma (S-inhibine-B)",
+            "value": "34319-4"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Statistics for lab result performed in this treatment period",
+          "temporalAgg": [
+            {
+              "aggOp": ["count", "max", "min", "avg", "stddev", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/labresult",
+      "join": {
+        "type": "future",
+        "duration": "%nextReferenceTimePoint"
+      },
+      "pivot": {
+        "name": "code",
+        "description": "Important lab results",
+        "values": [
+          {
+            "name": "bLeuk",
+            "description": "Blood WBC values (B-Leuk)",
+            "value": "26464-8"
+          },
+          {
+            "name": "bNeut",
+            "description":"Blood ANC values (B-Neut)",
+            "value": "26499-4"
+          },
+          {
+            "name": "pCRP",
+            "description":"Plasma CRP values (P-CRP)",
+            "value": "1988-5"
+          },
+          {
+            "name": "pNa",
+            "description":"Plasma sodium values (P-Na)",
+            "value": "2951-2"
+          },
+          {
+            "name": "pPi",
+            "description":"Plasma phosphate values (P-Pi)",
+            "value": "2777-1"
+          },
+          {
+            "name": "pK",
+            "description":"Plasma potassium values (P-K)",
+            "value": "2823-3"
+          },
+          {
+            "name": "pMg",
+            "description":"Plasma magnesium values (P-Mg)",
+            "value": "2601-3"
+          },
+          {
+            "name": "bHb",
+            "description":"Blood hemoglobin consentration (B-Hb)",
+            "value": "718-7"
+          },
+          {
+            "name": "bTrom",
+            "description":"Blood patelet concentration (B-Trom)",
+            "value": "26515-7"
+          },
+          {
+            "name": "bAlb",
+            "description":"Plasma albumin level (P-Alb)",
+            "value": "1751-7"
+          },
+          {
+            "name": "pTT",
+            "description":"Plasma tromboplastin level (P-TT)",
+            "value": "14979-9"
+          },
+          {
+            "name": "pKrea",
+            "description":"Plasma creatinine (P-Krea)",
+            "value": "2160-0"
+          },
+          {
+            "name": "pKysC",
+            "description":"Plasma cystatine-C level (P-KysC)",
+            "value": "33863-2"
+          },
+          {
+            "name": "pUrea",
+            "description":"BUN level (P-Urea)",
+            "value": "6299-2"
+          },
+          {
+            "name": "pAlat",
+            "description":"Plasma alanine transferase level (P-ALAT)",
+            "value": "1742-6"
+          },
+          {
+            "name": "pBil",
+            "description":"Plasma bilirubin level (P-Bil)",
+            "value": "1975-2"
+          },
+          {
+            "name": "pBilKj",
+            "description":"Plasma conjugated bilirubin level (P-Bil-kj)",
+            "value": "15152-2"
+          },
+          {
+            "name": "pTSH",
+            "description":"Thyrotropin [Units/volume] in Serum or Plasma (P-TSH)",
+            "value": "3016-3"
+          },
+          {
+            "name": "pT4v",
+            "description":"Thyroxine (T4) [Mass/volume] in Serum or Plasma (P-T4V)",
+            "value": "3026-2"
+          },
+          {
+            "name": "pIGF1",
+            "description":"Insulin-like growth factor-I [Mass/volume] in Serum or Plasma (P-IGF-1)",
+            "value": "2484-4"
+          },
+          {
+            "name": "pACTH",
+            "description":"Corticotropin [Mass/volume] in Plasma (P-ACTH)",
+            "value": "2141-0"
+          },
+          {
+            "name": "sKorsol",
+            "description":"Cortisol [Mass/volume] in Serum or Plasma (S-Korsol)",
+            "value": "2143-6"
+          },
+          {
+            "name": "sFSH",
+            "description":"Follitropin [Units/volume] in Serum or Plasma (S-FSH)",
+            "value": "15067-2"
+          },
+          {
+            "name": "sLH",
+            "description":"Lutropin [Units/volume] in Serum or Plasma (S-LH)",
+            "value": "10501-5"
+          },
+          {
+            "name": "sE2",
+            "description":"Estradiol (E2) [Mass/volume] in Serum or Plasma (S-estradiol)",
+            "value": "2243-4"
+          },
+          {
+            "name": "sAMH",
+            "description":"Mullerian inhibiting substance [Mass/volume] in Serum or Plasma by Immunoassay (S-AMH)",
+            "value": "83104-0"
+          },
+          {
+            "name": "sTestosterone",
+            "description":"Testosterone [Mass/volume] in Serum or Plasma (S-testosterone)",
+            "value": "2986-8"
+          },
+          {
+            "name": "sInhibinB",
+            "description":"Inhibin B [Mass/volume] in Serum or Plasma (S-inhibine-B)",
+            "value": "34319-4"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Statistics for lab result performed in this treatment period",
+          "temporalAgg": [
+            {
+              "aggOp": ["count", "max", "min", "avg", "stddev", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/observation",
+      "join": {
+        "type": "future",
+        "duration": "%nextReferenceTimePoint"
+      },
+      "filter": {
+        "name": "EF",
+        "description": "Ejection Fraction observations",
+        "fhirPath": "code='10230-1'"
+      },
+      "feature": [
+        {
+          "name": "lfDysfunction",
+          "description": "Left ventricular dysfunction",
+          "valueExpr": {
+            "fhirPath": "valueQuantity.fst:categorize(3 | 30 | 2 | 40 | 1 | 54 | 0)",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["max"]
+            }
+          ]
+        },
+        {
+          "name": "hasLfDysfunction",
+          "description": "If has left ventricular dysfunction",
+          "valueExpr": {
+            "fhirPath": "valueQuantity < 55",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/observation",
+      "join": {
+        "type": "future",
+        "duration": "%nextReferenceTimePoint"
+      },
+      "filter": {
+        "name": "PTA",
+        "description": "Hearing function measured by pure-tone audiometry (PTA)",
+        "fhirPath": "code='89015-2'"
+      },
+      "feature": [
+        {
+          "name": "hasHearingLoss",
+          "description": "If has hearing loss (PTA >= 10db)",
+          "valueExpr": {
+            "fhirPath": "valueQuantity >= 10",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/observation",
+      "join": {
+        "type": "future",
+        "duration": "%nextReferenceTimePoint"
+      },
+      "filter": {
+        "name": "GFR",
+        "description": "GFR",
+        "fhirPath": "code='98980-6'"
+      },
+      "feature": [
+        {
+          "name": "hasKidneyFailure",
+          "description": "If patient has kidney failure based on GFR (GFR decrease by 75% or GFR < 35 mL/min/1.73 m2)",
+          "valueExpr": {
+            "fhirPath": "valueQuantity < 35 or valueQuantity < (%previousRow.valueQuantity * 0.25)",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/observation",
+      "join": {
+        "type": "future",
+        "duration": "%nextReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "hasRelapse",
+          "description": "If a relapse is indicated in the records",
+          "valueExpr": {
+            "fhirPath": "code='21976-6' and valueCode='LA3971-4'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/observation",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "hasRelapse",
+          "description": "If a relapse is indicated in the records",
+          "valueExpr": {
+            "fhirPath": "code='21976-6' and valueCode='LA3971-4'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

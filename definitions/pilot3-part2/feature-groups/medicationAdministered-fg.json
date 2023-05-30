@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p2/medadm",
+  "name": "medadm",
+  "title": "Cancer medication treatments",
+  "description": "Cancer medication treatments given to patient",
+  "version": "0.1",
+  "date": "2023-05-17",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "MedicationAdministration",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationAdministration",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "MedicationAdministration.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment time",
+      "description": "Time of assessment",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationAdministration.effectiveDateTime.nav:orElse(MedicationAdministration.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Code for the medication",
+      "description": "ATC code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationAdministration.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').first().code"
+    },
+    {
+      "name": "name",
+      "title": "Medication name",
+      "description": "Name of the medication",
+      "dataType": "string",
+      "fhirPath": "MedicationAdministration.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').display.first()"
+    }
+  ]
+}

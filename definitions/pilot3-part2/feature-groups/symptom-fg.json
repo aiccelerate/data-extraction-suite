@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p2/symptom",
+  "name": "symptom",
+  "title": "Symptom",
+  "description": "Represent a symptom assessment made during home care related with AICCELERATE Pilot 3  - Part 2",
+  "version": "0.1",
+  "date": "2023-05-17",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PediatricNeurooncologicalSymptomFinding",
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/pediatric-neurooncological-findings",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "date",
+      "title": "Assessment date ",
+      "description": "Assessment date",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Symptom code",
+      "description": "Code (SNOMED-CT) for the symptom type",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct').code.first()"
+    },
+    {
+      "name": "name",
+      "title": "Symptom name",
+      "description": "Name for the symptom e.g. Seizures, etc",
+      "dataType": "code",
+      "fhirPath": "Observation.code.text.nav:orElse(Observation.code.coding.where(system='http://snomed.info/sct').display.first())"
+    },
+    {
+      "name": "exists",
+      "title": "Whether symptom is seen or not",
+      "description": "Whether symptom is seen or not",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean"
+    }
+  ]
+}

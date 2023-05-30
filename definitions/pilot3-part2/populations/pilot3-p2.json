@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/cohorts/pilot3/neurooncological_patients",
+  "name": "neurooncological_patients",
+  "title": "Pediatric patients diagnosed with neurooncology related tumors and have some treatment; chemotherapy or radiotherapy",
+  "description": "Pediatric patients diagnosed with neurooncology related tumors and have some treatment; chemotherapy or radiotherapy",
+  "version": "0.1",
+  "date": "2022-04-21T00:00:00",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "entityType": ["Patient"],
+  "eligibilityCriteria": [
+    {
+      "fhirSearch": "?",
+      "description": "All patients with related diagnosis and have some chemotherapy",
+      "filter": [
+        {
+          "resourceType": "Condition",
+          "fhirSearch": "?code:below=http://hl7.org/fhir/sid/icd-10|C71,http://hl7.org/fhir/sid/icd-10|C72,http://hl7.org/fhir/sid/icd-10|C75,http://hl7.org/fhir/sid/icd-10|C47,http://hl7.org/fhir/sid/icd-10|D32,http://hl7.org/fhir/sid/icd-10|D33,http://hl7.org/fhir/sid/icd-10|D43&patient={{Patient}}",
+          "entities": ["Condition.subject"],
+          "eventTime": "Condition.onsetDateTime"
+        },
+        {
+          "resourceType": "MedicationAdministration",
+          "fhirSearch": "?code:below=http://www.whocc.no/atc|L01,http://www.whocc.no/atc|L04AA10,http://www.whocc.no/atc|N03AG01&patient={{Patient}}",
+          "entities": ["MedicationAdministration.subject"]
+        }
+      ]
+    },
+    {
+      "fhirSearch": "?",
+      "description": "All patients with related diagnosis and have some radiotherapy or surgery",
+      "filter": [
+        {
+          "resourceType": "Condition",
+          "fhirSearch": "?code:below=http://hl7.org/fhir/sid/icd-10|C71,http://hl7.org/fhir/sid/icd-10|C72,http://hl7.org/fhir/sid/icd-10|C75,http://hl7.org/fhir/sid/icd-10|C47,http://hl7.org/fhir/sid/icd-10|D32,http://hl7.org/fhir/sid/icd-10|D33,http://hl7.org/fhir/sid/icd-10|D43&patient={{Patient}}",
+          "entities": ["Condition.subject"],
+          "eventTime": "Condition.onsetDateTime"
+        },
+        {
+          "resourceType": "Procedure",
+          "fhirSearch": "?code=AAB00,AAB10,AAE10,AAG00,AAG50,AX099,WF002&patient={{Patient}}",
+          "entities": ["Procedure.subject"]
+        }
+      ]
+    }
+  ]
+}

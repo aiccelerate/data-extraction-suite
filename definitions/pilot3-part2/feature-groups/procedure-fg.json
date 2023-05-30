@@ -1,0 +1,46 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p2/procedure",
+  "name": "procedure",
+  "title": "Procedure",
+  "description": "A procedure or treatment performed on a patient",
+  "version": "0.1",
+  "date": "2023-05-17",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "date",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "date",
+      "title": "Procedure date",
+      "description": "Procedure date",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedDateTime.nav:orElse(Procedure.performedPeriod.start).toDate()"
+    },
+    {
+      "name": "code",
+      "title": "Procedure code",
+      "description": "Procedure code in NOMESCO procedure classification",
+      "dataType": "code",
+      "fhirPath": "Procedure.code.coding.where(system='urn:oid:1.2.246.537.6.2').code.first()"
+    },
+    {
+      "name": "name",
+      "title": "Procedure name",
+      "description": "Name of the procedure",
+      "dataType": "string",
+      "fhirPath": "Procedure.code.coding.where(system='urn:oid:1.2.246.537.6.2').display.first()"
+    }
+  ]
+}

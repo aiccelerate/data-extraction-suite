@@ -1,0 +1,55 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p2/medused",
+  "name": "medused",
+  "title": "Used medications after cancer treatment",
+  "description": "Used medications after cancer treatment",
+  "version": "0.1",
+  "date": "2023-05-17",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "MedicationStatement",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-MedicationUsed",
+  "fhirSearch": "?patient={{Patient}}&status=active,completed,unknown,on-hold",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "startDate",
+  "periodEnd": "endDate",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "MedicationStatement.subject"
+    },
+    {
+      "name": "startDate",
+      "title": "Medication start date",
+      "description": "Medication start date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.start"
+    },
+    {
+      "name": "endDate",
+      "title": "Medication end date",
+      "description": "Medication end date",
+      "dataType": "dateTime",
+      "fhirPath": "MedicationStatement.effectivePeriod.end"
+    },
+    {
+      "name": "code",
+      "title": "ATC code for the medication",
+      "description": "ATC code for the medication",
+      "dataType": "code",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').code"
+    },
+    {
+      "name": "name",
+      "title": "Medication name",
+      "description": "Name of the medication",
+      "dataType": "string",
+      "fhirPath": "MedicationStatement.medicationCodeableConcept.coding.where(system='http://www.whocc.no/atc').display.first()"
+    }
+  ]
+}

@@ -7,9 +7,9 @@
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
-  "targetResourceType": "Condition",
+  "targetResourceType": "Procedure",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PediatricPalliativeCareProcedure",
-  "fhirSearch": "?patient={{Patient}}&_include=Condition:patient",
+  "fhirSearch": "?patient={{Patient}}&_include=Procedure:patient",
   "entities": {
     "pid": "Patient"
   },

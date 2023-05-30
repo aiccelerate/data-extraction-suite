@@ -1,0 +1,17 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot3_p2_dataset",
+  "name": "pilot3_p2_dataset",
+  "title": "Dataset for AICCELERATE pilot 1 HSJD Use Cases",
+  "description": "Dataset for AICCELERATE pilot 1 HSJD Use Cases",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "featureSet": "https://aiccelerate.eu/feature-sets/pilot3_p2_summary",
+  "population": "https://aiccelerate.eu/cohorts/pilot3/neurooncological_patients",
+  "agentSettings": [
+    {
+      "agent": "hsjd"
+    }
+  ]
+}
