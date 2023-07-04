@@ -19,7 +19,7 @@
           "resourceType": "Encounter",
           "fhirSearch": "?status=finished&type=http://snomed.info/sct|305408004&patient={{Patient}}&episode-of-care={{EpisodeOfCare}}",
           "entities": ["Encounter.subject", "Encounter.episodeOfCare"],
-          "condition": "Encounter.serviceType.coding.exists(system='http://snomed.info/sct' and code='394603008')",
+          "condition": "Encounter.serviceType.coding.exists(system='http://snomed.info/sct' and (code='394603008' or code='41976001' or code='252425004'))",
           "eventTime": "Encounter.period.end"
         }
       ]

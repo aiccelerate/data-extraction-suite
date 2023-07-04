@@ -9,7 +9,7 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Encounter",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-SurgeryEncounter",
-  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&type=http://snomed.info/sct|305408004",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&type=http://snomed.info/sct|305408004&status=finished",
   "entities": {
     "pid": "Patient",
     "episodeId": "EpisodeOfCare"
@@ -39,9 +39,9 @@
       "fhirPath": "Encounter.period.end"
     },
     {
-      "name": "specialty",
-      "title": "Specialty of the performed surgery",
-      "description": "SNOMED-CT code for surgical specialty e.g. 394611003 -> Plastic surgery",
+      "name": "category",
+      "title": "Surgical operation category",
+      "description": "SNOMED-CT code for Surgical operation category e.g. 394603008 -> Cardiac Surgery, 41976001 -> Catheterization, etc.",
       "dataType": "code",
       "fhirPath": "Encounter.serviceType.coding.where(system='http://snomed.info/sct').first().code"
     },
@@ -72,27 +72,6 @@
       "description": "Unique id of the operating room that this operation takes place",
       "dataType": "id",
       "fhirPath": "Encounter.location.location.identifier.value"
-    },
-    {
-      "name": "surgeryPlanId",
-      "title": "Surgery plan identifier",
-      "description": "Id of the plan record that this surgery is based on ",
-      "dataType": "id",
-      "fhirPath": "Encounter.basedOn.reference"
-    },
-    {
-      "name": "isCancelled",
-      "title": "Whether operation is cancelled",
-      "description": "Whether operation is cancelled",
-      "dataType": "boolean",
-      "fhirPath": "Encounter.status = 'cancelled'"
-    },
-    {
-      "name": "cancellationReason",
-      "title": "Cancellation reason",
-      "description": "Reason for cancellation",
-      "dataType": "boolean",
-      "fhirPath": "Encounter.reasonCode.coding.code.first()"
     },
     {
       "name": "duration",

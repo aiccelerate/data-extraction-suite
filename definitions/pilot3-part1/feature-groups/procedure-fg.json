@@ -1,0 +1,46 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p1/procedure",
+  "name": "procedure",
+  "title": "Procedure",
+  "description": "A diagnostic or treatment procedure performed on a patient",
+  "version": "0.1",
+  "date": "2023-05-17",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Procedure",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "date",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Procedure.subject"
+    },
+    {
+      "name": "date",
+      "title": "Procedure start date",
+      "description": "Procedure start date",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "code",
+      "title": "Procedure code",
+      "description": "Procedure code in NOMESCO procedure classification",
+      "dataType": "code",
+      "fhirPath": "Procedure.code.coding.code.first()"
+    },
+    {
+      "name": "duration",
+      "title": "Procedure duration in terms of minutes",
+      "description": "Duration of the procedure",
+      "dataType": "decimal",
+      "fhirPath": "utl:getPeriod(Procedure.performedPeriod.start, Procedure.performedPeriod.end, 'minutes')"
+    }
+  ]
+}

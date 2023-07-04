@@ -1,0 +1,17 @@
+{
+  "url": "https://aiccelerate.eu/cohorts/pilot3/p1_patients",
+  "name": "p1_patients",
+  "title": "Target population for AICCELERATE for Pilot 3-Part 1 OBPG Case",
+  "description": "Target population for AICCELERATE for Pilot 3-Part 1 OBPG Case",
+  "version": "0.1",
+  "date": "2022-04-21T00:00:00",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "entityType": ["Patient"],
+  "eligibilityCriteria": [
+    {
+      "fhirSearch": "?",
+      "description": "All patients given by the hospital"
+    }
+  ]
+}

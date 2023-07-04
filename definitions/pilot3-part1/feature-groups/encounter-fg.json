@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p1/encounter",
+  "name": "encounter",
+  "title": "Encounter (Hospital visits/stays)",
+  "description": "Represents the hospitilization encounters (e.g. ward stay, ICU stay) as well as ambulatory visits",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Encounter",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-Encounter",
+  "fhirSearch": "?patient={{Patient}}",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "date",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Encounter.subject"
+    },
+    {
+      "name": "date",
+      "title": "Encounter date",
+      "description": "Encounter date",
+      "dataType": "date",
+      "fhirPath": "Encounter.period.start.toDate()"
+    },
+    {
+      "name": "category",
+      "title": "Category of encounter",
+      "description": "Category of encounter (AMB | IMP | VR | EMER | HH)",
+      "dataType": "code",
+      "fhirPath": "Encounter.class.code"
+    },
+    {
+      "name": "type",
+      "title": "Type of encounter",
+      "description": "Type of service given in the of encounter",
+      "dataType": "code",
+      "fhirPath": "Encounter.type.coding.where(system='http://snomed.info/sct').first().code"
+    }
+  ]
+}

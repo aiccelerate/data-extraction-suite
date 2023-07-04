@@ -9,7 +9,7 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Procedure",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-SurgeryPhaseDetails",
-  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&category=http://snomed.info/sct|387713003",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&category=http://snomed.info/sct|387713003&_include=Procedure:encounter&_revinclude=Procedure:part-of&_revinclude=Observation:part-of",
   "entities": {
     "pid": "Patient",
     "episodeId": "EpisodeOfCare"
@@ -36,6 +36,13 @@
       "description": "End time for surgery phase",
       "dataType": "dateTime",
       "fhirPath": "Procedure.performedPeriod.end"
+    },
+    {
+      "name": "isMainSurgery",
+      "title": "Is cardiac surgery",
+      "description": "Whether this is a main surgery or diagnostic procedure (catheterization or EPS)",
+      "dataType": "boolean",
+      "fhirPath": "Procedure.encounter.resolve().serviceType.coding.exists(code='394603008' and system='http://snomed.info/sct')"
     },
     {
       "name": "ccsCategory",
@@ -94,6 +101,69 @@
       "description": "Duration of surgical phase in minutes",
       "dataType": "integer",
       "fhirPath": "utl:getPeriod(Procedure.performedPeriod.start, Procedure.performedPeriod.end,'min').toInteger()"
+    },
+    {
+      "name": "aristotleScore",
+      "title": "Aristotle Score of the Surgical Procedure",
+      "description": "Aristotle Score of the Surgical Procedure",
+      "dataType": "decimal",
+      "fhirPath": "Procedure.extension('https://aiccelerate.eu/fhir/StructureDefinition/aristotle-score').valueDecimal"
+    },
+    {
+      "name": "stsScore",
+      "title": "STAT Risk Score of the Surgical Procedure",
+      "description": "STAT risk score for congenital heart disease surgeries (from 1 to 5)",
+      "dataType": "integer",
+      "fhirPath": "Procedure.extension('https://aiccelerate.eu/fhir/StructureDefinition/sts-score').valueInteger"
+    },
+    {
+      "name": "rachs1Score",
+      "title": "RACHS-1 risk score for Surgical Procedure",
+      "description": "RACHS-1 risk score for congenital heart disease surgeries (from 1 to 6)",
+      "dataType": "integer",
+      "fhirPath": "Procedure.extension('https://aiccelerate.eu/fhir/StructureDefinition/rachs1-score').valueInteger"
+    },
+    {
+      "name": "extubationStatus",
+      "title": "Is extubated in OR",
+      "description": "Whether the patient was extubated in the operating room (true) or not (false). This only applies to surgeries.",
+      "dataType": "code",
+      "fhirPath": "%includes.where(Procedure.partOf.reference = 'Procedure/' & %context.id).where(code.coding.exists(code='271280005' and system='http://snomed.info/sct')).status.first()"
+    },
+    {
+      "name": "defibrillationStatus",
+      "title": "Is defibrillated in OR",
+      "description": "Whether the patient needed to be defibrillated during the surgery or not",
+      "dataType": "code",
+      "fhirPath": "%includes.where(Procedure.partOf.reference = 'Procedure/' & %context.id).where(code.coding.exists(code='308842001' and system='http://snomed.info/sct')).status.first()"
+    },
+    {
+      "name": "minTemperature",
+      "title": "Minimum body temperature during surgery",
+      "description": "Minimum temperature of the patient during surgery",
+      "dataType": "decimal",
+      "fhirPath": "%includes.where(Observation.partOf.reference = 'Procedure/' & %context.id).where(code.coding.exists(code='276885007' and system='http://snomed.info/sct')).select(valueQuantity.value).first()"
+    },
+    {
+      "name": "cecTime",
+      "title": "Time of extracorporeal circulation in minutes",
+      "description": "Time of extracorporeal circulation in minutes",
+      "dataType": "decimal",
+      "fhirPath": "%includes.where(Procedure.partOf.reference = 'Procedure/' & %context.id).where(code.coding.exists(code='182744004' and system='http://snomed.info/sct')).select(utl:getPeriod($this.performedPeriod.start, $this.performedPeriod.end, 'min')).first()"
+    },
+    {
+      "name": "clampTime",
+      "title": "Clamp time(min)",
+      "description": "Clamp time in minutes within surgery",
+      "dataType": "decimal",
+      "fhirPath": "%includes.where(Procedure.partOf.reference = 'Procedure/' & %context.id).where(code.coding.exists(code='301881006' and system='http://snomed.info/sct')).select(utl:getPeriod($this.performedPeriod.start, $this.performedPeriod.end, 'min')).first()"
+    },
+    {
+      "name": "arrestTime",
+      "title": "Circulatory arrest time (min)",
+      "description": "Circulatory arrest time in minutes within surgery",
+      "dataType": "decimal",
+      "fhirPath": "%includes.where(Procedure.partOf.reference = 'Procedure/' & %context.id).where(code.coding.exists(code='1197761000' and system='http://snomed.info/sct')).select(utl:getPeriod($this.performedPeriod.start, $this.performedPeriod.end, 'min')).first()"
     }
   ]
 }

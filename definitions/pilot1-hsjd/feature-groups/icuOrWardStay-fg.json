@@ -9,7 +9,7 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Encounter",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationEpisodeEncounter",
-  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&type=http://snomed.info/sct|305351004,http://snomed.info/sct|305354007&status=finished",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&type=http://snomed.info/sct|305342007,http://snomed.info/sct|305351004,http://snomed.info/sct|830077005,http://snomed.info/sct|305353001&status=finished",
   "entities": {
     "pid": "Patient",
     "episodeId": "EpisodeOfCare"

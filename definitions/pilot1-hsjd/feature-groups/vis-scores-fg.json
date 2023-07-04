@@ -1,0 +1,40 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/visscores",
+  "name": "visscores",
+  "title": "Post operative VIS scores ",
+  "description": "Post operative VIS score",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/Observation",
+  "fhirSearch": "?patient={{Patient}}&code=https://aiccelerate.eu/fhir/CodeSystem/intra-operative-observations|vis",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of measurement",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "value",
+      "title": "VIS score",
+      "description": "VIS score",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p1/diagnosticstudy",
+  "name": "diagnosticstudy",
+  "title": "Diagnostic Study",
+  "description": "A diagnostic study performed on a patient",
+  "version": "0.1",
+  "date": "2023-05-17",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "DiagnosticReport",
+  "fhirSearch": "?patient={{Patient}}&&_include:DiagnosticReport:based-on",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "date",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "DiagnosticReport.subject"
+    },
+    {
+      "name": "orderTime",
+      "title": "Study order date",
+      "description": "Study order date",
+      "dataType": "dateTime",
+      "fhirPath": "DiagnosticReport.basedOn.resolve().authoredOn"
+    },
+    {
+      "name": "startTime",
+      "title": "Study start date",
+      "description": "Study start date",
+      "dataType": "dateTime",
+      "fhirPath": "DiagnosticReport.effectivePeriod.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Study end date",
+      "description": "Study end date",
+      "dataType": "dateTime",
+      "fhirPath": "DiagnosticReport.effectivePeriod.end"
+    },
+    {
+      "name": "category",
+      "title": "Category of the study",
+      "description": "Category of the study",
+      "dataType": "code",
+      "fhirPath": "DiagnosticReport.category.coding.code.first()"
+    },
+    {
+      "name": "code",
+      "title": "Code for the study",
+      "description": "Code for the study",
+      "dataType": "code",
+      "fhirPath": "DiagnosticReport.code.coding.code.first()"
+    }
+  ]
+}
