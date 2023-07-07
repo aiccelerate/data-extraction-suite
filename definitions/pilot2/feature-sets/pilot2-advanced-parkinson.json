@@ -1930,7 +1930,7 @@
           "name": "5OrMore",
           "description": "Whether levodopa is used 5 times or more within a day in next period",
           "valueExpr": {
-            "fhirPath": "frequency > 4",
+            "fhirPath": "frequency_d_sum > 4",
             "dataType": "boolean"
           },
           "temporalAgg": [

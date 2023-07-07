@@ -1,0 +1,1386 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_complications",
+  "name": "pilot1_hsjd_complications",
+  "title": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
+  "description": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "temporal-windows",
+    "description": "The time period between the end of first surgical operation and the discharge time",
+    "useEndTime": true,
+    "period": "1h",
+    "minGap": "8h",
+    "featureGroup": [
+      {
+        "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      }
+    ],
+    "secondaryTimePoint": [
+      {
+        "name": "lastSurgeryTime",
+        "description": "Time of the latest main surgery performed in the episode",
+        "join": {
+          "type": "past"
+        },
+        "featureGroup": [
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
+            "useEndTime": true,
+            "filter": {
+              "name": "isMainSurgery",
+              "description": "If procedure is main cardiac surgery",
+              "fhirPath": "category='394603008'"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "featureGroup": [
+    {
+    "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
+    "feature": [
+      {
+        "name": "gender"
+      },
+      {
+        "name": "age",
+        "description": "Age of the patient at that time",
+        "valueExpr": {
+          "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+          "dataType": "integer"
+        }
+      }
+    ]
+  },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
+      "feature": [
+        {
+          "name": "los",
+          "description": "Length of stay (days) until the time point",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(time, %referenceTimePoint,'d').toInteger()",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeries",
+      "filter": {
+        "name": "main",
+        "fhirPath": "isMainSurgery"
+      },
+      "feature": [
+        {
+          "name": "numberOfHoursAfterSurgery",
+          "description": "Number of hours passed after first and last surgery",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(endTime, %referenceTimePoint,'h').toInteger()",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last"]
+            }
+          ]
+        },
+        {
+          "name": "mainProcedureCode",
+          "description": "Main procedure code of latest, first and all surgeries in this episode",
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "ccsCategory",
+          "description": "Main procedure category of latest, first and all surgeries in this episode",
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel1",
+          "description": "Main procedure 1 level classification of latest, first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "mainProcedureCode.substring(0,1)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel2",
+          "description": "Main procedure 2 level classification of latest, first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "mainProcedureCode.substring(0,2)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel3",
+          "description": "Main procedure 3 level classification of latest, first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "mainProcedureCode.substring(0,3)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel4",
+          "description": "Main procedure 4 level classification of latest, first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "mainProcedureCode.substring(0,4)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "duration",
+          "description":"Duration of the latest, first surgery as well as the total duration of all surgeries",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","first","sum"]
+            }
+          ]
+        },
+        {
+          "name": "aristotleScore",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","max"]
+            }
+          ]
+        },
+        {
+          "name": "stsScore",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","max"]
+            }
+          ]
+        },
+        {
+          "name": "rachs1Score",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","max"]
+            }
+          ]
+        },
+        {
+          "name": "isExtubated",
+          "valueExpr": {
+            "fhirPath": "extubationStatus='completed'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["last","any"]
+            }
+          ]
+        },
+        {
+          "name": "isDefibrillated",
+          "valueExpr": {
+            "fhirPath": "defibrillationStatus='completed'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["last","any"]
+            }
+          ]
+        },
+        {
+          "name": "minTemperature",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","min"]
+            }
+          ]
+        },
+        {
+          "name": "cecTime",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","sum"]
+            }
+          ]
+        },
+        {
+          "name": "clampTime",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","sum"]
+            }
+          ]
+        },
+        {
+          "name": "arrestTime",
+          "temporalAgg": [
+            {
+              "aggOp": ["last","sum"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeries",
+      "filter": {
+        "name": "other",
+        "fhirPath": "isMainSurgery.not()"
+      },
+      "feature": [
+        {
+          "name": "numberOfHoursAfterOperation",
+          "description": "Number of hours passed after last operation",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(endTime, %referenceTimePoint,'h').toInteger()",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "mainProcedureCode",
+          "description": "Main procedure code of all other operations in this episode",
+          "temporalAgg": [
+            {
+              "aggOp": ["set", "count"]
+            }
+          ]
+        },
+        {
+          "name": "ccsCategory",
+          "description": "Main procedure category of all other operations in this episode",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
+      "join": {
+        "type": "past",
+        "on": ["pid"]
+      },
+      "feature": [
+        {
+          "name": "hasSurgeryBefore",
+          "description": "Whether patient has cardiac surgery before this operation in his/her medical history",
+          "valueExpr": {
+            "fhirPath": "category='394603008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
+      "feature": [
+        {
+          "name": "category"
+        },
+        {
+          "name": "hasMainSurgery",
+          "description": "Whether patient has main surgery until now in this episode",
+          "valueExpr": {
+            "fhirPath": "category='394603008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "numOfSurgeries",
+          "description": "Number of surgery procedures in this episode",
+          "valueExpr": {
+            "fhirPath": "category='394603008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["count_true"]
+            }
+          ]
+        },
+        {
+          "name": "numOfNonSurgeryProcedures",
+          "description": "Number of non-surgery procedures in this episode",
+          "valueExpr": {
+            "fhirPath": "category!='394603008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["count_true"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
+      "filter": {
+        "name": "main",
+        "fhirPath": "category='394603008'"
+      },
+      "feature": [
+        {
+          "name": "isElective",
+          "description": "Whether first surgery in this episode is elective or not",
+          "valueExpr": {
+            "fhirPath": "priority='274075007'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/otherProcedure",
+      "feature": [
+        {
+          "name": "code",
+          "description": "Other procedure code of latest,first and all surgeries in this episode",
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel1",
+          "description": "Other procedure 1 level classification of latest,first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "code.substring(0,1)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel2",
+          "description": "Other procedure 2 level classification of latest,first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "code.substring(0,2)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel3",
+          "description": "Other procedure 3 level classification of latest,first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "code.substring(0,3)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        },
+        {
+          "name": "classLevel4",
+          "description": "Other procedure 4 level classification of latest,first and all surgeries in this episode",
+          "valueExpr": {
+            "fhirPath": "code.substring(0,4)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first","last","set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/condition",
+      "feature": [
+        {
+          "name": "icd10Code",
+          "description": "Set of ICD-10 diagnosis for patients until that time point",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        },
+        {
+          "name": "icd10Code3Digits",
+          "description": "Set of ICD-10 diagnosis (first 3 digits) for patients until that time point",
+          "valueExpr": {
+            "fhirPath": "icd10Code.substring(0,3)",
+            "dataType": "code"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/lab",
+      "join": {
+        "type": "past",
+        "duration": "%eligibilityEventTime"
+      },
+      "pivot": {
+        "name": "code",
+        "description": "Important lab results to be evaluated features",
+        "values": [
+          {
+            "name":"hemoglobin",
+            "value": "718-7"
+          },
+          {
+            "name":"hematocrit",
+            "value": "20570-8"
+          },
+          {
+            "name":"leucos",
+            "value": "26464-8"
+          },
+          {
+            "name":"neutrophils",
+            "value": "26499-4"
+          },
+          {
+            "name":"platelets",
+            "value": "26515-7"
+          },
+          {
+            "name":"pct",
+            "value": "33959-8"
+          },
+          {
+            "name":"lactate",
+            "value": "2524-7"
+          },
+          {
+            "name":"vbgPH",
+            "value": "2746-6"
+          },
+          {
+            "name":"vbgPCO2",
+            "value": "2021-4"
+          },
+          {
+            "name":"vabgHCO3",
+            "value": "4627-4"
+          },
+          {
+            "name":"cbgPH",
+            "value": "2745-8"
+          },
+          {
+            "name":"cbgCO2",
+            "value": "2020-6"
+          },
+          {
+            "name":"abgPH",
+            "value": "2744-1"
+          },
+          {
+            "name":"abgCO2",
+            "value": "2019-8"
+          },
+          {
+            "name":"arterialSVO",
+            "value": "2708-6"
+          },
+          {
+            "name":"venousSVO",
+            "value": "2711-0"
+          },
+          {
+            "name":"plasmaNA",
+            "value": "2951-2"
+          },
+          {
+            "name":"plasmaK",
+            "value": "2823-3"
+          },
+          {
+            "name":"plasmaCl",
+            "value": "2075-0"
+          },
+          {
+            "name":"plasmaCa",
+            "value": "17861-6"
+          },
+          {
+            "name":"bloodNA",
+            "value": "2947-0"
+          },
+          {
+            "name":"bloodK",
+            "value": "6298-4"
+          },
+          {
+            "name":"bloodCl",
+            "value": "2069-3"
+          },
+          {
+            "name":"bloodCa",
+            "value": "1994-3"
+          },
+          {
+            "name":"coagulationTT",
+            "value": "3173-2"
+          },
+          {
+            "name":"coagulationPR",
+            "value": "5894-1"
+          },
+          {
+            "name":"coagulationPT",
+            "value": "5902-2"
+          },
+          {
+            "name":"coagulationFibrinogen",
+            "value": "3255-7"
+          },
+          {
+            "name":"proBNP",
+            "value": "33762-6"
+          },
+          {
+            "name":"troponinI",
+            "value": "10839-9"
+          },
+          {
+            "name":"bloodGlucose",
+            "value": "2339-0"
+          },
+          {
+            "name":"alanineAminotransferase",
+            "value": "1742-6"
+          },
+          {
+            "name":"aspartateAminotransferase",
+            "value": "1920-8"
+          },
+          {
+            "name":"gammaGlutarylTransferase",
+            "value": "2324-2"
+          },
+          {
+            "name":"urea",
+            "value": "3094-0"
+          },
+          {
+            "name":"creatinine",
+            "value": "2160-0"
+          },
+          {
+            "name":"crp",
+            "value": "1988-5"
+          },
+          {
+            "name":"neutrophilsRatio",
+            "value": "770-8"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "value",
+          "windowFunc": ["delta","rate"]
+        },
+        {
+          "name": "isNormal",
+          "description": "Whether this lab result value is within normal range",
+          "valueExpr": {
+            "fhirPath": "interpretation='N'",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "interpretation"
+        },
+        {
+          "name": "isHigh",
+          "description": "Whether this lab result value is higher than normal range",
+          "valueExpr": {
+            "fhirPath": "interpretation.endsWith('H')",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "isLow",
+          "description": "Whether this lab result value is lower than normal range",
+          "valueExpr": {
+            "fhirPath": "interpretation.endsWith('L')",
+            "dataType": "boolean"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
+      "filter": {
+        "name": "ward",
+        "fhirPath": "type='305354007'"
+      },
+      "feature": [
+        {
+          "name": "numOfHours",
+          "description": "Number of total hours in Ward after first surgery",
+          "valueExpr": {
+            "fhirPath": "iif(%eligibilityEventTime > startTime,0, iif(%referenceTimePoint > endTime, duration, utl:getPeriod(startTime, %referenceTimePoint, 'hours')))",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
+      "filter": {
+        "name": "icu",
+        "fhirPath": "type='305351004' or type='830077005' or type='305353001'"
+      },
+      "feature": [
+        {
+          "name": "encounterId",
+          "description": "Number of ICU admissions in this episode",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        },
+        {
+          "name": "isCurrentlyInICU",
+          "description": "Whether patient is currently in ICU",
+          "valueExpr": {
+            "fhirPath": "%referenceTimePoint < endTime and %referenceTimePoint > startTime",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "beforeSurgery",
+          "description": "Number of ICU admissions before first surgery in this episode",
+          "valueExpr": {
+            "fhirPath": "%eligibilityEventTime > startTime",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "afterSurgery",
+          "description": "Number of ICU admissions after the first surgery in this episode",
+          "valueExpr": {
+            "fhirPath": "%eligibilityEventTime <= startTime",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "numOfHours",
+          "description": "Number of total hours in ICU",
+          "valueExpr": {
+            "fhirPath": "iif(%referenceTimePoint >= endTime, duration, utl:getPeriod(startTime, %referenceTimePoint, 'hours'))",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        },
+        {
+          "name": "numOfHoursAfterSurgery",
+          "description": "Number of total hours in ICU after the first surgery",
+          "valueExpr": {
+            "fhirPath": "iif(%eligibilityEventTime > startTime, 0, iif(%referenceTimePoint > endTime, duration, utl:getPeriod(startTime, %referenceTimePoint, 'hours')))",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        },
+        {
+          "name": "numOfHoursBeforeSurgery",
+          "description": "Number of total hours in ICU before the first surgery",
+          "valueExpr": {
+            "fhirPath": "iif(%eligibilityEventTime > startTime, duration, 0)",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/visscores",
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "withinOr",
+          "description": "VIS score within OR",
+          "valueExpr": {
+            "fhirPath": "iif(utl:getPeriod(%lastSurgeryTime, time, 'h') < 4, value, {})",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["max"]
+            }
+          ]
+        },
+        {
+          "name": "within24h",
+          "description": "VIS score within 24h",
+          "valueExpr": {
+            "fhirPath": "iif(utl:getPeriod(%lastSurgeryTime, time, 'h').select($this > 20 and $this < 28), value, {})",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["max"]
+            }
+          ]
+        },
+        {
+          "name": "within48h",
+          "description": "VIS score within 48h",
+          "valueExpr": {
+            "fhirPath": "iif(utl:getPeriod(%lastSurgeryTime, time, 'h').select($this > 44 and $this < 52), value, {})",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["max"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
+      "filter": {
+        "name": "bodyHeight",
+        "fhirPath": "code='8302-2'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Latest body height measurement"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
+      "filter": {
+        "name": "bodyWeight",
+        "fhirPath": "code='29463-7'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Latest body weight measurement"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
+      "filter": {
+        "name": "bodyTemperature",
+        "fhirPath": "code='8310-5'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Aggregation of 8-hour time windows for body temperature measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 8,
+              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
+      "filter": {
+        "name": "spo2",
+        "fhirPath": "code='2708-6'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Aggregation of 8-hour time windows for SPO2 measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 8,
+              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
+      "filter": {
+        "name": "heartRate",
+        "fhirPath": "code='8867-4'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Aggregation of 8-hour time windows for heart rate measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 8,
+              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
+      "filter": {
+        "name": "respiratoryRate",
+        "fhirPath": "code='9279-1'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Aggregation of 8-hour time windows for respiratory rate measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 8,
+              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/bloodpressure",
+      "feature": [
+        {
+          "name": "systolic",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 8,
+              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+            }
+          ]
+        },
+        {
+          "name": "diastolic",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 8,
+              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/medications",
+      "join": {
+        "type": "past",
+        "duration": "1d"
+      },
+      "pivot": {
+        "name": "atcCategory",
+        "description": "Categorization of the medication",
+        "values": [
+          {
+            "name":"metabolism",
+            "value": "A"
+          },
+          {
+            "name":"antithrombotic",
+            "value": "B01"
+          },
+          {
+            "name":"antihemorrhagics",
+            "value": "B02"
+          },
+          {
+            "name":"antianemic",
+            "value": "B03"
+          },
+          {
+            "name":"bloodSubstitutes",
+            "value": "B05"
+          },
+          {
+            "name":"cardiacTherapy",
+            "value": "C01"
+          },
+          {
+            "name":"antihypertensives",
+            "value": "C02"
+          },
+          {
+            "name":"diuretics",
+            "value": "C03"
+          },
+          {
+            "name":"vasoprotectives",
+            "value": "C05"
+          },
+          {
+            "name":"betaBlocking",
+            "value": "C07"
+          },
+          {
+            "name":"calciumChannelBlocker",
+            "value": "C08"
+          },
+          {
+            "name":"reninAngiotensin",
+            "value": "C09"
+          },
+          {
+            "name":"dermatologicals",
+            "value": "D"
+          },
+          {
+            "name":"urinarySex",
+            "value": "G"
+          },
+          {
+            "name":"pituitaryHypothalamic",
+            "value": "H01"
+          },
+          {
+            "name":"corticosteroids",
+            "value": "H02"
+          },
+          {
+            "name":"thyroid",
+            "value": "H03"
+          },
+          {
+            "name":"pancreaticHormones",
+            "value": "H04"
+          },
+          {
+            "name":"antibacterials",
+            "value": "J01"
+          },
+          {
+            "name":"antimycotics",
+            "value": "J02"
+          },
+          {
+            "name":"antimycobacterials",
+            "value": "J04"
+          },
+          {
+            "name":"antivirals",
+            "value": "J05"
+          },
+          {
+            "name":"immunoglobulins",
+            "value": "J06"
+          },
+          {
+            "name":"vaccines",
+            "value": "J07"
+          },
+          {
+            "name":"antiinflammatory",
+            "value": "M01"
+          },
+          {
+            "name":"muscleRelaxants",
+            "value": "M03"
+          },
+          {
+            "name":"antigout",
+            "value": "M04"
+          },
+          {
+            "name":"anesthetics",
+            "value": "N01"
+          },
+          {
+            "name":"analgesics",
+            "value": "N02"
+          },
+          {
+            "name":"antiepileptics",
+            "value": "N03"
+          },
+          {
+            "name":"psycholeptics",
+            "value": "N05"
+          },
+          {
+            "name":"psychoanaleptics",
+            "value": "N06"
+          },
+          {
+            "name":"otherNervousSystem",
+            "value": "N07"
+          },
+          {
+            "name":"anthelmintics",
+            "value": "P02"
+          },
+          {
+            "name":"obstructiveAirwayDiseases",
+            "value": "R03"
+          },
+          {
+            "name":"antihistamines",
+            "value": "R06"
+          },
+          {
+            "name":"sensoryOrgans",
+            "value": "S"
+          },
+          {
+            "name":"various",
+            "value": "V"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "isGiven",
+          "description": "If a certain medication category is given in last 24 hours",
+          "valueExpr": {
+            "fhirPath": "atcCategory.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "join": {
+        "type": "past",
+        "duration": "8h"
+      },
+      "filter": {
+        "name": "other",
+        "fhirPath": "code!='397945004'"
+      },
+      "feature": [
+        {
+          "name": "exists",
+          "description": "Whether any complication occurs in the last 8 hours",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "filter": {
+        "name": "other",
+        "fhirPath": "code!='397945004'"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "filter": {
+        "name": "unexpectedICU",
+        "fhirPath": "code='397945004'"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "exists",
+          "description": "Whether any complication occurs in future",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "unexpectedIcuAdmission",
+          "description": "Whether an unexpected ICU admission occurs in future",
+          "valueExpr": {
+            "fhirPath": "code='397945004'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "losFurther",
+          "description": "Length of stay in terms of days after this time point",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, endTime, 'days').toInteger()",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "los",
+          "description": "Total length of stay for episode",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(time, endTime, 'days').toInteger()",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "losCurrent",
+          "description": "Number of total hours in current location before changing location",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, endTime, 'hours')",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["first"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "icu",
+        "fhirPath": "type='305351004' or type='830077005' or type='305353001'"
+      },
+      "feature": [
+        {
+          "name": "losFurther",
+          "description": "Number of total hours in ICU from that time point",
+          "valueExpr": {
+            "fhirPath": "iif(%referenceTimePoint < startTime, duration, utl:getPeriod(%referenceTimePoint, endTime, 'hours'))",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "ward",
+        "fhirPath": "type='305354007'"
+      },
+      "feature": [
+        {
+          "name": "losFurther",
+          "description": "Number of total hours in Ward from that time point",
+          "valueExpr": {
+            "fhirPath": "iif(%referenceTimePoint < startTime, duration, utl:getPeriod(%referenceTimePoint, endTime, 'hours'))",
+            "dataType": "decimal"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "combinedFeature": [
+    {
+      "name": "totalIcuStay",
+      "description": "Patient total ICU stay in hours for the whole episode of care",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "icuStayUntilThatTime",
+          "featureNamePattern": "icuOrWardStay_icu_numOfHoursAfterSurgery_sum"
+        },
+        {
+          "alias": "icuStayAfterThatTime",
+          "featureNamePattern": "icuOrWardStay_icu_losFurther_f_sum"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "icuStayUntilThatTime + icuStayAfterThatTime",
+        "dataType": "decimal"
+      }
+    },
+    {
+      "name": "totalWardStay",
+      "description": "Patient total Ward stay in hours for the whole episode of care",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "wardStayUntilThatTime",
+          "featureNamePattern": "icuOrWardStay_ward_numOfHours_sum"
+        },
+        {
+          "alias": "wardStayAfterThatTime",
+          "featureNamePattern": "icuOrWardStay_ward_losFurther_f_sum"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "wardStayUntilThatTime + wardStayAfterThatTime",
+        "dataType": "decimal"
+      }
+    }
+  ]
+}
