@@ -1,6 +1,6 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_los",
-  "name": "pilot1_hsjd_los",
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_los_test",
+  "name": "pilot1_hsjd_los_test",
   "title": "Feature set for AICCELERATE Pilot 1 for predicting length of stay at any time after the surgery",
   "description": "Feature set for AICCELERATE Pilot 1 for predicting length of stay at any time after the surgery",
   "version": "0.1",
@@ -9,8 +9,8 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "referenceTimePoints": {
     "method": "temporal-windows",
-    "description": "The time period between the end of first surgical operation and the discharge time is divided into 8-hour periods to get the snapshot of patient status at these time points",
-    "period": "8h",
+    "description": "The time period between the end of first surgical operation and the discharge time is divided into 1 day periods to ge the snapshot of patient status at these time points",
+    "period": "1d",
     "featureGroup": [
       {
         "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay"
@@ -283,7 +283,32 @@
         }
       ]
     },
-
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
+      "join": {
+        "type": "past",
+        "on": ["pid"]
+      },
+      "filter": {
+        "name": "inPast",
+        "fhirPath": "time < (%eligibilityEventTime - 5 days)"
+      },
+      "feature": [
+        {
+          "name": "hasSurgeryBefore",
+          "description": "Whether patient has cardiac surgery before this operation in his/her medical history",
+          "valueExpr": {
+            "fhirPath": "category='394603008'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgeryEncounter",
       "feature": [
@@ -446,204 +471,7 @@
         }
       ]
     },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/lab",
-      "join": {
-        "type": "past",
-        "duration": "%eligibilityEventTime"
-      },
-      "pivot": {
-        "name": "code",
-        "description": "Important lab results to be evaluated features",
-        "values": [
-          {
-            "name":"hemoglobin",
-            "value": "718-7"
-          },
-          {
-            "name":"hematocrit",
-            "value": "20570-8"
-          },
-          {
-            "name":"leucos",
-            "value": "26464-8"
-          },
-          {
-            "name":"neutrophils",
-            "value": "26499-4"
-          },
-          {
-            "name":"platelets",
-            "value": "26515-7"
-          },
-          {
-            "name":"pct",
-            "value": "33959-8"
-          },
-          {
-            "name":"lactate",
-            "value": "2524-7"
-          },
-          {
-            "name":"vbgPH",
-            "value": "2746-6"
-          },
-          {
-            "name":"vbgPCO2",
-            "value": "2021-4"
-          },
-          {
-            "name":"vabgHCO3",
-            "value": "4627-4"
-          },
-          {
-            "name":"cbgPH",
-            "value": "2745-8"
-          },
-          {
-            "name":"cbgCO2",
-            "value": "2020-6"
-          },
-          {
-            "name":"abgPH",
-            "value": "2744-1"
-          },
-          {
-            "name":"abgCO2",
-            "value": "2019-8"
-          },
-          {
-            "name":"arterialSVO",
-            "value": "2708-6"
-          },
-          {
-            "name":"venousSVO",
-            "value": "2711-0"
-          },
-          {
-            "name":"plasmaNA",
-            "value": "2951-2"
-          },
-          {
-            "name":"plasmaK",
-            "value": "2823-3"
-          },
-          {
-            "name":"plasmaCl",
-            "value": "2075-0"
-          },
-          {
-            "name":"plasmaCa",
-            "value": "17861-6"
-          },
-          {
-            "name":"bloodNA",
-            "value": "2947-0"
-          },
-          {
-            "name":"bloodK",
-            "value": "6298-4"
-          },
-          {
-            "name":"bloodCl",
-            "value": "2069-3"
-          },
-          {
-            "name":"bloodCa",
-            "value": "1994-3"
-          },
-          {
-            "name":"coagulationTT",
-            "value": "3173-2"
-          },
-          {
-            "name":"coagulationPR",
-            "value": "5894-1"
-          },
-          {
-            "name":"coagulationPT",
-            "value": "5902-2"
-          },
-          {
-            "name":"coagulationFibrinogen",
-            "value": "3255-7"
-          },
-          {
-            "name":"proBNP",
-            "value": "33762-6"
-          },
-          {
-            "name":"troponinI",
-            "value": "10839-9"
-          },
-          {
-            "name":"bloodGlucose",
-            "value": "2339-0"
-          },
-          {
-            "name":"alanineAminotransferase",
-            "value": "1742-6"
-          },
-          {
-            "name":"aspartateAminotransferase",
-            "value": "1920-8"
-          },
-          {
-            "name":"gammaGlutarylTransferase",
-            "value": "2324-2"
-          },
-          {
-            "name":"urea",
-            "value": "3094-0"
-          },
-          {
-            "name":"creatinine",
-            "value": "2160-0"
-          },
-          {
-            "name":"crp",
-            "value": "1988-5"
-          },
-          {
-            "name":"neutrophilsRatio",
-            "value": "770-8"
-          }
-        ]
-      },
-      "feature": [
-        {
-          "name": "value",
-          "windowFunc": ["delta","rate"]
-        },
-        {
-          "name": "isNormal",
-          "description": "Whether this lab result value is within normal range",
-          "valueExpr": {
-            "fhirPath": "interpretation='N'",
-            "dataType": "boolean"
-          }
-        },
-        {
-          "name": "interpretation"
-        },
-        {
-          "name": "isHigh",
-          "description": "Whether this lab result value is higher than normal range",
-          "valueExpr": {
-            "fhirPath": "interpretation.endsWith('H')",
-            "dataType": "boolean"
-          }
-        },
-        {
-          "name": "isLow",
-          "description": "Whether this lab result value is lower than normal range",
-          "valueExpr": {
-            "fhirPath": "interpretation.endsWith('L')",
-            "dataType": "boolean"
-          }
-        }
-      ]
-    },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
       "feature": [
@@ -818,331 +646,6 @@
           "temporalAgg": [
             {
               "aggOp": ["max"]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
-      "filter": {
-        "name": "bodyHeight",
-        "fhirPath": "code='8302-2'"
-      },
-      "feature": [
-        {
-          "name": "value",
-          "description": "Latest body height measurement"
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
-      "filter": {
-        "name": "bodyWeight",
-        "fhirPath": "code='29463-7'"
-      },
-      "feature": [
-        {
-          "name": "value",
-          "description": "Latest body weight measurement"
-        }
-      ]
-    },
-
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
-      "filter": {
-        "name": "bodyTemperature",
-        "fhirPath": "code='8310-5'"
-      },
-      "feature": [
-        {
-          "name": "value",
-          "description": "Aggregation of 8-hour time windows for body temperature measurements",
-          "temporalAgg": [
-            {
-              "lastN": 3,
-              "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "median"]
-            }
-          ],
-          "windowFunc": ["delta"]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
-      "filter": {
-        "name": "spo2",
-        "fhirPath": "code='2708-6'"
-      },
-      "feature": [
-        {
-          "name": "value",
-          "description": "Aggregation of 8-hour time windows for SPO2 measurements",
-          "temporalAgg": [
-            {
-              "lastN": 3,
-              "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "median"]
-            }
-          ],
-          "windowFunc": ["delta"]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
-      "filter": {
-        "name": "heartRate",
-        "fhirPath": "code='8867-4'"
-      },
-      "feature": [
-        {
-          "name": "value",
-          "description": "Aggregation of 8-hour time windows for heart rate measurements",
-          "temporalAgg": [
-            {
-              "lastN": 3,
-              "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "median"]
-            }
-          ],
-          "windowFunc": ["delta"]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
-      "filter": {
-        "name": "respiratoryRate",
-        "fhirPath": "code='9279-1'"
-      },
-      "feature": [
-        {
-          "name": "value",
-          "description": "Aggregation of 8-hour time windows for respiratory rate measurements",
-          "temporalAgg": [
-            {
-              "lastN": 3,
-              "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min",  "median"]
-            }
-          ],
-          "windowFunc": ["delta"]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/bloodpressure",
-      "feature": [
-        {
-          "name": "systolic",
-          "temporalAgg": [
-            {
-              "lastN": 3,
-              "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "median"]
-            }
-          ],
-          "windowFunc": ["delta"]
-        },
-        {
-          "name": "diastolic",
-          "temporalAgg": [
-            {
-              "lastN": 3,
-              "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "median"]
-            }
-          ],
-          "windowFunc": ["delta"]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/medications",
-      "join": {
-        "type": "past",
-        "duration": "1d"
-      },
-      "pivot": {
-        "name": "atcCategory",
-        "description": "Categorization of the medication",
-        "values": [
-          {
-            "name":"metabolism",
-            "value": "A"
-          },
-          {
-            "name":"antithrombotic",
-            "value": "B01"
-          },
-          {
-            "name":"antihemorrhagics",
-            "value": "B02"
-          },
-          {
-            "name":"antianemic",
-            "value": "B03"
-          },
-          {
-            "name":"bloodSubstitutes",
-            "value": "B05"
-          },
-          {
-            "name":"cardiacTherapy",
-            "value": "C01"
-          },
-          {
-            "name":"antihypertensives",
-            "value": "C02"
-          },
-          {
-            "name":"diuretics",
-            "value": "C03"
-          },
-          {
-            "name":"vasoprotectives",
-            "value": "C05"
-          },
-          {
-            "name":"betaBlocking",
-            "value": "C07"
-          },
-          {
-            "name":"calciumChannelBlocker",
-            "value": "C08"
-          },
-          {
-            "name":"reninAngiotensin",
-            "value": "C09"
-          },
-          {
-            "name":"dermatologicals",
-            "value": "D"
-          },
-          {
-            "name":"urinarySex",
-            "value": "G"
-          },
-          {
-            "name":"pituitaryHypothalamic",
-            "value": "H01"
-          },
-          {
-            "name":"corticosteroids",
-            "value": "H02"
-          },
-          {
-            "name":"thyroid",
-            "value": "H03"
-          },
-          {
-            "name":"pancreaticHormones",
-            "value": "H04"
-          },
-          {
-            "name":"antibacterials",
-            "value": "J01"
-          },
-          {
-            "name":"antimycotics",
-            "value": "J02"
-          },
-          {
-            "name":"antimycobacterials",
-            "value": "J04"
-          },
-          {
-            "name":"antivirals",
-            "value": "J05"
-          },
-          {
-            "name":"immunoglobulins",
-            "value": "J06"
-          },
-          {
-            "name":"vaccines",
-            "value": "J07"
-          },
-          {
-            "name":"antiinflammatory",
-            "value": "M01"
-          },
-          {
-            "name":"muscleRelaxants",
-            "value": "M03"
-          },
-          {
-            "name":"antigout",
-            "value": "M04"
-          },
-          {
-            "name":"anesthetics",
-            "value": "N01"
-          },
-          {
-            "name":"analgesics",
-            "value": "N02"
-          },
-          {
-            "name":"antiepileptics",
-            "value": "N03"
-          },
-          {
-            "name":"psycholeptics",
-            "value": "N05"
-          },
-          {
-            "name":"psychoanaleptics",
-            "value": "N06"
-          },
-          {
-            "name":"otherNervousSystem",
-            "value": "N07"
-          },
-          {
-            "name":"anthelmintics",
-            "value": "P02"
-          },
-          {
-            "name":"obstructiveAirwayDiseases",
-            "value": "R03"
-          },
-          {
-            "name":"antihistamines",
-            "value": "R06"
-          },
-          {
-            "name":"sensoryOrgans",
-            "value": "S"
-          },
-          {
-            "name":"various",
-            "value": "V"
-          }
-        ]
-      },
-      "feature": [
-        {
-          "name": "isGiven",
-          "description": "If a certain medication category is given in last 24 hours",
-          "valueExpr": {
-            "fhirPath": "atcCategory.exists()",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["any"]
             }
           ]
         }

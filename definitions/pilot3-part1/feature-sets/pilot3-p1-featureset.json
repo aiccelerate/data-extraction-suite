@@ -1,0 +1,346 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot3-p1-feature-set",
+  "name": "pilot3-p1-feature-set",
+  "title": "Feature set for AICCELERATE Pilot 3 - Part1 for predicting time to surgery",
+  "description": "Feature set for AICCELERATE Pilot 3 - Part1 for predicting time to surgery",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "feature-group",
+    "description": "The time for main surgery is used as reference time point",
+    "featureGroup": [
+      {
+        "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/procedure",
+        "filter": {
+          "name": "surgeries",
+          "fhirPath" : "code = '01.59' or code='01.24' or code='01.25'"
+        },
+        "useEndTime": true
+      }
+    ],
+    "secondaryTimePoint": [
+      {
+        "name": "firstProcedure",
+        "description": "Time of the first diagnostic procedure for this surgery",
+        "join": {
+          "type": "past",
+          "duration": "90d"
+        },
+        "sessionWindow": "15d",
+        "takeFirst": false,
+        "featureGroup": [
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/diagnosticstudy"
+          },
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/procedure",
+            "filter": {
+              "name": "diagnosticProcedures",
+              "fhirPath": "code != 'O1.59' and code!='01.24' and code!='01.25'"
+            }
+          }
+        ]
+      },
+      {
+        "name": "lastProcedure",
+        "description": "End time of the last diagnostic study or procedure for this surgery",
+        "join": {
+          "type": "past",
+          "duration": "90d"
+        },
+        "takeFirst": true,
+        "featureGroup": [
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/diagnosticstudy",
+            "useEndTime": true
+          },
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/procedure",
+            "useEndTime": true,
+            "filter": {
+              "name": "diagnosticProcedures",
+              "fhirPath": "(code = '01.59' or code = '01.24' or code = '01.25').not()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "featureGroup": [
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/patient",
+      "feature": [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "age",
+          "description": "Age of the patient at that time",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "timeToSurgery",
+          "description": "Number of days to surgery from first diagnostic procedure order",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%firstProcedure, %referenceTimePoint, 'days')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "preparationDuration",
+          "description": "Number of days for diagnostic study and procedures from first diagnostic procedure order to end of the last",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%firstProcedure, %lastProcedure, 'days')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/condition",
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/condition",
+      "join": {
+        "type": "past",
+        "duration": "3mo"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/diagnosticstudy",
+      "join": {
+        "type": "past",
+        "duration": "%firstProcedure"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["count", "set"]
+            }
+          ]
+        },
+        {
+          "name": "durationFromOrder",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(orderTime, endTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        },
+        {
+          "name": "duration",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(startTime, endTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        },
+        {
+          "name": "delay",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(orderTime, startTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/diagnosticstudy",
+      "join": {
+        "type": "past",
+        "duration": "%firstProcedure"
+      },
+      "pivot": {
+        "name": "category",
+        "description": "Category of diagnostic studies",
+        "values": [
+          {
+            "name": "lab",
+            "value": "108252007"
+          },
+          {
+            "name": "imaging",
+            "value": "363679005"
+          },
+          {
+            "name": "counselling",
+            "value": "409063005"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["count", "set"]
+            }
+          ]
+        },
+        {
+          "name": "durationFromOrder",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(orderTime, endTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        },
+        {
+          "name": "duration",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(startTime, endTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        },
+        {
+          "name": "delay",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(orderTime, startTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/diagnosticstudy",
+      "join": {
+        "type": "past",
+        "duration": "%firstProcedure"
+      },
+      "filter": {
+        "name": "major",
+        "fhirPath": "code.subsetOf('1206' | '1207' | '1208' | '1667' | '1678' | '2077' | '2535' | '2751' | '1199' | '1210' | '1578')"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        },
+        {
+          "name": "durationFromOrder",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(orderTime, endTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        },
+        {
+          "name": "duration",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(startTime, endTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        },
+        {
+          "name": "delay",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(orderTime, startTime, 'days')",
+            "dataType": "integer"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["sum", "avg"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/procedure",
+      "filter": {
+        "name": "surgery",
+        "fhirPath" : "code = '01.59' or code='01.24' or code='01.25'"
+      },
+      "feature": [
+        {
+          "name": "code"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p1/procedure",
+      "filter": {
+        "name": "diagnostic",
+        "fhirPath" : "(code = '01.59' or code='01.24' or code='01.25').not()"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "description": "Set and number of diagnostic procedures ",
+          "temporalAgg": [
+            {
+              "aggOp": ["count", "set"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

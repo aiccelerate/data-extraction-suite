@@ -1,15 +1,24 @@
 {
   "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_complications",
   "name": "pilot1_hsjd_complications",
-  "title": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
-  "description": "Feature set for AICCELERATE Pilot 1 for predicting length of stay and complications after the surgery",
+  "title": "Feature set for AICCELERATE Pilot 1 for predicting complications after the surgery",
+  "description": "Feature set for AICCELERATE Pilot 1 for predicting complications after the surgery",
   "version": "0.1",
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "referenceTimePoints": {
     "method": "temporal-windows",
-    "period": "8h",
+    "description": "The time period between the end of first surgical operation and the discharge time is divided into 1h periods. However if patient has complications then these event times are considered as anchor points and reference time points are calculated accordingly. Two complications with less than 8 hour is assumed same complication so no reference time point is picked within this period. Enumeration for reference time points start from 1 hour before the complications",
+    "useEndTime": true,
+    "period": "1h",
+    "minGap": "8h",
+    "offset": "1h",
+    "featureGroup": [
+      {
+        "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication"
+      }
+    ],
     "secondaryTimePoint": [
       {
         "name": "lastSurgeryTime",
@@ -663,7 +672,7 @@
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
       "filter": {
         "name": "ward",
-        "fhirPath": "type='305354007'"
+        "fhirPath": "type='305342007'"
       },
       "feature": [
         {
@@ -852,6 +861,7 @@
         }
       ]
     },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/vitalsign",
       "filter": {
@@ -861,15 +871,30 @@
       "feature": [
         {
           "name": "value",
-          "description": "Aggregation of 8-hour time windows for body temperature measurements",
+          "description": "Aggregations of last (2,4 and 8)-hour time windows for body temperature measurements",
           "temporalAgg": [
             {
               "lastN": 3,
               "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+              "windowSize": 2,
+              "extending": "multiplicative",
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
             }
-          ]
+          ],
+          "windowFunc": ["delta"]
+        },
+        {
+          "name": "value",
+          "description": "Aggregations of last 3 1-hour time windows for body temperature measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 1,
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
+            }
+          ],
+          "windowFunc": ["delta"]
         }
       ]
     },
@@ -882,15 +907,30 @@
       "feature": [
         {
           "name": "value",
-          "description": "Aggregation of 8-hour time windows for SPO2 measurements",
+          "description": "Aggregation of last (2,4 and 8)-hour time windows for SPO2 measurements",
           "temporalAgg": [
             {
               "lastN": 3,
               "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+              "windowSize": 2,
+              "extending": "multiplicative",
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
             }
-          ]
+          ],
+          "windowFunc": ["delta"]
+        },
+        {
+          "name": "value",
+          "description": "Aggregations of last 3 1-hour time windows for body SPO2 measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 1,
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
+            }
+          ],
+          "windowFunc": ["delta"]
         }
       ]
     },
@@ -903,15 +943,30 @@
       "feature": [
         {
           "name": "value",
-          "description": "Aggregation of 8-hour time windows for heart rate measurements",
+          "description": "Aggregation of last (2,4 and 8)-hour time windows for heart rate measurements",
           "temporalAgg": [
             {
               "lastN": 3,
               "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+              "windowSize": 2,
+              "extending": "multiplicative",
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
             }
-          ]
+          ],
+          "windowFunc": ["delta"]
+        },
+        {
+          "name": "value",
+          "description": "Aggregations of last 3 1-hour time windows for heart rate measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 1,
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
+            }
+          ],
+          "windowFunc": ["delta"]
         }
       ]
     },
@@ -924,15 +979,30 @@
       "feature": [
         {
           "name": "value",
-          "description": "Aggregation of 8-hour time windows for respiratory rate measurements",
+          "description": "Aggregation of last (2,4 and 8)-hour time windows for respiratory rate measurements",
           "temporalAgg": [
             {
               "lastN": 3,
               "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+              "windowSize": 2,
+              "extending": "multiplicative",
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
             }
-          ]
+          ],
+          "windowFunc": ["delta"]
+        },
+        {
+          "name": "value",
+          "description": "Aggregations of last 3 1-hour time windows for respiratory rate measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 1,
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
+            }
+          ],
+          "windowFunc": ["delta"]
         }
       ]
     },
@@ -941,28 +1011,61 @@
       "feature": [
         {
           "name": "systolic",
+          "description": "Aggregation of last (2,4 and 8)-hour time windows for systolic bp measurements",
           "temporalAgg": [
             {
               "lastN": 3,
               "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+              "windowSize": 2,
+              "extending": "multiplicative",
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
             }
-          ]
+          ],
+          "windowFunc": ["delta"]
+        },
+        {
+          "name": "systolic",
+          "description": "Aggregations of last 3 1-hour time windows for systolic bp measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 1,
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
+            }
+          ],
+          "windowFunc": ["delta"]
         },
         {
           "name": "diastolic",
+          "description": "Aggregation of last (2,4 and 8)-hour time windows for diastolic bp measurements",
           "temporalAgg": [
             {
               "lastN": 3,
               "windowPeriod": "h",
-              "windowSize": 8,
-              "aggOp": ["stddev", "avg", "max", "min", "variance", "median"]
+              "windowSize": 2,
+              "extending": "multiplicative",
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
             }
-          ]
+          ],
+          "windowFunc": ["delta"]
+        },
+        {
+          "name": "diastolic",
+          "description": "Aggregations of last 3 1-hour time windows for diastplic bp measurements",
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "h",
+              "windowSize": 1,
+              "aggOp": ["stddev", "avg", "max", "min", "median", "kurtosis", "skewness"]
+            }
+          ],
+          "windowFunc": ["delta"]
         }
       ]
     },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/medications",
       "join": {
@@ -1179,6 +1282,7 @@
       "feature": [
         {
           "name": "code",
+          "description": "Number of complications until now",
           "temporalAgg": [
             {
               "aggOp": ["count"]
@@ -1196,6 +1300,7 @@
       "feature": [
         {
           "name": "code",
+          "description": "Number of unexpected ICU admissions until now",
           "temporalAgg": [
             {
               "aggOp": ["count"]
@@ -1225,10 +1330,30 @@
           ]
         },
         {
-          "name": "unexpectedIcuAdmission",
-          "description": "Whether an unexpected ICU admission occurs in future",
+          "name": "minutesUntil",
+          "description": "Number of minutes until first complication",
           "valueExpr": {
-            "fhirPath": "code='397945004'",
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, time, 'minutes')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "unexpectedICU",
+        "fhirPath": "code='397945004'"
+      },
+      "feature": [
+        {
+          "name": "exists",
+          "description": "Whether any unexpected ICU admission occurs in future",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -1236,142 +1361,290 @@
               "aggOp": ["any"]
             }
           ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/episodes",
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "losFurther",
-          "description": "Length of stay in terms of days after this time point",
-          "valueExpr": {
-            "fhirPath": "utl:getPeriod(%referenceTimePoint, endTime, 'days').toInteger()",
-            "dataType": "integer"
-          }
         },
         {
-          "name": "los",
-          "description": "Total length of stay for episode",
+          "name": "minutesUntil",
+          "description": "Number of minutes until first unexpected ICU admission",
           "valueExpr": {
-            "fhirPath": "utl:getPeriod(time, endTime, 'days').toInteger()",
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, time, 'minutes')",
             "dataType": "integer"
           }
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "losCurrent",
-          "description": "Number of total hours in current location before changing location",
-          "valueExpr": {
-            "fhirPath": "utl:getPeriod(%referenceTimePoint, endTime, 'hours')",
-            "dataType": "decimal"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["first"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
-      "join": {
-        "type": "future"
-      },
-      "filter": {
-        "name": "icu",
-        "fhirPath": "type='305351004' or type='830077005' or type='305353001'"
-      },
-      "feature": [
-        {
-          "name": "losFurther",
-          "description": "Number of total hours in ICU from that time point",
-          "valueExpr": {
-            "fhirPath": "iif(%referenceTimePoint < startTime, duration, utl:getPeriod(%referenceTimePoint, endTime, 'hours'))",
-            "dataType": "decimal"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["sum"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot1/icuOrWardStay",
-      "join": {
-        "type": "future"
-      },
-      "filter": {
-        "name": "ward",
-        "fhirPath": "type='305354007'"
-      },
-      "feature": [
-        {
-          "name": "losFurther",
-          "description": "Number of total hours in Ward from that time point",
-          "valueExpr": {
-            "fhirPath": "iif(%referenceTimePoint < startTime, duration, utl:getPeriod(%referenceTimePoint, endTime, 'hours'))",
-            "dataType": "decimal"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": ["sum"]
-            }
-          ]
         }
       ]
     }
   ],
   "combinedFeature": [
     {
-      "name": "totalIcuStay",
-      "description": "Patient total ICU stay in hours for the whole episode of care",
+      "name": "complication_n1_w1h_any",
+      "description": "Whether patient has a complication in the next hour",
       "isOutcome": true,
       "combinedFeatures": [
         {
-          "alias": "icuStayUntilThatTime",
-          "featureNamePattern": "icuOrWardStay_icu_numOfHoursAfterSurgery_sum"
-        },
-        {
-          "alias": "icuStayAfterThatTime",
-          "featureNamePattern": "icuOrWardStay_icu_losFurther_f_sum"
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
         }
       ],
       "valueExpr": {
-        "fhirPath": "icuStayUntilThatTime + icuStayAfterThatTime",
-        "dataType": "decimal"
+        "fhirPath": "minutesUntilComplication > 0 and minutesUntilComplication <= 60",
+        "dataType": "boolean"
       }
     },
     {
-      "name": "totalWardStay",
-      "description": "Patient total Ward stay in hours for the whole episode of care",
+      "name": "complication_n2_w1h_any",
+      "description": "Whether patient has a complication in the next 2nd 1-hour period",
       "isOutcome": true,
       "combinedFeatures": [
         {
-          "alias": "wardStayUntilThatTime",
-          "featureNamePattern": "icuOrWardStay_ward_numOfHours_sum"
-        },
-        {
-          "alias": "wardStayAfterThatTime",
-          "featureNamePattern": "icuOrWardStay_ward_losFurther_f_sum"
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
         }
       ],
       "valueExpr": {
-        "fhirPath": "wardStayUntilThatTime + wardStayAfterThatTime",
-        "dataType": "decimal"
+        "fhirPath": "minutesUntilComplication > 60 and minutesUntilComplication <= 120",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "complication_n3_w1h_any",
+      "description": "Whether patient has a complication in the next 3rd 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 120 and minutesUntilComplication <= 180",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "complication_n4_w1h_any",
+      "description": "Whether patient has a complication in the next 4th 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 180 and minutesUntilComplication <= 240",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "complication_n5_w1h_any",
+      "description": "Whether patient has a complication in the next 5th 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 240 and minutesUntilComplication <= 300",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "complication_n6_w1h_any",
+      "description": "Whether patient has a complication in the next 6th 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 300 and minutesUntilComplication <= 360",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "complication_n7_w1h_any",
+      "description": "Whether patient has a complication in the next 7th 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 360 and minutesUntilComplication <= 420",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "complication_n8_w1h_any",
+      "description": "Whether patient has a complication in the next 8th 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 420 and minutesUntilComplication <= 480",
+        "dataType": "boolean"
+      }
+    },
+
+    {
+      "name": "unexpectedICU_n1_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the next hour",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 0 and minutesUntilComplication <= 60 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "unexpectedICU_n2_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the 2nd next 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 60 and minutesUntilComplication <= 120 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "unexpectedICU_n3_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the 3rd next 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 120 and minutesUntilComplication <= 180 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "unexpectedICU_n4_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the 4th next 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 180 and minutesUntilComplication <= 240 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "unexpectedICU_n5_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the 5th next 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 240 and minutesUntilComplication <= 300 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "unexpectedICU_n6_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the 6th next 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 300 and minutesUntilComplication <= 360 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "unexpectedICU_n7_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the 7th next 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 360 and minutesUntilComplication <= 420 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "unexpectedICU_n8_w1h_any",
+      "description": "Whether patient has a unexpected ICU in the 8th next 1-hour period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "minutesUntilComplication",
+          "featureNamePattern": "complication_minutesUntil_f"
+        },
+        {
+          "alias": "minutesUntilUnexpectedICU",
+          "featureNamePattern": "complication_unexpectedICU_minutesUntil_f"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "minutesUntilComplication > 420 and minutesUntilComplication <= 480 and (minutesUntilUnexpectedICU - minutesUntilComplication) > 0 and (minutesUntilUnexpectedICU - minutesUntilComplication) < 480",
+        "dataType": "boolean"
       }
     }
   ]

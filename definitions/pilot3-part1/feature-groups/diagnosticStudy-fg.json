@@ -8,11 +8,12 @@
   "fhirVersion": "4.0.1",
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "DiagnosticReport",
-  "fhirSearch": "?patient={{Patient}}&&_include:DiagnosticReport:based-on",
+  "fhirSearch": "?patient={{Patient}}&_include=DiagnosticReport:based-on",
   "entities": {
     "pid": "Patient"
   },
-  "timestamp": "date",
+  "timestamp": "orderTime",
+  "periodEnd": "endTime",
   "feature": [
     {
       "name": "pid",

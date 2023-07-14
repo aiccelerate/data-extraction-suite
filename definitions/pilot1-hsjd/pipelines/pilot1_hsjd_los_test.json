@@ -1,0 +1,17 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_los_test",
+  "name": "pilot1_hsjd_los_test",
+  "title": "Dataset for AICCELERATE pilot 1 HSJD Use Case for predicting length of stay at any time after the surgery",
+  "description": "Dataset for AICCELERATE pilot 1 HSJD Use Case for predicting length of stay at any time after the surgery",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "featureSet": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_los_test",
+  "population": "https://aiccelerate.eu/cohorts/pilot1/cardiac_surgeries",
+  "agentSettings": [
+    {
+      "agent": "hsjd"
+    }
+  ]
+}

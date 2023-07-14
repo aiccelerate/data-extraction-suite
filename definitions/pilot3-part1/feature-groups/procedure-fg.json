@@ -12,7 +12,8 @@
   "entities": {
     "pid": "Patient"
   },
-  "timestamp": "date",
+  "timestamp": "startTime",
+  "periodEnd": "endTime",
   "feature": [
     {
       "name": "pid",
@@ -21,12 +22,20 @@
       "dataType": "id",
       "fhirPath": "Procedure.subject"
     },
+
     {
-      "name": "date",
-      "title": "Procedure start date",
-      "description": "Procedure start date",
+      "name": "startTime",
+      "title": "Procedure start time",
+      "description": "Procedure start time",
       "dataType": "dateTime",
       "fhirPath": "Procedure.performedPeriod.start"
+    },
+    {
+      "name": "endTime",
+      "title": "Procedure end time",
+      "description": "Procedure end time",
+      "dataType": "dateTime",
+      "fhirPath": "Procedure.performedPeriod.end"
     },
     {
       "name": "code",
