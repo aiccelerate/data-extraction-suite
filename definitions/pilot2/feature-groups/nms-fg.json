@@ -1,0 +1,137 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/nms",
+  "name": "nms",
+  "title": "Parkinson MDS-NMS assessment",
+  "description": "Assessment of a Parkinson Non-Motor Symptom with MDS-NMS",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "fhirSearch": "?patient={{Patient}}&code=https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms|non-motor-symptoms&method=https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods|nms",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date",
+      "description": "Assessment date of symptom(s)",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "total",
+      "title": "Total NMS score",
+      "description": "Total NMS score (0-832)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value.fst:rescale(0 | 832)"
+    },
+    {
+      "name": "depression",
+      "title": "NMS Section A - Depression",
+      "description": "NMS Section A - Depression subscore (0-80)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='A')).valueQuantity.value.fst:rescale(0 | 80)"
+    },
+    {
+      "name": "anxiety",
+      "title": "NMS Section B - Anxiety",
+      "description": "NMS Section B - Anxiety subscore (0-64)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='B')).valueQuantity.value.fst:rescale(0 | 64)"
+    },
+    {
+      "name": "apathy",
+      "title": "NMS Section C - Apathy",
+      "description": "NMS Section C - Apathy subscore (0-48)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='C')).valueQuantity.value.fst:rescale(0 | 48)"
+    },
+    {
+      "name": "psychosis",
+      "title": "NMS Section D - Psychosis",
+      "description": "NMS Section D - Psychosis subscore (0-64)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='D')).valueQuantity.value.fst:rescale(0 | 64)"
+    },
+    {
+      "name": "impulseControl",
+      "title": "NMS Section E - Impulse Control and Related Disorders",
+      "description": "NMS Section E - Impulse Control and Related Disorders subscore (0-64)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='E')).valueQuantity.value.fst:rescale(0 | 64)"
+    },
+    {
+      "name": "cognition",
+      "title": "NMS Section F - Cognition",
+      "description": "NMS Section F - Cognition subscore (0-96)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='F')).valueQuantity.value.fst:rescale(0 | 96)"
+    },
+    {
+      "name": "orthostaticHypo",
+      "title": "NMS Section G - Orthostatic Hypotension",
+      "description": "NMS Section G - Orthostatic Hypotension subscore (0-32)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='G')).valueQuantity.value.fst:rescale(0 | 32)"
+    },
+    {
+      "name": "urinary",
+      "title": "NMS Section H - Urinary",
+      "description": "NMS Section H - Urinary subscore (0-48)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='H')).valueQuantity.value.fst:rescale(0 | 48)"
+    },
+    {
+      "name": "sexual",
+      "title": "NMS Section I - Sexual",
+      "description": "NMS Section I - Sexual subscore (0-32)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='I')).valueQuantity.value.fst:rescale(0 | 32)"
+    },
+    {
+      "name": "gastrointestinal",
+      "title": "NMS Section J - Gastrointestinal",
+      "description": "NMS Section J - Gastrointestinal subscore (0-64)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='J')).valueQuantity.value.fst:rescale(0 | 64)"
+    },
+    {
+      "name": "sleep",
+      "title": "NMS Section K - Sleep and Wakefulness",
+      "description": "NMS Section K - Sleep and Wakefulness subscore (0-96)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='K')).valueQuantity.value.fst:rescale(0 | 96)"
+    },
+    {
+      "name": "pain",
+      "title": "NMS Section L - Pain",
+      "description": "NMS Section L - Pain subscore (0-64)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='L')).valueQuantity.value.fst:rescale(0 | 64)"
+    },
+    {
+      "name": "other",
+      "title": "NMS Section M - Other",
+      "description": "NMS Section M - Other subscore (0-80)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='M')).valueQuantity.value.fst:rescale(0 | 80)"
+    },
+    {
+      "name": "nonMotorFluctuations",
+      "title": "NMS Section NMF - Non-Motor Fluctuations",
+      "description": "NMS Section NMF - Non-Motor Fluctuations (0-128)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nms-sections' and $this.code='NMF')).valueQuantity.value.fst:rescale(0 | 128)"
+    }
+  ]
+}

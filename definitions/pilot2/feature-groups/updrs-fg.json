@@ -1,0 +1,95 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/updrs",
+  "name": "updrs",
+  "title": "Parkinson MDS-UPDRS assessment",
+  "description": "Assessment of a Parkinson Motor Symptom with UPDRS",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "QuestionnaireResponse",
+  "fhirSearch": "?patient={{Patient}}&questionnaire=https://aiccelerate.eu/fhir/Questionnaire/mds-updrs",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "QuestionnaireResponse.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date",
+      "description": "Assessment date of symptom(s)",
+      "dataType": "dateTime",
+      "fhirPath": "QuestionnaireResponse.authored"
+    },
+    {
+      "name": "tremor",
+      "title": "Scaled tremor assessment score",
+      "description": "Scaled tremor assessment score with MDS-UPDRS (part III, questions 3.15-3.18) (0-40)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '3').item.where(linkId.in('3.15-R' | '3.15-L' | '3.16-R' | '3.16-L' | '3.17-RUE' | '3.17-LUE' | '3.17-RLE' | '3.17-LLE' | '3.17-LipJaw' | '3.18')).answer.valueCoding.code.select($this.toInteger()).sum().fst:rescale(0 | 40)"
+    },
+    {
+      "name": "dyskinesia",
+      "title": "Scaled dyskinesia assessment score",
+      "description": "Scaled dyskinesia assessment score with MDS-UPDRS (Part IV Question 4.1) (0-4)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '4').item.where(linkId='4.1').answer.valueCoding.code.toInteger().fst:rescale(0 | 4)"
+    },
+    {
+      "name": "posturalBalance",
+      "title": "Scaled postural balance assessment score",
+      "description": "Scaled postural balance assessment score with MDS-UPDRS (Part III Question 3.12)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '3').item.where(linkId='3.12').answer.valueCoding.code.toInteger().fst:rescale(0 | 4)"
+    },
+    {
+      "name": "bradykinesia",
+      "title": "Scaled bradykinesia assessment score",
+      "description": "Scaled bradykinesia assessment score with MDS-UPDRS (Question 3.10 Gait and 3.14 Global spontaneity of movement) (0-8)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '3').item.where(linkId.in('3.10' | '3.14')).answer.valueCoding.code.select($this.toInteger()).sum().fst:rescale(0 | 8)"
+    },
+    {
+      "name": "rigidity",
+      "title": "Scaled stiffness/Rigidity assessment score",
+      "description": "Scaled stiffness/Rigidity assessment score with MDS-UPDRS (Question 3.3 a-b) (0-20)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '3').item.where(linkId.startsWith('3.3')).answer.valueCoding.code.select($this.toInteger()).sum().fst:rescale(0 | 20)"
+    },
+    {
+      "name": "dystonia",
+      "title": "Scaled dystonia assessment score",
+      "description": "Scaled dystonia assessment score with MDS-UPDRS score (Question 4.6) (0-4)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '4').item.where(linkId='4.6').answer.valueCoding.code.toInteger().fst:rescale(0 | 4)"
+    },
+    {
+      "name": "offtime",
+      "title": "Scaled off-time assessment score",
+      "description": "Scaled time spent in off state with MDS-UPDRS (Question 4.3) (0-4)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '4').item.where(linkId='4.3').answer.valueCoding.code.toInteger().fst:rescale(0 | 4)"
+    },
+    {
+      "name": "fluctuations",
+      "title": "Scaled assessment of fluctuations",
+      "description": "Scaled assessment of fluctuations with MDS-UPDRS (Functional impact of fluctuation -Question 4.4 and Question 4.5 time predictability of MOTOR FLUCTUATIONS --> MDS-UPDRS score -  (Functional impact of fluctuation -Question 4.4 and Question 4.5 time predictability of MOTOR FLUCTUATIONS ) -> Sum of their scores)",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '4').item.where(linkId = '4.4' or linkId='4.5').answer.valueCoding.code.select($this.toInteger()).sum().fst:rescale(0 | 8)"
+    },
+    {
+      "name": "hoehnYahrStage",
+      "title": "Hoehn Yahr Stage",
+      "description": "Hoehn Yahr Stage",
+      "dataType": "decimal",
+      "fhirPath": "QuestionnaireResponse.item.where(linkId = '3').item.where(linkId = '3hys').answer.valueDecimal.fst:rescale(0 | 5)"
+    }
+  ]
+}

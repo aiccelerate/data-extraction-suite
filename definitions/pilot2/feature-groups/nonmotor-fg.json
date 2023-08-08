@@ -15,26 +15,10 @@
       "description": "Minimum and maximum values for numeric assessments and cut-off scores to convert them to boolean symptom existence.",
       "item": [
         {
-          "key": "non-motor-symptoms:nms",
-          "description":"Non-motor symptom assessment in general with MDS-NMS",
-          "content": {
-            "range": [0, 334],
-            "cutoff": [false, 0, true]
-          }
-        },
-        {
           "key": "non-motor-symptoms:nmss",
           "description":"Non-motor symptom assessment in general with MDS-NMSS",
           "content": {
             "range": [0, 360],
-            "cutoff": [false, 0, true]
-          }
-        },
-        {
-          "key": "39898005:nms",
-          "description":"Assessment of Sleep disorder by MDS-NMS (Part K - subtotal score)",
-          "content": {
-            "range": [0, 96],
             "cutoff": [false, 0, true]
           }
         },
@@ -47,14 +31,6 @@
           }
         },
         {
-          "key": "713567005:nms",
-          "description":"Assessment of daytime sleepiness by MDS-NMS (Part K3.3)",
-          "content": {
-            "range": [0, 16],
-            "cutoff": [false, 0, true]
-          }
-        },
-        {
           "key": "713567005:nmss",
           "description":"Assessment of daytime sleepiness by MDS-NMSS (Domain 2.3)",
           "content": {
@@ -62,6 +38,42 @@
             "cutoff": [false, 0, true]
           }
         },
+        {
+          "key": "404640003:nmss",
+          "description":"Assessment of dizziness/fainting by MDS-NMSS (Question 2.4)",
+          "content": {
+            "range": [0, 12],
+            "cutoff": [false, 0, true]
+          }
+        },
+
+        {
+          "key": "non-motor-symptoms:nms",
+          "description":"Non-motor symptom assessment in general with MDS-NMS",
+          "content": {
+            "range": [0, 334],
+            "cutoff": [false, 0, true]
+          }
+        },
+
+        {
+          "key": "39898005:nms",
+          "description":"Assessment of Sleep disorder by MDS-NMS (Part K - subtotal score)",
+          "content": {
+            "range": [0, 96],
+            "cutoff": [false, 0, true]
+          }
+        },
+
+        {
+          "key": "713567005:nms",
+          "description":"Assessment of daytime sleepiness by MDS-NMS (Part K3.3)",
+          "content": {
+            "range": [0, 16],
+            "cutoff": [false, 0, true]
+          }
+        },
+
         {
           "key": "713567005:mds-updrs",
           "description":"Assessment of daytime sleepiness by MDS-UPDRS (Question 1.8)",
@@ -78,14 +90,7 @@
             "cutoff": [false, 0, true]
           }
         },
-        {
-          "key": "404640003:nmss",
-          "description":"Assessment of dizziness/fainting by MDS-NMSS (Question 2.4)",
-          "content": {
-            "range": [0, 12],
-            "cutoff": [false, 0, true]
-          }
-        },
+
         {
           "key": "404640003:mds-updrs",
           "description":"Assessment of dizziness/fainting by MDS-UPDRS (Question 1.12)",

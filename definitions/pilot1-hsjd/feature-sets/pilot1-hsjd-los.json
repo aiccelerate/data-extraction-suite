@@ -1304,6 +1304,68 @@
           ]
         }
       ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "exists",
+          "description": "Whether any complication occurs in future",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "minutesUntil",
+          "description": "Number of minutes until first complication",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, time, 'minutes')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "unexpectedICU",
+        "fhirPath": "code='397945004'"
+      },
+      "feature": [
+        {
+          "name": "exists",
+          "description": "Whether any unexpected ICU admission occurs in future",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "minutesUntil",
+          "description": "Number of minutes until first unexpected ICU admission",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%referenceTimePoint, time, 'minutes')",
+            "dataType": "integer"
+          }
+        }
+      ]
     }
   ],
   "combinedFeature": [

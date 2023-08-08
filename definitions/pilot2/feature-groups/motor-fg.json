@@ -39,6 +39,22 @@
           }
         },
         {
+          "key": "77718-5:mds-updrs",
+          "description":"UPDRS - Mentation, Behavior and Mood (Part 1)",
+          "content": {
+            "range": [0,52],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
+          "key": "77719-3:mds-updrs",
+          "description":"UPDRS - Activities of Daily Living (Part 2)",
+          "content": {
+            "range": [0,52],
+            "cutoff": [false, 0, true]
+          }
+        },
+        {
           "key": "26079004:mds-updrs",
           "description":"Tremor assessment score with MDS-UPDRS (part III, questions 3.15-3.18)",
           "content": {

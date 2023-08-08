@@ -1,0 +1,54 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/observations",
+  "name": "observations",
+  "title": "Other numeric or coded observations about patient",
+  "description": "Other numeric or coded observations about patient",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-PatientObservation",
+  "fhirSearch": "?patient={{Patient}}&code=http://snomed.info/sct|762713009,http://loinc.org|82590-1,http://snomed.info/sct|407628009",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date ",
+      "description": "Assessment date",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Code for the observation",
+      "description": "Code for the observation",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='http://loinc.org').code.first()"
+    },
+    {
+      "name": "value",
+      "title": "Value of the measurement",
+      "description": "Numeric value of the assessment",
+      "dataType": "integer",
+      "fhirPath": "Observation.valueQuantity.value.nav:orElse(Observation.valueInteger)"
+    },
+    {
+      "name": "concept",
+      "title": "Value of the measurement",
+      "description": "Coded value of the assessment",
+      "dataType": "code",
+      "fhirPath": "Observation.valueCodeableConcept.coding.where(system='http://snomed.info/sct' or system='http://loinc.org').code.first()"
+    }
+  ]
+}

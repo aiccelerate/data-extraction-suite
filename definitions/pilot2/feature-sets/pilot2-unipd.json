@@ -1,0 +1,1715 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot2_unipd",
+  "name": "pilot2_unipd",
+  "title": "Feature set for AICCELERATE pilot 2 - Predicting Advance Parkinson Disease and Dementia for UNIPD data",
+  "description": "Feature set for Parkinson disease - Predicting Advance Parkinson Disease and Dementia for UNIPD data",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "feature-group",
+    "description": "Use main encounters as reference time point"
+  },
+  "featureGroup": [
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/encounter",
+      "filter": {
+        "name": "mainVisit",
+        "fhirPath": "type='225398001'"
+      },
+      "join": {"type": "past"},
+      "feature": [
+        {
+          "name": "numOfYearsSinceDiagnosis",
+          "description": "Number of years passed from Parkinson diagnosis to current encounter",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%eligibilityEventTime, date, 'years')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
+      "feature": [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "age",
+          "description": "Age of the patient at reference point (examination)",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "ageOfDiagnosis",
+          "description": "Age when Parkinson is diagnosed first",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %eligibilityEventTime, 'years')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/condition",
+      "join": {
+        "type": "past"
+      },
+      "feature": [
+        {
+          "name": "hasDementia",
+          "description": "Whether patient has dementia or not until that time point. ICD-10 Codes: F00-F09, F10.73, G30, G31",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('F0') or icd10Code.startsWith('G30') or icd10Code.startsWith('G31') or icd10Code = 'F10.73'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasPsychosis",
+          "description": "Whether patient has psychosis or not until that time point. ICD-10 Codes: F20-29, F10.59, F16.79, F31.2, F31.5, F32.3, F10.5, F11.5, F19.5",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('F2') or icd10Code = 'F10.59' or icd10Code = 'F16.79' or icd10Code.startsWith('F31.2') or icd10Code.startsWith('F31.5') or icd10Code.startsWith('F32.3') or icd10Code.startsWith('F10.5') or icd10Code.startsWith('F11.5') or icd10Code.startsWith('F19.5')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasMyocardialInfarction",
+          "description": "Whether patient has myocardial infarction or not until that time point. ICD-10 Codes:  I21.x, I22.x, I25.2",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('I21') or icd10Code.startsWith('I22') or icd10Code.startsWith('I25.2')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasCongestiveHeartFailure",
+          "description": "Whether patient has congestive heart failure or not until that time point. ICD-10 Codes:  I09.9, I11.0, I13.0, I13.2, I25.5, I42.0, I42.5 - I42.9, I43.x, I50.x, P29.0",
+          "valueExpr": {
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('I09.9' | 'I11.0' | 'I13.0' | 'I13.2' | 'I25.5' | 'I42.0' | 'P29.0')) or icd10Code.matches('I42\\.[5-9]') or icd10Code.startsWith('I43') or icd10Code.startsWith('I50')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasPeripheralVascularDisease",
+          "description": "Whether patient has Peripheral vascular disease or not until that time point. ICD-10 Codes:  I70.x, I71.x, I73.1, I73.8, I73.9, I77.1, I79.0, I79.2, K55.1, K55.8, K55.9, Z95.8, Z95.9",
+          "valueExpr": {
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('I73.1' | 'I73.8' | 'I73.9' | 'I77.1' | 'I79.0' | 'I79.2' | 'K55.1' | 'K55.8' | 'K55.9' | 'Z95.8' | 'Z95.9')) or icd10Code.startsWith('I70') or icd10Code.startsWith('I71')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasCerebrovascularDisease",
+          "description": "Whether patient has Cerebrovascular disease (G45.x, G46.x, H34.0, I60.x - I69.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('G45') or icd10Code.startsWith('G46') or icd10Code = 'H34.0' or icd10Code.startsWith('I6')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasChronicPulmonaryDisease",
+          "description": "Whether patient has Chronic pulmonary disease (I27.8, I27.9, J40.x - J47.x, J60.x - J67.x, J68.4, J70.1, J70.3)",
+          "valueExpr": {
+            "fhirPath": "icd10Code = 'I27.8' or icd10Code = 'I27.9' or icd10Code.matches('J4[0-7](\\..*)?') or icd10Code.matches('J6[0-7](\\..*)?') or icd10Code = 'J68.4' or icd10Code='J70.1' or icd10Code='J70.3'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasRheumatoidArthritisVascularDiseases",
+          "description": "Whether patient has Rheumatoid arthritis/collagen vascular diseases (L94.0, L94.1, L94.3, M05.x, M06.x, M08.x, M12.0, M12.3, M30.x, M31.0 - M31.3, M32.x - M35.x, M45.x, M46.1, M46.8, M46.9)",
+          "valueExpr": {
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('L94.0' | 'L94.1' | 'L94.3' | 'M12.0' | 'M12.3' | 'M46.1' | 'M46.8' | 'M46.9')) or icd10Code.startsWith('M05') or icd10Code.startsWith('M06') or icd10Code.startsWith('M08') or icd10Code.startsWith('M30') or icd10Code.matches('M31\\.[0-3]') or icd10Code.startsWith('M32') or icd10Code.startsWith('M33') or icd10Code.startsWith('M34') or icd10Code.startsWith('M35') or icd10Code.startsWith('M45')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasMildLiverDisease",
+          "description": "Whether patient has Mild liver disease (B18.x, K70.0 - K70.3, K70.9, K71.3 - K71.5, K71.7, K73.x, K74.x, K76.0, K76.2 - K76.4, K76.8, K76.9, Z94.4)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('B18') or (icd10Code.exists() and icd10Code.subsetOf('K70.0' | 'K70.1' | 'K70.2' | 'K70.3' | 'K70.9' | 'K71.3' | 'K71.4' | 'K71.5' | 'K71.7' | 'K76.0' | 'K76.2' | 'K76.3' | 'K76.4' | 'K76.8' | 'K76.9' | 'Z94.4')) or icd10Code.startsWith('K73') or icd10Code.startsWith('K74')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasDiabetesWithoutChronicComplication",
+          "description": "Whether patient has Diabetes without chronic complication (E10.0, E10.1, E10.6, E10.8, E10.9, E11.0, E11.1, E11.6, E11.8, E11.9, E12.0, E12.1, E12.6, E12.8, E12.9, E13.0, E13.1, E13.6, E13.8, E13.9, E14.0, E14.1, E14.6, E14.8, E14.9)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.exists() and icd10Code.subsetOf('E10.0' | 'E10.1' | 'E10.6' | 'E10.8' | 'E10.9' | 'E11.0' | 'E11.1' | 'E11.6' | 'E11.8' | 'E11.9' | 'E12.0' | 'E12.1' | 'E12.6' | 'E12.8' | 'E12.9' | 'E13.0' | 'E13.1' | 'E13.6' | 'E13.8' | 'E13.9' | 'E14.0' | 'E14.1' | 'E14.6' | 'E14.8' | 'E14.9')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasDiabetesWithChronicComplication",
+          "description": "Whether patient has Diabetes with chronic complication (E10.2 - E10.5, E10.7, E11.2 - E11.5, E11.7, E12.2 - E12.5, E12.7, E13.2 - E13.5, E13.7, E14.2 - E14.5, E14.7)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('E1[0-4]\\.[2-5]') or icd10Code.matches('E1[0-4]\\.7')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasHemiplegiaOrParaplegia",
+          "description": "Whether patient has Hemiplegia or paraplegia (G04.1, G11.4, G80.1, G80.2, G81.x, G82.x, G83.0 - G83.4, G83.9)",
+          "valueExpr": {
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('G04.1' | 'G11.4' | 'G80.1' | 'G80.2' | 'G83.9')) or icd10Code.startsWith('G81') or icd10Code.startsWith('G82') or icd10Code.matches('G83\\.[0-4]')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasRenalDisease",
+          "description": "Whether patient has Renal disease (I12.0, I13.1, N03.2 - N03.7, N05.2 - N05.7, N18.x, N19.x, N25.0, Z49.0 - Z49.2, Z94.0, Z99.2)",
+          "valueExpr": {
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('I12.0' | 'I13.1' | ' N25.0' | 'Z94.0' | 'Z99.2')) or icd10Code.matches('N03\\.[2-7]') or icd10Code.matches('N05\\.[2-7]') or icd10Code.startsWith('N18') or icd10Code.startsWith('N19') or icd10Code.matches('Z49\\.[0-2]')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasMalignancy",
+          "description": "Whether patient has Any malignancy, including lymphoma and leukaemia, except malignant neoplasm of skin (C00.x - C26.x, C30.x - C34.x, C37.x - C41.x, C43.x, C45.x - C58.x, C60.x - C76.x, C81.x - C85.x, C88.x, C90.x - C97.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('C0') or icd10Code.startsWith('C1') or icd10Code.matches('C2[0-6](\\..*)?') or icd10Code.matches('C3[0-4](\\..*)?') or icd10Code.matches('C3[7-9](\\..*)?') or icd10Code.matches('C4[01356789](\\..*)?') or icd10Code.matches('C5[1-8](\\..*)?') or icd10Code.startsWith('C6') or icd10Code.matches('C7[0-6](\\..*)?') or icd10Code.matches('C8[0123458](\\..*)?') or icd10Code.matches('C9[0-7](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasModerateOrSevereLiverDisease",
+          "description": "Whether patient has Moderate or severe liver disease (I85.0, I85.9, I86.4, I98.2, K70.4, K71.1, K72.1, K72.9, K76.5, K76.6, K76.7)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.exists() and icd10Code.subsetOf('I85.0' | 'I85.9' |  'I86.4' |  'I98.2' |  'K70.4' |  'K71.1' | 'K72.1' | 'K72.9' | 'K76.5' | 'K76.6' | 'K76.7')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasMetastaticSolidTumour",
+          "description": "Whether patient has Metastatic solid tumour (C77.x - C80.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('C7[7-9](\\..*)?') or icd10Code.startsWith('C80')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasSolidTumourWithoutMetastasis",
+          "description": "Whether patient has Solid tumour without metastasis (C00.x - C26.x, C30.x - C34.x, C37.x - C41.x, C43.x, C45.x - C58.x, C60.x - C76.x, C97.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('C0') or icd10Code.startsWith('C1') or icd10Code.matches('C2[0-6](\\..*)?') or icd10Code.matches('C3[0-4](\\..*)?') or icd10Code.matches('C3[7-9](\\..*)?') or icd10Code.matches('C4[01356789](\\..*)?') or icd10Code.matches('C5[1-8](\\..*)?') or icd10Code.startsWith('C6') or icd10Code.matches('C7[0-6](\\..*)?') or icd10Code.startsWith('C97')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasCoagulopathy",
+          "description": "Whether patient has Coagulopathy (D65 - D68.x, D69.1, D69.3 - D69.6)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('D6[5-8](\\..*)?') or icd10Code.matches('D69\\.[3-6]') or icd10Code = 'D69.1'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasHiv",
+          "description": "Whether patient has AIDS/HIV (B20.x - B22.x, B24.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('B2[0-2](\\..*)?') or icd10Code.startsWith('B24')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasHypothyroidism",
+          "description": "Whether patient has Hypothyroidism (E00.x - E03.x, E89.0)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('E0[0-3](\\..*)?') or icd10Code = 'E89.0'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasHypertensionComplicated",
+          "description": "Whether patient has Hypertension, complicated (I10.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('I10')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasHypertensionUncomplicated",
+          "description": "Whether patient has Hypertension, uncomplicated (I11.x - I13.x, I15.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('I1[1-3](\\..*)?') or icd10Code.startsWith('I15')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasObesity",
+          "description": "Whether patient has Obesity (E66.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('E66')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasDepression",
+          "description": "Whether patient has Depression (F20.4, F31.3 - F31.5, F32.x, F33.x, F34.1, F41.2, F43.2)",
+          "valueExpr": {
+            "fhirPath": "(icd10Code.exists() and icd10Code.subsetOf('F20.4' | 'F34.1' | 'F41.2' | 'F43.2')) or icd10Code.matches('F1[3-5](\\..*)?') or icd10Code.startsWith('F32') or icd10Code.startsWith('F33')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/condition",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "traumas",
+          "description": "Whether patient has trauma and number of traumas until that time point. ICD-10 Codes: S00-S99, T00-T14",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('S') or icd10Code.startsWith('T0') or icd10Code.startsWith('T11') or icd10Code.startsWith('T12') or icd10Code.startsWith('T13') or icd10Code.startsWith('T14')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "falls",
+          "description": "Whether patient has fall and number of falls until that time point. ICD-10 Codes: W00-W19",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('W0') or icd10Code.startsWith('W1')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "fractures",
+          "description": "Whether patient has fracture and number of fracture until that time point. ICD-10 Codes: S02, S12, S22, S32, S42, S52, S62, S72, S82, S92",
+          "valueExpr": {
+            "fhirPath": "icd10Code.exists() and icd10Code.substring(0,2).subsetOf('S02' | 'S12' | 'S22' | 'S32' | 'S42' | 'S52' | 'S62' | 'S72' | 'S82' | 'S92')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasPepticUlcerDisease",
+          "description": "Whether patient has Peptic ulcer disease (K25.x - K28.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('K2[5-8](\\..*)?')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasFluidAndElectrolyteDisorders",
+          "description": "Whether patient has Fluid and electrolyte disorders (E22.2, E86.x, E87.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.startsWith('E86') or icd10Code.startsWith('E87') or icd10Code = 'E22.2'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasDeficiencyAnaemia",
+          "description": "Whether patient has Deficiency anaemia (D50.8, D50.9, D51.x - D53.x)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.matches('D5[1-3](\\..*)?') or icd10Code.matches('D50\\.[8-9]')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/observations",
+      "filter": {
+        "name": "cci",
+        "description": "Charlson Comorbidity Index",
+        "fhirPath": "code='762713009'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Latest Charlson Comorbidity Index"
+        },
+        {
+          "name": "delta",
+          "description": "Change in the Charlson Comorbidity Index",
+          "valueExpr": {
+            "fhirPath": "value - %previousRow.value",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/observations",
+      "filter": {
+        "name": "yoe",
+        "description": "Years of education",
+        "fhirPath": "code='82590-1'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Years of education"
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/observations",
+      "filter": {
+        "name": "cognitiveStatus",
+        "description": "Cognitive status",
+        "fhirPath": "code='407628009'"
+      },
+      "feature": [
+        {
+          "name": "concept",
+          "description": "Cognitive status of patient; 407629001: GDS Level 1 (no cognitive decline), 407630006: GDS level 2 - very mild cognitive decline, 407631005: GDS level 3 - mild cognitive decline, 407632003: GDS level 4 - moderate cognitive decline"
+        },
+        {
+          "name": "isDementia",
+          "description": "Whether patient is dementia",
+          "valueExpr": {
+            "fhirPath": "concept='407632003'",
+            "dataType": "boolean"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/social",
+      "filter": {
+        "name": "smoker",
+        "description": "Smoking",
+        "fhirPath": "code='72166-2'"
+      },
+      "feature": [
+        {
+          "name": "former",
+          "description": "Whether patient is a past or current smoker",
+          "valueExpr": {
+            "fhirPath": "value='8517006' or value='449868002'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "current",
+          "description": "Whether patient is a current smoker",
+          "valueExpr": {
+            "fhirPath": "value='449868002'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/social",
+      "filter": {
+        "name": "alcohol",
+        "description": "Alcohol use",
+        "fhirPath": "code='11331-6'"
+      },
+      "feature": [
+        {
+          "name": "former",
+          "description": "Whether patient is a past or current alcohol user",
+          "valueExpr": {
+            "fhirPath": "value='LA28391-3' or value='LA28393-9'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "current",
+          "description": "Whether patient is a current alcohol user",
+          "valueExpr": {
+            "fhirPath": "value='LA28391-3'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/social",
+      "filter": {
+        "name": "exercise",
+        "description": "Exercise",
+        "fhirPath": "code='106020009'"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "description": "Whether patient has intensive, moderate or low physical activity"
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "pivot": {
+        "name": "code",
+        "description": "Motor symptom assessments",
+        "values": [
+          {
+            "name":"tremor",
+            "value": "26079004"
+          },
+          {
+            "name":"dyskinesia",
+            "value": "9748009"
+          },
+          {
+            "name":"wearingOff",
+            "value": "427488005"
+          },
+          {
+            "name":"freezing_of_gait",
+            "value": "443544006"
+          },
+          {
+            "name":"postural_balance",
+            "value": "416240000"
+          },
+          {
+            "name":"bradykinesia",
+            "value": "399317006"
+          },
+          {
+            "name":"stiffness_rigidity",
+            "value": "271587009"
+          },
+          {
+            "name":"dystonia",
+            "value": "15802004"
+          },
+          {
+            "name":"offtime",
+            "value": "1230308005"
+          },
+          {
+            "name":"dysarthria",
+            "value": "8011004"
+          },
+          {
+            "name":"chorea",
+            "value": "271700006"
+          },
+          {
+            "name":"tic",
+            "value": "386783003"
+          },
+          {
+            "name":"camptocormia",
+            "value": "13534001"
+          },
+          {
+            "name":"hypophonia",
+            "value": "34527004"
+          },
+          {
+            "name":"pisa",
+            "value": "34288008"
+          },
+          {
+            "name":"abnormal_gait",
+            "value": "22325002"
+          },
+          {
+            "name":"fluctuations",
+            "value": "fluctuations"
+          },
+          {
+            "name":"reduced_arm_swing",
+            "value": "reduced-arm-swing"
+          },
+          {
+            "name":"severe_dyskinesia",
+            "value": "troublesome-dyskinesia"
+          }
+        ]
+      },
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "advanceSymptoms",
+        "description": "Motor symptoms (severe dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
+        "fhirPath": "code='1230308005' or code='troublesome-dyskinesia' or code='fluctuations'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether any advance symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "pivot": {
+        "name": "code",
+        "description": "Non motor symptoms",
+        "values": [
+          {
+            "name":"dizziness",
+            "value": "404640003"
+          },
+          {
+            "name":"pain",
+            "value": "22253000"
+          },
+          {
+            "name":"weakness",
+            "value": "13791008"
+          },
+          {
+            "name":"orthostatic_hypo",
+            "value": "28651003"
+          },
+          {
+            "name":"constipation",
+            "value": "14760008"
+          },
+          {
+            "name":"nausea",
+            "value": "422587007"
+          },
+          {
+            "name":"sweating",
+            "value": "52526003"
+          },
+          {
+            "name":"gastroparesis",
+            "value": "235675006"
+          },
+          {
+            "name":"nocturia",
+            "value": "139394000"
+          },
+          {
+            "name":"saliva",
+            "value": "288961002"
+          },
+          {
+            "name":"incontinence",
+            "value": "48340000"
+          },
+          {
+            "name":"dysphagia",
+            "value": "40739000"
+          }
+        ]
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether non-motor symptom seen within the period",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nonmotor",
+      "filter": {
+        "name": "sleep",
+        "description": "Sleep problems",
+        "fhirPath": "code='415238003' or code='193462001' or code='67233009' or code='230489007' or code='32914008'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether non-motor symptom seen within the period",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/cognitive_problems",
+      "pivot": {
+        "name": "code",
+        "description": "Cognitive, behavioral problems observed by clinician",
+        "values": [
+          {
+            "name":"impaired_cognition",
+            "value": "386806002"
+          },
+          {
+            "name":"apathy",
+            "value": "20602000"
+          },
+          {
+            "name":"anxiety",
+            "value": "48694002"
+          },
+          {
+            "name":"mood",
+            "value": "1217332007"
+          },
+          {
+            "name":"disinhibited",
+            "value": "247973004"
+          },
+          {
+            "name":"irritability",
+            "value": "55929007"
+          },
+          {
+            "name":"delusions",
+            "value": "2073000"
+          },
+          {
+            "name":"hallucinations",
+            "value": "7011001"
+          },
+          {
+            "name":"depression",
+            "value": "35489007"
+          },
+          {
+            "name":"anomie",
+            "value": "anomie"
+          },
+          {
+            "name":"hypomimia",
+            "value": "hypomimia"
+          },
+          {
+            "name":"micrographia",
+            "value": "725122008"
+          },
+          {
+            "name":"bradyphrenia",
+            "value": "285242009"
+          }
+        ]
+      },
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/updrs",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "tremor",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "dyskinesia",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "posturalBalance",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "bradykinesia",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "rigidity",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "dystonia",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "offtime",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "fluctuations",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "hoehnYahrStage",
+          "windowFunc": ["delta", "rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "pivot": {
+        "name": "code",
+        "description": "Numeric motor symptom assessments via MDS-UPDRS",
+        "values": [
+          {
+            "name": "updrs1",
+            "value": "77718-5"
+          },
+          {
+            "name": "updrs2",
+            "value": "77719-3"
+          },
+          {
+            "name": "updrs3",
+            "value": "77720-1"
+          },
+          {
+            "name": "updrs4",
+            "value": "77721-9"
+          }
+        ]
+      },
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "description": "Last UPDRS-Part III score (scaled) within the period and its change in time.",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nmss",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "total",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "cardiovascular",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "sleep",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "mood",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "perceptual",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "memory",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "gastrointestinal",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "urinary",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "sexual",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "miscellaneous",
+          "windowFunc": ["delta", "rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/nms",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "total",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "depression",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "anxiety",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "apathy",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "psychosis",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "impulseControl",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "cognition",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "orthostaticHypo",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "urinary",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "sexual",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "gastrointestinal",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "sleep",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "pain",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "other",
+          "windowFunc": ["delta", "rate"]
+        },
+        {
+          "name": "nonMotorFluctuations",
+          "windowFunc": ["delta", "rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "pivot": {
+        "name": "code",
+        "description": "Cognitive, behavioral assessment with certain questionnaires",
+        "values": [
+          {
+            "name":"MMSE",
+            "value": "72106-8"
+          },
+          {
+            "name":"MoCA",
+            "value": "72172-0"
+          },
+          {
+            "name":"PDCFRS",
+            "value": "pd-cfrs"
+          },
+          {
+            "name":"ADL",
+            "value": "273547007"
+          },
+          {
+            "name":"iADL",
+            "value": "273534002"
+          },
+          {
+            "name":"PDQ8",
+            "value": "pdq-8"
+          },
+          {
+            "name":"SAS",
+            "value": "sas"
+          },
+          {
+            "name":"STAIy1",
+            "value": "stai-y1"
+          },
+          {
+            "name":"STAIy2",
+            "value": "stai-y2"
+          },
+          {
+            "name":"BDI",
+            "value": "89209-1"
+          },
+          {
+            "name":"BIS11",
+            "value": "bis-11"
+          },
+          {
+            "name":"SOGS",
+            "value": "sogs"
+          },
+          {
+            "name":"QUIPRS",
+            "value": "quip-rs"
+          }
+        ]
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "scoreScaled",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/other",
+      "pivot": {
+        "name": "code",
+        "description": "Cognitive, behavioral assessment (Zscores)",
+        "values": [
+          {
+            "name":"ROCFc",
+            "value": "rocf-c"
+          },
+          {
+            "name":"ROCFdr",
+            "value": "rocf-d"
+          },
+          {
+            "name":"VERBFLUph",
+            "value": "verb-flu-ph"
+          },
+          {
+            "name":"VERBFLUs",
+            "value": "verb-flu-s"
+          },
+          {
+            "name":"VERBFLUa",
+            "value": "verb-flu-a"
+          },
+          {
+            "name":"VERBFLUsi",
+            "value": "verb-flu-si"
+          },
+          {
+            "name":"WPAT",
+            "value": "wpat"
+          },
+          {
+            "name":"SDMT",
+            "value": "sdmt"
+          },
+          {
+            "name":"BABt",
+            "value": "bab-t"
+          },
+          {
+            "name":"TMT",
+            "value": "tmt"
+          },
+          {
+            "name":"TMTa",
+            "value": "tmt-a"
+          },
+          {
+            "name":"TMTb",
+            "value": "tmt-a"
+          },
+          {
+            "name":"VOSP",
+            "value": "vosp"
+          },
+          {
+            "name":"CDT",
+            "value": "cdt"
+          },
+          {
+            "name":"BJLOT",
+            "value": "bjlot"
+          },
+          {
+            "name":"STROOPt",
+            "value": "stroop-t"
+          },
+          {
+            "name":"STROOPe",
+            "value": "stroop-e"
+          },
+          {
+            "name":"BNT",
+            "value": "bnt"
+          }
+        ]
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "score",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/medication",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "feature": [
+        {
+          "name": "hasOtherParkinsonMedication",
+          "description": "Whether patient has other parkinson medication or not within this period. ATC Code: under N04B",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N04B')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasDopamineAgonist",
+          "description": "Whether patient has dopamine agonist or not within this period. ATC Code: under N04BC",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N04BC')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasCOMPTI",
+          "description": "Whether patient has COMPT-I therapy or not within this period. ATC Code: entacapone or opicapone",
+          "valueExpr": {
+            "fhirPath": "atcCode = 'N04BX02' or atcCode='N04BX04'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasMAOBI",
+          "description": "Whether patient has MAOB-I therapy or not within this period. ATC Code: N04BD",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N04BD')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasACHI",
+          "description": "Whether patient has anticholinesterase inhibitors or not within this period. ATC Code: under under N06DA",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N06DA')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasSSRI",
+          "description": "Whether patient has Selective serotonin reuptake inhibitors (SSRIs) or not within this period. ATC Code: under under N06AB",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N06AB')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasSRNI",
+          "description": "Whether patient has Serotonin-Norepinephrine Reuptake Inhibitors (SRNIs) or not within this period.",
+          "valueExpr": {
+            "fhirPath": "atcCode = 'N06AX23' or atcCode='N06AX21' or atcCode='N06AX28' or atcCode='N06AX17' or atcCode='N06AX16'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasNASSA",
+          "description": "Whether patient has Noradrenergic and specific serotonergic antidepressants (NaSSAs) or not within this period.",
+          "valueExpr": {
+            "fhirPath": "atcCode = 'N06AX11' or atcCode='N06AX03'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasAntidepressant",
+          "description": "Whether patient has antidepressant or not within this period. ATC Code: N06AA,N06AB,N06AF,N06AG,N06AX",
+          "valueExpr": {
+            "fhirPath": "atcCode.substring(0,5).subsetOf('N06AA' | 'N06AB' | 'N06AF' | 'N06AG' | 'N06AX')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasBZD",
+          "description": "Whether patient has benzodiazepines or not within this period. ATC Code: under N05CD",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N05CD')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasAntipsychotics",
+          "description": "Whether patient has antipsychotics or not within this period. ATC Code: under under N05A",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N05A')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "hasPsychostimulant",
+          "description": "Whether patient has Psychostimulants or not within this period. ATC Code: under under N05A",
+          "valueExpr": {
+            "fhirPath": "atcCode.startsWith('N06B')",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/meddose",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "filter": {
+        "name": "levodopa",
+        "fhirPath": "atcCode='N04BA01'"
+      },
+      "feature": [
+        {
+          "name": "5OrMore",
+          "description": "Whether levodopa is used 5 times or more within a day in this period",
+          "valueExpr": {
+            "fhirPath": "frequency > 4",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "dose",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/meddose",
+      "join": {
+        "type": "past",
+        "duration": "%previousReferenceTimePoint"
+      },
+      "filter": {
+        "name": "dopamine",
+        "fhirPath": "atcCode='N04BC01'"
+      },
+      "feature": [
+        {
+          "name": "dose",
+          "windowFunc": ["delta","rate"]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device",
+      "feature": [
+        {
+          "name": "treatment",
+          "description": "Whether any advance parkinson device is started to be used in this period",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "deepBrainStimulator",
+          "description": "Whether deep brain stimulator device is started to be used in this period",
+          "valueExpr": {
+            "fhirPath": "code='deep-brain-stimulator'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "levodopaInfusionPumpUsed",
+          "description": "Whether Levodopa infusion pump device is started to be used in this period",
+          "valueExpr": {
+            "fhirPath": "code='levodopa-infusion-pump' or code='levodopo-infusion-pump'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        },
+        {
+          "name": "apomorphinePumpUsed",
+          "description": "Whether Apomorphine pump device is started to be used in this period",
+          "valueExpr": {
+            "fhirPath": "code='apomorfine-pump'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/meddose",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "levodopa",
+        "fhirPath": "atcCode='N04BA01'"
+      },
+      "feature": [
+        {
+          "name": "5OrMore",
+          "description": "Whether levodopa is used 5 times or more within a day in this period",
+          "valueExpr": {
+            "fhirPath": "frequency > 4",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/motor",
+      "filter": {
+        "name": "advanceSymptoms",
+        "description": "Motor symptoms (severe dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
+        "fhirPath": "code='1230308005' or code='troublesome-dyskinesia' or code='fluctuations'"
+      },
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "isSeen",
+          "description": "Whether any advance symptom seen within the period.",
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/device",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "treatment",
+          "description": "Whether any advance parkinson device is started to be used in this period",
+          "valueExpr": {
+            "fhirPath": "code.exists()",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot2/observations",
+      "join": {
+        "type": "future"
+      },
+      "filter": {
+        "name": "cognitiveStatus",
+        "description": "Cognitive status",
+        "fhirPath": "code='407628009'"
+      },
+      "feature": [
+        {
+          "name": "isDementia",
+          "description": "Whether patient will be dementia in the future",
+          "valueExpr": {
+            "fhirPath": "concept='407632003'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 6,
+              "windowPeriod": "mo",
+              "windowSize": 12,
+              "aggOp": [
+                "any"
+              ]
+            },
+            {
+              "lastN": 4,
+              "windowPeriod": "mo",
+              "windowSize": 6,
+              "extending": "multiplicative",
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "combinedFeature": [
+    {
+      "name": "inAdvancedStage",
+      "description": "Whether patient is within advance stage of Parkinson (modified delphi criteria) in this period",
+      "isOutcome": false,
+      "combinedFeatures": [
+        {
+          "alias": "deviceAidedTreatment",
+          "featureNamePattern": "device_treatment_any"
+        },
+        {
+          "alias": "usingLevodopa5OrMore",
+          "featureNamePattern": "meddose_levodopa_5OrMore_pPRTP_any"
+        },
+        {
+          "alias": "advanceSymptoms",
+          "featureNamePattern": "motor_advanceSymptoms_isSeen_pPRTP_any"
+        },
+        {
+          "alias": "isDementia",
+          "featureNamePattern": "observations_cognitiveStatus_isDementia"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "deviceAidedTreatment or (usingLevodopa5OrMore and (advanceSymptoms or isDementia))",
+        "dataType": "boolean"
+      }
+    },
+    {
+      "name": "inAdvancedStage",
+      "description": "Whether patient is passed to the advance stage of Parkinson (modified delphi criteria) in next period",
+      "isOutcome": true,
+      "combinedFeatures": [
+        {
+          "alias": "alreadyInAdvanceStage",
+          "featureNamePattern": "inAdvancedStage"
+        },
+        {
+          "alias": "deviceAidedTreatment",
+          "featureNamePattern": "device_treatment_*"
+        },
+        {
+          "alias": "usingLevodopa5OrMore",
+          "featureNamePattern": "meddose_levodopa_5OrMore_*"
+        },
+        {
+          "alias": "advanceSymptoms",
+          "featureNamePattern": "motor_advanceSymptoms_isSeen_*"
+        },
+        {
+          "alias": "isDementia",
+          "featureNamePattern": "observations_cognitiveStatus_isDementia_*"
+        }
+      ],
+      "valueExpr": {
+        "fhirPath": "alreadyInAdvanceStage.not() and deviceAidedTreatment or (usingLevodopa5OrMore and (advanceSymptoms or isDementia))",
+        "dataType": "boolean"
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/cognitive_problems",
+  "name": "cognitive_problems",
+  "title": "Other cognitive, behavioral problems",
+  "description": "ther cognitive, behavioral problems identified related with Parkinson",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ParkinsonCognitiveBehavioralProblemObservation",
+  "fhirSearch": "?patient={{Patient}}&code:in=https://aiccelerate.eu/fhir/ValueSet/parkinson-cognitive-behavioral-problems",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date ",
+      "description": "Assessment date",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "code",
+      "title": "Assessment type",
+      "description": "Code for the problem",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='http://loinc.org' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms').code.first()"
+    },
+    {
+      "name": "isSeen",
+      "title": "Whether the cognitive/behavioral problem exists for the target domain",
+      "description": "Whether the cognitive/behavioral problem exists for the target domain",
+      "dataType": "boolean",
+      "fhirPath": "Observation.valueBoolean"
+    }
+  ]
+}

@@ -108,7 +108,7 @@
           "description": "Beck Depression Inventory II total score (BDI2)",
           "content": {
             "range": [0,63],
-            "cutoff": [false, 14, true],
+            "cutoff": [false, 13, true],
             "concept": "depression"
           }
         },
@@ -237,6 +237,14 @@
           }
         },
         {
+          "key": "rocf-d",
+          "description":"Rey–Osterrieth complex figure test(ROCF)-delayed Zscore",
+          "content": {
+            "cutoff": [true, -1.5, false],
+            "concept": "memory"
+          }
+        },
+        {
           "key": "bjlot",
           "description":"Benton Judgment of Line Orientation Test (BJLOT) Zscore",
           "content": {
@@ -332,6 +340,33 @@
             "cutoff": [false, 0, true],
             "concept": "QoL"
           }
+        },
+        {
+          "key": "pdq-8",
+          "description":"Parkinson Disease Questionnaire ",
+          "content": {
+            "range": [0,32],
+            "cutoff": [false, 0, true],
+            "concept": "QoL"
+          }
+        },
+        {
+          "key": "stai-y1",
+          "description":"The State-Trait Anxiety Inventory - Y1 Form",
+          "content": {
+            "range": [20,80],
+            "cutoff": [false, 39, true],
+            "concept": "anxiety"
+          }
+        },
+        {
+          "key": "stai-y2",
+          "description":"The State-Trait Anxiety Inventory - Y1 Form",
+          "content": {
+            "range": [20,80],
+            "cutoff": [false, 39, true],
+            "concept": "anxiety"
+          }
         }
       ]
     }
@@ -364,13 +399,6 @@
       "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-cognitive-behavioral-assessments' or system='http://loinc.org').code.first()"
     },
     {
-      "name": "name",
-      "title": "Assessment name",
-      "description": "Name for the assessment e.g. MMSE, MoCA, Activity of Daily Livings-ADL",
-      "dataType": "code",
-      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/parkinson-cognitive-behavioral-assessments' or system='http://loinc.org').display.first()"
-    },
-    {
       "name": "concept",
       "title": "Cognitive or behavioral domain under assessment",
       "description": "Cognitive or behavioral domain that is assessed with this assessment e.g. cognition, anxiety, etc.",
@@ -389,7 +417,7 @@
       "title": "Scaled score of the assessment",
       "description": "Scaled numeric value of the assessment (min-max normalization)",
       "dataType": "decimal",
-      "fhirPath": "Observation.valueQuantity.value.fst:rescale(fst:getContext(%assessmentContext, iif(%code='273534002', iif(Observation.subject.resolve().gender ='female', 'iadlForFemale', 'iadlForMale') ,%code)).range)"
+      "fhirPath": "Observation.valueQuantity.value.fst:rescale(fst:getContext(%assessmentContext, iif(%code='273534002', iif(%context.subject.resolve().gender ='female', 'iadlForFemale', 'iadlForMale') ,%code)).range)"
     },
     {
       "name": "problemExists",

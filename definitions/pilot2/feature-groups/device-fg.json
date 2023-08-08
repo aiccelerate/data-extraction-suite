@@ -14,8 +14,6 @@
     "pid": "Patient"
   },
   "timestamp": "startDate",
-  "periodEnd": "endDate",
-  "temporalGrouping": "mo",
   "feature": [
     {
       "name": "pid",
@@ -30,13 +28,6 @@
       "description": "Medication start date",
       "dataType": "date",
       "fhirPath": "DeviceUseStatement.timingPeriod.start.toDate()"
-    },
-    {
-      "name": "endDate",
-      "title": "End date for use of device",
-      "description": "Medication end date",
-      "dataType": "date",
-      "fhirPath": "DeviceUseStatement.timingPeriod.end.toDate()"
     },
     {
       "name": "code",

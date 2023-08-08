@@ -1,0 +1,102 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot2/nmss",
+  "name": "nmss",
+  "title": "Parkinson MDS-NMSS assessment",
+  "description": "Assessment of a Parkinson Non-Motor Symptom with MDS-NMSS",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "fhirSearch": "?patient={{Patient}}&code=https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptoms|non-motor-symptoms&method=https://aiccelerate.eu/fhir/CodeSystem/parkinson-symptom-assessment-methods|nmss",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Assessment date",
+      "description": "Assessment date of symptom(s)",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime.nav:orElse(Observation.effectivePeriod.start)"
+    },
+    {
+      "name": "total",
+      "title": "Total NMSS score",
+      "description": "Total NMSS score (0-360)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value.fst:rescale(0 | 360)"
+    },
+    {
+      "name": "cardiovascular",
+      "title": "NMSS Domain 1 - Cardiovascular subscore",
+      "description": "NMSS Domain 1 - Cardiovascular subscore (0-24)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain1')).valueQuantity.value.fst:rescale(0 | 24)"
+    },
+    {
+      "name": "sleep",
+      "title": "NMSS Domain 2 - Sleep/Fatigue",
+      "description": "NMSS Domain 2 - Sleep/Fatigue subscore (0-48)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain2')).valueQuantity.value.fst:rescale(0 | 24)"
+    },
+    {
+      "name": "mood",
+      "title": "NMSS Domain 3 - Mood/Cognition",
+      "description": "NMSS Domain 3 - Mood/Cognition subscore (0-72)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain3')).valueQuantity.value.fst:rescale(0 | 72)"
+    },
+    {
+      "name": "perceptual",
+      "title": "NMSS Domain 4 - Perceptual problems halicunations",
+      "description": "NMSS Domain 4 - Perceptual problems halicunations subscore (0-36)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain4')).valueQuantity.value.fst:rescale(0 | 36)"
+    },
+    {
+      "name": "memory",
+      "title": "NMSS Domain 5 - Attention/Memory",
+      "description": "NMSS Domain 5 - Attention/Memory subscore (0-36)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain5')).valueQuantity.value.fst:rescale(0 | 36)"
+    },
+    {
+      "name": "gastrointestinal",
+      "title": "NMSS Domain 6 - Gastrointestinal tract",
+      "description": "NMSS Domain 6 - Gastrointestinal tract subscore (0-36)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain6')).valueQuantity.value.fst:rescale(0 | 36)"
+    },
+    {
+      "name": "urinary",
+      "title": "NMSS Domain 7 - Urinary",
+      "description": "NMSS Domain 7 - Urinary subscore (0-36)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain7')).valueQuantity.value.fst:rescale(0 | 36)"
+    },
+    {
+      "name": "sexual",
+      "title": "NMSS Domain 8 - Sexual function",
+      "description": "NMSS Domain 8 - Sexual function subscore (0-24)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain8')).valueQuantity.value.fst:rescale(0 | 24)"
+    },
+    {
+      "name": "miscellaneous",
+      "title": "NMSS Domain 9 - Miscellaneous",
+      "description": "NMSS Domain 9 - Miscellaneoussubscore (0-48)",
+      "dataType": "decimal",
+      "fhirPath": "Observation.component.where(code.coding.exists($this.system ='https://aiccelerate.eu/fhir/CodeSystem/nmss-domains' and $this.code='domain9')).valueQuantity.value.fst:rescale(0 | 48)"
+    }
+  ]
+}
