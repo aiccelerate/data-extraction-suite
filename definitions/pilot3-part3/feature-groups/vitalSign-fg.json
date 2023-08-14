@@ -1,0 +1,47 @@
+{
+  "url": "https://aiccelerate.eu/feature-groups/pilot3-p3/vitalsign",
+  "name": "vitalsign",
+  "title": "Vital Sign",
+  "description": "Represent information about a vital sign apart from the panel like information (e.g. blood pressure)",
+  "version": "0.1",
+  "date": "2022-09-07",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "targetResourceType": "Observation",
+  "targetProfile": "http://hl7.org/fhir/StructureDefinition/vitalsigns",
+  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&category=http://terminology.hl7.org/CodeSystem/observation-category|vital-signs&code:not=http://loinc.org|85354-9,http://loinc.org|85353-1",
+  "entities": {
+    "pid": "Patient"
+  },
+  "timestamp": "time",
+  "feature": [
+    {
+      "name": "pid",
+      "title": "Patient identifier",
+      "description": "Patient identifier",
+      "dataType": "id",
+      "fhirPath": "Observation.subject"
+    },
+    {
+      "name": "time",
+      "title": "Observation time",
+      "description": "Time of measurement",
+      "dataType": "dateTime",
+      "fhirPath": "Observation.effectiveDateTime"
+    },
+    {
+      "name": "code",
+      "title": "LOINC code for the vital-sign",
+      "description": "LOINC code for the vital-sign",
+      "dataType": "code",
+      "fhirPath": "Observation.code.coding.where(system='http://loinc.org').first().code"
+    },
+    {
+      "name": "value",
+      "title": "Numeric lab result",
+      "description": "Numeric lab result",
+      "dataType": "decimal",
+      "fhirPath": "Observation.valueQuantity.value"
+    }
+  ]
+}

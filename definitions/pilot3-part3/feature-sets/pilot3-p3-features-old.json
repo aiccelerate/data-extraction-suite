@@ -1,6 +1,6 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot3_p3",
-  "name": "pilot3_p3",
+  "url": "https://aiccelerate.eu/feature-sets/pilot3_p3_old",
+  "name": "pilot3_p3_old",
   "title": "Feature set for AICCELERATE Pilot 3 - Part 3",
   "description": "Feature set for AICCELERATE Pilot 3 - Part 3 - Optimisation of palliative and chronic paediatric service delivery and patient workflow for Cerebral Palsy patients",
   "version": "0.1",
@@ -39,7 +39,7 @@
   },
   "featureGroup": [
     {
-      "reference": "https://aiccelerate.eu/feature-groups/common/patient",
+      "reference": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
       "feature": [
         {
           "name": "gender"
@@ -57,13 +57,9 @@
 
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
-      "join": {
-        "type": "past",
-        "duration": "%encounterStartTime"
-      },
       "filter": {
         "name": "current",
-        "fhirPath": "type.subsetOf('305354007' | '305353001')"
+        "fhirPath": "endDate = %referenceTimePoint"
       },
       "feature": [
         {
@@ -84,6 +80,11 @@
     },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "filter": {
+        "name": "other",
+        "description": "Past encounters in the last 6 month",
+        "fhirPath": "endDate < (%encounterStartTime - 4 hours)"
+      },
       "join": {
         "type": "past",
         "duration": "6mo"
@@ -132,7 +133,7 @@
               "windowPeriod": "mo",
               "windowSize": 3,
               "extending": "multiplicative",
-              "aggOp": ["count_distinct"]
+              "aggOp": ["count_unique"]
             }
           ]
         }
@@ -140,6 +141,11 @@
     },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "filter": {
+        "name": "stays",
+        "description": "Past stays in the last 12 month",
+        "fhirPath": "(code = '305354007' or code ='305353001')  and endDate < (%encounterStartTime - 4 hours)"
+      },
       "join": {
         "type": "past",
         "duration": "12mo"
@@ -201,7 +207,9 @@
           },
           "temporalAgg": [
             {
-              "aggOp": ["set", "count_distinct"]
+              "aggOp": [
+                "set"
+              ]
             }
           ]
         },
@@ -269,7 +277,7 @@
           "name": "hasOsteoporosis",
           "description": "Whether patient has Osteoporosis or not until that time point. ICD-10 Codes: M89.9",
           "valueExpr": {
-            "fhirPath": "icd10Code = 'M89.9'",
+            "fhirPath": "icd10Code = M89.9",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -488,21 +496,6 @@
       },
       "feature": [
         {
-          "name": "surgical",
-          "description": "Number of total surgical clinical procedures in past. (ICD-10-PCS code starting with '0')",
-          "valueExpr": {
-            "fhirPath": "code.startsWith('0')",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": [
-                "count_true"
-              ]
-            }
-          ]
-        },
-        {
           "name": "hasVDVP",
           "description": "Whether patient has VDVP placed until that time point. Codes: 826, 827, 830, 1600",
           "valueExpr": {
@@ -521,7 +514,7 @@
           "name": "hasBaclofenPump",
           "description": "Whether patient has Baclofen pump placed until that time point. ICD-10-PCS Codes: 0JH80VZ, 00HU33Z",
           "valueExpr": {
-            "fhirPath": "code='0JH80VZ' or code='00HU33Z' or code='00HV03Z' or code='00HV33Z' or code='00HV43Z'",
+            "fhirPath": "code='0JH80VZ' or code='00HU33Z'",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -587,25 +580,10 @@
       },
       "feature": [
         {
-          "name": "surgical",
-          "description": "Number of surgical clinical procedures in last 3 months",
-          "valueExpr": {
-            "fhirPath": "code.startsWith('0')",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "aggOp": [
-                "count_true"
-              ]
-            }
-          ]
-        },
-        {
           "name": "hasNonInvasiveVentilation",
-          "description": "Whether patient has non invasive respiratory ventilation within the last period. ICD-10-PCS Codes: 5A0935*, 5A0945*, 5A0955*",
+          "description": "Whether patient has non invasive respiratory ventilation within the last period. ICD-10-PCS Codes: 5A19054",
           "valueExpr": {
-            "fhirPath": "code = '5A19054' or code.startsWith('5A0935') or code.startsWith('5A0945') or code.startsWith('5A0955')",
+            "fhirPath": "code = '5A19054'",
             "dataType": "boolean"
           },
           "temporalAgg": [
@@ -640,9 +618,24 @@
           },
           "temporalAgg": [
             {
+              "lastN": 4,
+              "windowPeriod": "wk",
+              "windowSize": 1,
               "aggOp": [
                 "any"
               ]
+            }
+          ]
+        },
+        {
+          "name": "numOfDaysSedationPumpUsed",
+          "filter": {
+            "fhirPath": "code='462741000'"
+          },
+          "description": "Number of days sedation or analgesia pump is used at home",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
             }
           ]
         }
@@ -685,7 +678,7 @@
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/medication",
       "join": {
         "type": "past",
-        "duration": "%encounterStartTime"
+        "duration": "1mo"
       },
       "feature": [
         {
@@ -693,7 +686,12 @@
           "description": "Number of different ingredients (ATC code) given to the patient",
           "temporalAgg": [
             {
-              "aggOp": ["count_distinct"]
+              "lastN": 3,
+              "windowPeriod": "wk",
+              "windowSize": 1,
+              "aggOp": [
+                "count_distinct"
+              ]
             }
           ]
         },
@@ -702,7 +700,12 @@
           "description": "Number of different medications given to the patient",
           "temporalAgg": [
             {
-              "aggOp": ["count_distinct"]
+              "lastN": 3,
+              "windowPeriod": "wk",
+              "windowSize": 1,
+              "aggOp": [
+                "count_distinct"
+              ]
             }
           ]
         }
@@ -712,7 +715,7 @@
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/medication",
       "join": {
         "type": "past",
-        "duration": "%encounterStartTime"
+        "duration": "1mo"
       },
       "pivot": {
         "name": "route",
@@ -762,6 +765,9 @@
           "description": "Number of times medication administered in the given period",
           "temporalAgg": [
             {
+              "lastN": 3,
+              "windowPeriod": "wk",
+              "windowSize": 1,
               "aggOp": [
                 "count"
               ]
@@ -772,214 +778,180 @@
     },
 
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/vitalsign",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "join": {
+        "type": "past"
+      },
       "filter": {
-        "name": "weight",
-        "fhirPath": "code='29463-7' and value > 0"
+        "name": "gmfcs",
+        "fhirPath": "code='707621005'"
       },
       "feature": [
         {
-          "name": "value",
-          "description": "Latest body weight of patient"
+          "name": "value"
         }
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/vitalsign",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
       "filter": {
-        "name": "height",
-        "fhirPath": "code='8302-2' and value > 0"
+        "name": "pedsql",
+        "fhirPath": "code='pedsql'"
       },
-      "feature": [
-        {
-          "name": "value",
-          "description": "Latest body height of patient",
-          "valueExpr": {
-            "fhirPath": "iif(value < 10, value * 100, value)",
-            "dataType": "integer"
-          }
-        }
-      ]
-    },
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/vitalsign",
       "join": {
         "type": "past",
-        "duration": "%encounterStartTime"
-      },
-      "filter": {
-        "name": "valid",
-        "fhirPath": "value > 0"
-      },
-      "pivot": {
-        "name": "code",
-        "description": "Other vital signs",
-        "values": [
-          {
-            "name":"temperature",
-            "value": "8310-5"
-          },
-          {
-            "name":"heartRate",
-            "value": "8867-4"
-          },
-          {
-            "name":"respRate",
-            "value": "9279-1"
-          },
-          {
-            "name":"spo2",
-            "value": "2708-6"
-          }
-        ]
+        "duration": "12mo"
       },
       "feature": [
         {
-          "name": "value",
-          "description": "Statistics for each vital sign during hospital stay in given periods",
-
-          "temporalAgg": [
-            {
-              "aggOp": ["max", "min", "avg", "stddev", "kurtosis", "skewness"]
-            }
-          ]
+          "name": "value"
+        },
+        {
+          "name": "valueScaled"
         }
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/bloodpressure",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "pqol",
+        "fhirPath": "code='pqol'"
+      },
       "join": {
         "type": "past",
-        "duration": "%encounterStartTime"
+        "duration": "6mo"
       },
       "feature": [
         {
-          "name": "systolic",
-          "description": "Statistics for systolic BP during hospital stay in given periods",
-          "temporalAgg": [
-            {
-              "aggOp": ["max", "min", "avg", "stddev", "kurtosis", "skewness"]
-            }
-          ]
+          "name": "value"
         },
         {
-          "name": "diastolic",
-          "description": "Statistics for diastolic BP during hospital stay in given periods",
-          "temporalAgg": [
-            {
-              "aggOp": ["max", "min", "avg", "stddev", "kurtosis", "skewness"]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "reference": "https://aiccelerate.eu/feature-groups/common/patient",
-      "join": {
-        "type": "future"
-      },
-      "feature": [
-        {
-          "name": "expiredInHospital",
-          "description": "Whether patient dies at hospital",
-          "valueExpr": {
-            "fhirPath": "deceasedDateTime <= %referenceTimePoint",
-            "dataType": "boolean"
-          }
-        },
-        {
-          "name": "expiredInNextMonth",
-          "description": "Whether patient dies in the next 1 month",
-          "valueExpr": {
-            "fhirPath": "deceasedDateTime >= %referenceTimePoint and deceasedDateTime < (%referenceTimePoint + 1 months)",
-            "dataType": "boolean"
-          }
-        },
-        {
-          "name": "expiredIn3Month",
-          "description": "Whether patient dies in the next 3 month",
-          "valueExpr": {
-            "fhirPath": "deceasedDateTime >= %referenceTimePoint and deceasedDateTime < (%referenceTimePoint + 3 months)",
-            "dataType": "boolean"
-          }
-        },
-        {
-          "name": "expiredIn6Month",
-          "description": "Whether patient dies in the next 6 month",
-          "valueExpr": {
-            "fhirPath": "deceasedDateTime >= %referenceTimePoint and deceasedDateTime < (%referenceTimePoint + 3 months)",
-            "dataType": "boolean"
-          }
+          "name": "valueScaled"
         }
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "zarit",
+        "fhirPath": "code='zarit'"
+      },
       "join": {
-        "type": "future"
+        "type": "past",
+        "duration": "6mo"
       },
       "feature": [
         {
-          "name": "hasEmergencyVisit",
-          "description": "If patient has an emergency department visit in the next given period.",
-          "valueExpr": {
-            "fhirPath": "type='183452005'",
-            "dataType": "boolean"
-          },
-          "temporalAgg": [
-            {
-              "lastN": 3,
-              "windowPeriod": "wk",
-              "windowSize": 1,
-              "extending": "multiplicative",
-              "aggOp": ["any"]
-            }
-          ]
+          "name": "value"
+        },
+        {
+          "name": "valueScaled"
         }
       ]
     },
     {
-      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "pain",
+        "fhirPath": "code='38215-0'"
+      },
       "join": {
-        "type": "future",
+        "type": "past",
         "duration": "1mo"
       },
-      "pivot": {
-        "name": "type",
-        "description": "Pivoted on encounter type",
-        "values": [
-          {
-            "name":"WARD",
-            "value": "305354007"
-          },
-          {
-            "name":"PICU",
-            "value": "305353001"
-          },
-          {
-            "name":"EMER",
-            "value": "183452005"
-          },
-          {
-            "name":"C2P2",
-            "value": "305647009"
-          },
-          {
-            "name":"C2P2INF",
-            "value": "305731000"
-          }
-        ]
+      "feature": [
+        {
+          "name": "value",
+           "temporalAgg": [
+             {
+               "aggOp": ["avg", "max", "min"]
+             }
+           ]
+        },
+        {
+          "name": "valueScaled",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "ramsay",
+        "fhirPath": "code='281400004'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "1mo"
       },
       "feature": [
         {
-          "name": "pid",
-          "description": "Number of encounters per given type",
+          "name": "value",
           "temporalAgg": [
             {
-              "aggOp": ["count"]
+              "aggOp": ["avg", "max", "min"]
             }
           ]
+        },
+        {
+          "name": "valueScaled",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "ramsay",
+        "fhirPath": "code='386554004' or code='443709007'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "1mo"
+      },
+      "feature": [
+        {
+          "name": "value",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        },
+        {
+          "name": "valueScaled",
+          "temporalAgg": [
+            {
+              "aggOp": ["avg", "max", "min"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/observation",
+      "filter": {
+        "name": "dmec",
+        "fhirPath": "code='dme-c'"
+      },
+      "join": {
+        "type": "past",
+        "duration": "6mo"
+      },
+      "feature": [
+        {
+          "name": "value"
+        },
+        {
+          "name": "valueScaled"
         }
       ]
     }

@@ -13,7 +13,8 @@
   "entities": {
     "pid": "Patient"
   },
-  "timestamp": "date",
+  "timestamp": "startDate",
+  "periodEnd": "endDate",
   "feature": [
     {
       "name": "pid",
@@ -23,11 +24,18 @@
       "fhirPath": "Encounter.subject"
     },
     {
-      "name": "date",
+      "name": "startDate",
       "title": "Encounter date",
       "description": "Encounter date",
-      "dataType": "date",
-      "fhirPath": "Encounter.period.start.toDate()"
+      "dataType": "dateTime",
+      "fhirPath": "Encounter.period.start"
+    },
+    {
+      "name": "endDate",
+      "title": "Encounter date",
+      "description": "Encounter date",
+      "dataType": "dateTime",
+      "fhirPath": "Encounter.period.end"
     },
     {
       "name": "category",

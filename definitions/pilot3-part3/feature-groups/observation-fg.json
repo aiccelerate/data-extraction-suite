@@ -101,13 +101,6 @@
       "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/pediatric-assessments' or system='http://loinc.org').code.first()"
     },
     {
-      "name": "name",
-      "title": "Assessment name",
-      "description": "Name for the assessment e.g. Zarit Scale, Ramsay Scale, etc",
-      "dataType": "code",
-      "fhirPath": "Observation.code.coding.where(system='http://snomed.info/sct' or system='https://aiccelerate.eu/fhir/CodeSystem/pediatric-assessments' or system='http://loinc.org').display.first()"
-    },
-    {
       "name": "value",
       "title": "Value of the assessment or measurement",
       "description": "Numeric value of the assessment or measurement",

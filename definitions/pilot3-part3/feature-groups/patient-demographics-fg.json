@@ -1,6 +1,6 @@
 {
-  "url": "https://aiccelerate.eu/feature-groups/common/patient_demographics",
-  "name": "patient_demographics",
+  "url": "https://aiccelerate.eu/feature-groups/common/patient",
+  "name": "patient",
   "title": "Patient demographics",
   "description": "Patient demographics related features",
   "version": "0.1",
@@ -47,7 +47,7 @@
       "title": "Date of death",
       "description": "Date of death (format: YYYY-MM-DD or YYYY-MM)",
       "dataType": "date",
-      "fhirPath": "Patient.deceasedDateTime"
+      "fhirPath": "Patient.deceasedDateTime.toDate()"
     },
     {
       "name": "ageOfDeath",

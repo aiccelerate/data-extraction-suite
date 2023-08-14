@@ -13,7 +13,7 @@
   "entities": {
     "pid": "Patient"
   },
-  "timestamp": "onsetDate",
+  "timestamp": "date",
   "feature": [
     {
       "name": "pid",
@@ -27,7 +27,7 @@
       "title": "Procedure date",
       "description": "Procedure date",
       "dataType": "dateTime",
-      "fhirPath": "Procedure.performedDateTime.nav:orElse(Procedure.performedPeriod.start).toDate()"
+      "fhirPath": "Procedure.performedDateTime.nav:orElse(Procedure.performedPeriod.start)"
     },
     {
       "name": "code",
@@ -35,13 +35,6 @@
       "description": "ICD-10-PCS code for the procedure",
       "dataType": "code",
       "fhirPath": "Procedure.code.coding.where(system='http://hl7.org/fhir/sid/ex-icd-10-procedures' or system='http://snomed.info/sct').code.first()"
-    },
-    {
-      "name": "name",
-      "title": "Procedure name",
-      "description": "Name of the procedure",
-      "dataType": "string",
-      "fhirPath": "Procedure.code.coding.where(system='http://hl7.org/fhir/sid/ex-icd-10-procedures').display.first()"
     },
     {
       "name": "ageProcedureApplied",

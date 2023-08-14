@@ -1,8 +1,8 @@
 {
-  "url": "https://aiccelerate.eu/cohorts/pilot3/cerebral_palsy",
-  "name": "cerebral_palsy",
-  "title": "Pediatric patients diagnosed with Cerebral Palsy",
-  "description": "Pediatric patients diagnosed with Cerebral Palsy (ICD-10 G80)",
+  "url": "https://aiccelerate.eu/cohorts/pilot3/all",
+  "name": "all",
+  "title": "Pediatric patients ",
+  "description": "Pediatric patients",
   "version": "0.1",
   "date": "2022-04-21T00:00:00",
   "fhirVersion": "4.0.1",
@@ -11,15 +11,7 @@
   "eligibilityCriteria": [
     {
       "fhirSearch": "?",
-      "description": "All patients with a Cerebral palsy diagnosis (ICD-10 G80)",
-      "filter": [
-        {
-          "resourceType": "Condition",
-          "fhirSearch": "?code:below=http://hl7.org/fhir/sid/icd-10|G80&patient={{Patient}}",
-          "entities": ["Condition.subject"],
-          "eventTime": "Condition.onsetDateTime"
-        }
-      ]
+      "description": "All patients with a Cerebral palsy diagnosis (ICD-10 G80)"
     }
   ]
 }

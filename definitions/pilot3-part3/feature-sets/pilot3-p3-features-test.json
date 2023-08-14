@@ -1,0 +1,186 @@
+{
+  "url": "https://aiccelerate.eu/feature-sets/pilot3_p3_test",
+  "name": "pilot3_p3_test",
+  "title": "Feature set for AICCELERATE Pilot 3 - Part 3",
+  "description": "Feature set for AICCELERATE Pilot 3 - Part 3 - Optimisation of palliative and chronic paediatric service delivery and patient workflow for Cerebral Palsy patients",
+  "version": "0.1",
+  "date": "2022-04-21",
+  "fhirVersion": "4.0.1",
+  "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
+  "referenceTimePoints": {
+    "method": "feature-group",
+    "featureGroup": [
+      {
+        "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+        "filter": {
+          "name": "isHospitalStay",
+          "description": "Take the end of Pediatric or PICU stays",
+          "fhirPath": "type.subsetOf('305354007' | '305353001')"
+        },
+        "useEndTime": true
+      }
+    ],
+    "secondaryTimePoint": [
+      {
+        "name": "encounterStartTime",
+        "description": "Start time for the encounter",
+        "featureGroup": [
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+            "filter": {
+              "name": "isHospitalStay",
+              "description": "Take the stary of Pediatric or PICU stays",
+              "fhirPath": "type.subsetOf('305354007' | '305353001')"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "featureGroup": [
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/common/patient",
+      "feature": [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "age",
+          "description": "Age of the patient at reference point",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(birthDate, %referenceTimePoint, 'years')",
+            "dataType": "integer"
+          }
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "join": {
+        "type": "past",
+        "duration": "%encounterStartTime"
+      },
+      "filter": {
+        "name": "current",
+        "fhirPath": "type.subsetOf('305354007' | '305353001')"
+      },
+      "feature": [
+        {
+          "name": "isPICU",
+          "description": "Whether patient is currently in PICU",
+          "valueExpr": {
+            "fhirPath": "type='305353001'",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "lengthOfStay"
+        },
+        {
+          "name": "dischargeType"
+        }
+      ]
+    },
+
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/common/patient",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "expiredInNextMonth",
+          "description": "Whether patient dies in the next 1 month",
+          "valueExpr": {
+            "fhirPath": "deceasedDateTime >= %referenceTimePoint and deceasedDateTime < (%referenceTimePoint + 1 months)",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "expiredIn3Month",
+          "description": "Whether patient dies in the next 3 month",
+          "valueExpr": {
+            "fhirPath": "deceasedDateTime >= %referenceTimePoint and deceasedDateTime < (%referenceTimePoint + 3 months)",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "expiredIn6Month",
+          "description": "Whether patient dies in the next 6 month",
+          "valueExpr": {
+            "fhirPath": "deceasedDateTime >= %referenceTimePoint and deceasedDateTime < (%referenceTimePoint + 3 months)",
+            "dataType": "boolean"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "join": {
+        "type": "future"
+      },
+      "feature": [
+        {
+          "name": "hasEmergencyVisit",
+          "valueExpr": {
+            "fhirPath": "type='183452005'",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "lastN": 3,
+              "windowPeriod": "wk",
+              "windowSize": 1,
+              "extending": "multiplicative",
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/encounter",
+      "join": {
+        "type": "future",
+        "duration": "1mo"
+      },
+      "pivot": {
+        "name": "type",
+        "description": "Pivoted on encounter type",
+        "values": [
+          {
+            "name":"WARD",
+            "value": "305354007"
+          },
+          {
+            "name":"PICU",
+            "value": "305353001"
+          },
+          {
+            "name":"EMER",
+            "value": "183452005"
+          },
+          {
+            "name":"C2P2",
+            "value": "305647009"
+          },
+          {
+            "name":"C2P2INF",
+            "value": "305731000"
+          }
+        ]
+      },
+      "feature": [
+        {
+          "name": "startDate",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
