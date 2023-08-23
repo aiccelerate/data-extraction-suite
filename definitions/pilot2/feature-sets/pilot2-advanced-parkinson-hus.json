@@ -9,16 +9,17 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "referenceTimePoints": {
     "method": "feature-group",
-    "description": "Use main encounters as reference time point where minimum gap between two time point is 6 month",
-    "minGap": "6mo",
+    "description": "Use main encounters as reference time point where minimum gap between two time point is 3 month",
+    "minGap": "3mo",
     "useEndTime": true,
     "featureGroup": [
       {
         "reference": "https://aiccelerate.eu/feature-groups/pilot2/encounter",
         "filter": {
           "name": "mainVisit",
-          "fhirPath": "type='225398001'"
-        }
+          "fhirPath": "type='225398001' and category.subsetOf('AMB' | 'IMP' | 'EMER')"
+        },
+        "useEndTime": true
       }
     ]
   },
@@ -27,9 +28,8 @@
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/encounter",
       "filter": {
         "name": "mainVisit",
-        "fhirPath": "type='225398001'"
+        "fhirPath": "type='225398001' and category.subsetOf('AMB' | 'IMP' | 'EMER')"
       },
-      "join": {"type": "past"},
       "feature": [
         {
           "name": "numOfMonthsSinceDiagnosis",
@@ -71,15 +71,6 @@
         "type": "past"
       },
       "feature": [
-        {
-          "name": "icd10Code",
-          "description": "Set of ICD-10 diagnosis for patients until that time point",
-          "temporalAgg": [
-            {
-              "aggOp": ["set"]
-            }
-          ]
-        },
         {
           "name": "icd10Code3Digits",
           "description": "Set of ICD-10 diagnosis (First 3 digits) for patients until that time point",
@@ -1505,6 +1496,14 @@
               "windowPeriod": "mo",
               "windowSize": 6,
               "extending": "multiplicative",
+              "aggOp": [
+                "any"
+              ]
+            },
+            {
+              "lastN": 6,
+              "windowPeriod": "mo",
+              "windowSize": 12,
               "aggOp": [
                 "any"
               ]
