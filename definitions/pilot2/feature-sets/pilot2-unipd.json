@@ -713,10 +713,6 @@
         "description": "Motor symptoms (severe dyskinesia, off-time, fluctuations) that may indicate advance disease state in parkinson",
         "fhirPath": "code='1230308005' or code='troublesome-dyskinesia' or code='fluctuations'"
       },
-      "join": {
-        "type": "past",
-        "duration": "%previousReferenceTimePoint"
-      },
       "feature": [
         {
           "name": "isSeen",
@@ -1429,10 +1425,6 @@
     },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/meddose",
-      "join": {
-        "type": "past",
-        "duration": "%previousReferenceTimePoint"
-      },
       "filter": {
         "name": "levodopa",
         "fhirPath": "atcCode='N04BA01'"
@@ -1460,8 +1452,7 @@
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot2/meddose",
       "join": {
-        "type": "past",
-        "duration": "%previousReferenceTimePoint"
+        "type": "past"
       },
       "filter": {
         "name": "dopamine",
@@ -1664,11 +1655,11 @@
         },
         {
           "alias": "usingLevodopa5OrMore",
-          "featureNamePattern": "meddose_levodopa_5OrMore_pPRTP_any"
+          "featureNamePattern": "meddose_levodopa_5OrMore_any"
         },
         {
           "alias": "advanceSymptoms",
-          "featureNamePattern": "motor_advanceSymptoms_isSeen_pPRTP_any"
+          "featureNamePattern": "motor_advanceSymptoms_isSeen_any"
         },
         {
           "alias": "isDementia",
@@ -1690,6 +1681,23 @@
           "featureNamePattern": "inAdvancedStage"
         },
         {
+          "alias": "alreadyDeviceAidedTreatment",
+          "featureNamePattern": "device_treatment_any"
+        },
+        {
+          "alias": "alreadyUsingLevodopa5OrMore",
+          "featureNamePattern": "meddose_levodopa_5OrMore_any"
+        },
+        {
+          "alias": "alreadyAdvanceSymptoms",
+          "featureNamePattern": "motor_advanceSymptoms_isSeen_any"
+        },
+        {
+          "alias": "alreadyIsDementia",
+          "featureNamePattern": "observations_cognitiveStatus_isDementia"
+        },
+
+        {
           "alias": "deviceAidedTreatment",
           "featureNamePattern": "device_treatment_*"
         },
@@ -1707,7 +1715,7 @@
         }
       ],
       "valueExpr": {
-        "fhirPath": "alreadyInAdvanceStage.not() and deviceAidedTreatment or (usingLevodopa5OrMore and (advanceSymptoms or isDementia))",
+        "fhirPath": "alreadyInAdvanceStage.not() and ((deviceAidedTreatment or alreadyDeviceAidedTreatment) or ((usingLevodopa5OrMore or alreadyUsingLevodopa5OrMore) and ((advanceSymptoms or alreadyAdvanceSymptoms) or (isDementia or alreadyIsDementia))))",
         "dataType": "boolean"
       }
     }
