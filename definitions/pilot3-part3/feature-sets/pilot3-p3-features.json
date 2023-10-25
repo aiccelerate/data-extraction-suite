@@ -177,6 +177,35 @@
 
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/condition",
+      "filter": {
+        "name": "main",
+        "fhirPath": "isMain"
+      },
+      "feature": [
+        {
+          "name": "code",
+          "description": "Main problem code for the patient"
+        },
+        {
+          "name": "icd10Code3Digits",
+          "description": "Main problem code with ICD10 (First 3 digits)",
+          "valueExpr": {
+            "fhirPath": "icd10Code.substring(0,3)",
+            "dataType": "code"
+          }
+        },
+        {
+          "name": "lifeExpectancyLessThan2Years",
+          "description": "Whether prognosis is less than 2 years for main condition",
+          "valueExpr": {
+            "fhirPath": "prognosis = '170969009'",
+            "dataType": "boolean"
+          }
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot3-p3/condition",
       "join": {
         "type": "past"
       },

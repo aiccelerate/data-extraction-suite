@@ -1246,6 +1246,24 @@
         }
       ]
     },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/medications",
+      "feature": [
+        {
+          "name": "inotropics",
+          "description": "If inotropics is given in the last main surgery",
+          "valueExpr": {
+            "fhirPath": "atcCode.empty() and time >= %lastSurgeryTime",
+            "dataType": "boolean"
+          },
+          "temporalAgg": [
+            {
+              "aggOp": ["any"]
+            }
+          ]
+        }
+      ]
+    },
 
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/complication",

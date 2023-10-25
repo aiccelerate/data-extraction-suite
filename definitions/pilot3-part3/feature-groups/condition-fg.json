@@ -30,6 +30,13 @@
       "fhirPath": "Condition.onsetDateTime.toDate()"
     },
     {
+      "name": "code",
+      "title": "Condition code",
+      "description": "Local code for the condition",
+      "dataType": "code",
+      "fhirPath": "Condition.code.coding.where(system!='http://hl7.org/fhir/sid/icd-10').code.first()"
+    },
+    {
       "name": "icd10Code",
       "title": "Condition code (ICD-10)",
       "description": "ICD-10 code for the condition",
@@ -37,11 +44,18 @@
       "fhirPath": "Condition.code.coding.where(system='http://hl7.org/fhir/sid/icd-10').code.first()"
     },
     {
-      "name": "severity",
-      "title": "Condition severity",
-      "description": "Condition severity",
+      "name": "isMain",
+      "title": "Whether condition is the main condition",
+      "description": "Whether condition is the main condition",
+      "dataType": "boolean",
+      "fhirPath": "Condition.category.coding.exists(system='http://terminology.hl7.org/CodeSystem/condition-category' and code='problem-list-item')"
+    },
+    {
+      "name": "prognosis",
+      "title": "Prognosis for the main condition",
+      "description": "Prognosis for the main condition",
       "dataType": "code",
-      "fhirPath": "Condition.severity.coding.where(system='http://www.snomed.org').code.first()"
+      "fhirPath": "Condition.stage.summary.coding.where(system='http://snomed.info/sct').code.first()"
     }
   ]
 }

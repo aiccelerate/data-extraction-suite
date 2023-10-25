@@ -411,7 +411,7 @@
           "name": "fractures",
           "description": "Whether patient has fracture and number of fracture until that time point. ICD-10 Codes: S02, S12, S22, S32, S42, S52, S62, S72, S82, S92",
           "valueExpr": {
-            "fhirPath": "icd10Code.exists() and icd10Code.substring(0,2).subsetOf('S02' | 'S12' | 'S22' | 'S32' | 'S42' | 'S52' | 'S62' | 'S72' | 'S82' | 'S92')",
+            "fhirPath": "icd10Code.exists() and icd10Code.substring(0,3).subsetOf('S02' | 'S12' | 'S22' | 'S32' | 'S42' | 'S52' | 'S62' | 'S72' | 'S82' | 'S92')",
             "dataType": "boolean"
           },
           "temporalAgg": [

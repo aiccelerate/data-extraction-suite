@@ -11,7 +11,7 @@
   "eligibilityCriteria": [
     {
       "fhirSearch": "?",
-      "description": "All patients with a Cerebral palsy diagnosis (ICD-10 G80)"
+      "description": "All patients given by the data source"
     }
   ]
 }
