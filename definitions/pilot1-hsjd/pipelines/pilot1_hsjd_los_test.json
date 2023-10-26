@@ -11,7 +11,11 @@
   "population": "https://aiccelerate.eu/cohorts/pilot1/cardiac_surgeries",
   "agentSettings": [
     {
-      "agent": "hsjd"
+      "agent": "hsjd",
+      "synchronizationSchedule": {
+        "timing":"0 3 * * * *",
+        "endOffset":"1d"
+      }
     }
   ]
 }

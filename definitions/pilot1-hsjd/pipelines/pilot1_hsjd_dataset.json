@@ -1,8 +1,8 @@
 {
-  "url": "https://aiccelerate.eu/feature-sets/pilot1_hsjd_dataset",
-  "name": "pilot1_hsjd_dataset",
-  "title": "Dataset for AICCELERATE pilot 1 HSJD Use Cases",
-  "description": "Dataset for AICCELERATE pilot 1 HSJD Use Cases",
+  "url": "https://aiccelerate.eu/datasets/pilot1_hsjd_complications",
+  "name": "pilot1_hsjd_complications",
+  "title": "Dataset for AICCELERATE pilot 1 HSJD Use Case for predicting unexpected ICU admissions after surgery",
+  "description": "Dataset for AICCELERATE pilot 1 HSJD Use Case for predicting unexpected ICU admissions after surgery",
   "version": "0.1",
   "date": "2022-04-21",
   "fhirVersion": "4.0.1",
