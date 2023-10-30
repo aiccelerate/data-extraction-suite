@@ -10,7 +10,7 @@
   "entityType": ["Patient"],
   "eligibilityCriteria": [
     {
-      "fhirSearch": "?",
+      "fhirSearch": "?_source=https://aiccelerate.eu/hsjd-pilot3",
       "description": "All patients given by the data source"
     }
   ]
