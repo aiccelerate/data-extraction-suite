@@ -7,12 +7,12 @@
   "date": "2022-04-21T00:00:00",
   "fhirVersion": "4.0.1",
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
-  "entityType": ["Patient", "EpisodeOfCare"],
+  "entityType": ["Patient", "EpisodeOfCare", "Encounter"],
   "eligibilityCriteria": [
     {
-      "fhirSearch": "?type=http://snomed.info/sct|736770009&patient={{Patient}}",
+      "fhirSearch": "?type=http://snomed.info/sct|305408004&status=finished",
       "description": "Surgeries and patients",
-      "entities": ["EpisodeOfCare.patient"]
+      "entities": ["Encounter.subject", "Encounter.episodeOfCare"]
     }
   ]
 }

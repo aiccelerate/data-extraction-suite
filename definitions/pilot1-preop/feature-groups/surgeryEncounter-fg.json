@@ -9,10 +9,11 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Encounter",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-SurgeryEncounter",
-  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&type=http://snomed.info/sct|305408004",
+  "fhirSearch": "?_id={{Encounter}}",
   "entities": {
     "pid": "Patient",
-    "episodeId": "EpisodeOfCare"
+    "episodeId": "EpisodeOfCare",
+    "encounterId": "Encounter"
   },
   "timestamp": "time",
   "periodEnd": "endTime",
@@ -43,14 +44,14 @@
       "title": "Specialty of the performed surgery",
       "description": "SNOMED-CT code for surgical specialty e.g. 394611003 -> Plastic surgery",
       "dataType": "code",
-      "fhirPath": "Encounter.serviceType.coding.where(system='http://snomed.info/sct').first().code"
+      "fhirPath": "Encounter.serviceType.coding.first().code"
     },
     {
       "name": "priority",
       "title": "Priority of surgery",
-      "description": "SNOMED-CT code for surgical priority e.g. 274075007 -> Elective surgery",
+      "description": "SNOMED-CT code for surgical priority e.g. EL -> Elective surgery",
       "dataType": "code",
-      "fhirPath": "Encounter.priority.coding.where(system='http://snomed.info/sct').first().code"
+      "fhirPath": "Encounter.priority.coding.where(system='http://terminology.hl7.org/CodeSystem/v3-ActPriority').first().code"
     },
     {
       "name": "encounterId",

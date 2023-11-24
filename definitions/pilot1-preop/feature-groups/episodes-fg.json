@@ -9,7 +9,7 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "EpisodeOfCare",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationEpisode",
-  "fhirSearch": "?patient={{Patient}}&_id={{EpisodeOfCare}}&_include=EpisodeOfCare:condition",
+  "fhirSearch": "?_id={{EpisodeOfCare}}&_include=EpisodeOfCare:condition",
   "entities": {
     "pid": "Patient",
     "episodeId": "EpisodeOfCare"

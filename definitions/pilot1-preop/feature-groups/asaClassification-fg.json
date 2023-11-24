@@ -9,9 +9,10 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Observation",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-ASAClassification",
-  "fhirSearch": "?patient={{Patient}}&code=http://loinc.org|97816-3",
+  "fhirSearch": "?patient={{Patient}}&encounter={{Encounter}}&code=http://loinc.org|97816-3",
   "entities": {
-    "pid": "Patient"
+    "pid": "Patient",
+    "encounterId": "Encounter"
   },
   "timestamp": "time",
   "feature": [
@@ -41,7 +42,7 @@
       "title": "Encounter identifier",
       "description": "Identifier of the encounter that this assessment is done",
       "dataType": "id",
-      "fhirPath": "Observation.encounter.reference"
+      "fhirPath": "Observation.encounter"
     }
   ]
 }

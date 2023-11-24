@@ -9,9 +9,10 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Procedure",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-SurgeryPhaseDetails",
-  "fhirSearch": "?patient={{Patient}}&episode-of-care={{EpisodeOfCare}}&category=http://snomed.info/sct|387713003",
+  "fhirSearch": "?patient={{Patient}}&encounter={{Encounter}}&category=http://snomed.info/sct|387713003",
   "entities": {
     "pid": "Patient",
+    "encounterId": "Encounter",
     "episodeId": "EpisodeOfCare"
   },
   "timestamp": "startTime",
@@ -80,7 +81,7 @@
       "title": "Encounter identifier",
       "description": "Identifier of the surgery encounter this phase is part of",
       "dataType": "id",
-      "fhirPath": "Procedure.encounter.reference"
+      "fhirPath": "Procedure.encounter"
     },
     {
       "name": "episodeId",

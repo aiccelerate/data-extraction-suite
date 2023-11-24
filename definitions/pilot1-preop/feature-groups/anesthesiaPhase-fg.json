@@ -1,5 +1,5 @@
 {
-  "url": "https://aiccelerate.eu/feature-groups/pilot2/anesthesiaPhase",
+  "url": "https://aiccelerate.eu/feature-groups/pilot1/anesthesiaPhase",
   "name": "anesthesiaPhase",
   "title": "Anesthesia Phase Details for the surgery",
   "description": "Information about the anesthesia procedure performed",
@@ -12,6 +12,7 @@
   "fhirSearch": "?patient={{Patient}}&category=http://snomed.info/sct|399097000",
   "entities": {
     "pid": "Patient",
+    "encounterId": "Encounter",
     "episodeId": "EpisodeOfCare"
   },
   "timestamp": "startTime",
@@ -71,7 +72,7 @@
       "title": "Encounter identifier",
       "description": "Identifier of the surgery encounter this phase is part of",
       "dataType": "id",
-      "fhirPath": "Procedure.encounter.reference"
+      "fhirPath": "Procedure.encounter"
     },
     {
       "name": "duration",

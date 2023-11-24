@@ -9,9 +9,10 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Flag",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationFlag",
-  "fhirSearch": "?patient={{Patient}}",
+  "fhirSearch": "?patient={{Patient}}&encounter={{Encounter}}",
   "entities": {
-    "pid": "Patient"
+    "pid": "Patient",
+    "encounterId": "Encounter"
   },
   "timestamp": "time",
   "feature": [
@@ -41,7 +42,7 @@
       "title": "Encounter identifier",
       "description": "Identifier of the encounter that this study is done",
       "dataType": "id",
-      "fhirPath": "DiagnosticReport.encounter.reference"
+      "fhirPath": "Flag.encounter"
     }
   ]
 }
