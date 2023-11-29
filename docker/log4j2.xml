@@ -2,12 +2,12 @@
 <Configuration status="DEBUG">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1.}:%L - %msg%n" />
+            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} %-5p %c{1.}:%L - %msg%n" />
         </Console>
 
         <!-- For normal application logs -->
         <RollingFile  name="OnFhirFeastLogsRollingFileAppender" fileName="logs/onfhir-feast.log" filePattern="logs/onfhir-feast-%d{MM-dd-yyyy}-%i.log.gz">
-            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1.}:%L - %msg%n" />
+            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} %-5p %c{1.}:%L - %msg%n" />
             <Policies>
                 <SizeBasedTriggeringPolicy size="50 MB" />
                 <TimeBasedTriggeringPolicy />

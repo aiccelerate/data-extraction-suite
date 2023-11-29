@@ -9,7 +9,7 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "targetResourceType": "Observation",
   "targetProfile": "https://aiccelerate.eu/fhir/StructureDefinition/AIC-OperationUrgency",
-  "fhirSearch": "?patient={{Patient}}&encounter={{Encounter}}&code=http://loinc.org|34000-0",
+  "fhirSearch": "?patient={{Patient}}&encounter={{Encounter}}&category=exam&code=http://loinc.org|34000-0",
   "entities": {
     "pid": "Patient",
     "encounterId": "Encounter"

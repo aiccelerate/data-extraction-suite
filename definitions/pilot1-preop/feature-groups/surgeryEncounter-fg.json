@@ -101,6 +101,13 @@
       "description": "Duration in minutes between entry and exit to/from the operation room",
       "dataType": "integer",
       "fhirPath": "Encounter.length.value"
+    },
+    {
+      "name": "estimatedDuration",
+      "title": "Estimated duration of surgery",
+      "description": "Estimated duration of surgery",
+      "dataType": "integer",
+      "fhirPath": "Encounter.extension.where(url = 'http://aiccelerate.eu/fhir/StructureDefinition/encounter-estimated-duration').valueQuantity.value"
     }
   ]
 }

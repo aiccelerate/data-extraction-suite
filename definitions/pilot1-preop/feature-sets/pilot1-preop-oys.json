@@ -689,16 +689,21 @@
     },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/asaClassification",
-      "join": {
-        "type": "past",
-        "duration": "2d"
-      },
       "feature": [
         {
           "name": "value"
         }
       ]
     },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/surgical_wound_classification",
+      "feature": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/operationFlag",
       "feature": [
@@ -782,12 +787,30 @@
     },
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot1/anesthesiaPhase",
+      "filter": {
+        "name": "typ",
+        "fhirPath": "anesthesiaType.exists()"
+      },
       "feature": [
         {
           "name": "anesthesiaType"
-        },
+        }
+      ]
+    },
+    {
+      "reference": "https://aiccelerate.eu/feature-groups/pilot1/anesthesiaPhase",
+      "filter": {
+        "name": "oth",
+        "fhirPath": "anesthesiaType.exists().not()"
+      },
+      "feature": [
         {
-          "name": "anesthesiaCode"
+          "name": "anesthesiaCode",
+          "temporalAgg": [
+            {
+              "aggOp": ["set"]
+            }
+          ]
         },
         {
           "name": "duration"
