@@ -9,7 +9,26 @@
   "publisher": "AICCELERATE WP1 Team (SRDC Corp.)",
   "referenceTimePoints": {
     "method": "feature-group",
-    "description": "Use main encounters as reference time point"
+    "description": "Use main encounters as reference time point",
+    "secondaryTimePoint": [
+      {
+        "name": "baselineVisitTime",
+        "description": "Time of the first main visit(encounter) in the dataset",
+        "join": {
+          "type": "past"
+        },
+        "takeFirst": false,
+        "featureGroup": [
+          {
+            "reference": "https://aiccelerate.eu/feature-groups/pilot2/encounter",
+            "filter": {
+              "name": "mainVisit",
+              "fhirPath": "type='225398001'"
+            }
+          }
+        ]
+      }
+    ]
   },
   "featureGroup": [
     {
@@ -27,6 +46,23 @@
             "fhirPath": "utl:getPeriod(%eligibilityEventTime, date, 'years')",
             "dataType": "integer"
           }
+        },
+        {
+          "name": "numOfMonthsFromFirstVisit",
+          "description": "Number of months passed from the first main visit in the dataset",
+          "valueExpr": {
+            "fhirPath": "utl:getPeriod(%baselineVisitTime, date, 'months')",
+            "dataType": "integer"
+          }
+        },
+        {
+          "name": "date",
+          "description": "Index of visit as the main visit (2nd visit)",
+          "temporalAgg": [
+            {
+              "aggOp": ["count"]
+            }
+          ]
         }
       ]
     },
@@ -783,7 +819,7 @@
       },
       "join": {
         "type": "past",
-        "duration": "6mo"
+        "duration": "%previousReferenceTimePoint"
       },
       "feature": [
         {
@@ -1157,7 +1193,7 @@
       },
       "join": {
         "type": "past",
-        "duration": "6mo"
+        "duration": "%previousReferenceTimePoint"
       },
       "feature": [
         {
@@ -1218,7 +1254,7 @@
           },
           {
             "name":"TMTb",
-            "value": "tmt-a"
+            "value": "tmt-b"
           },
           {
             "name":"VOSP",
@@ -1248,7 +1284,7 @@
       },
       "join": {
         "type": "past",
-        "duration": "6mo"
+        "duration": "%previousReferenceTimePoint"
       },
       "feature": [
         {

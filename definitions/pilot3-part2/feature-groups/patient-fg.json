@@ -22,6 +22,13 @@
       "fhirPath": "Patient.id"
     },
     {
+      "name": "studyId",
+      "title": "Patient study identifier",
+      "description": "Patient study identifier",
+      "dataType": "id",
+      "fhirPath": "Patient.identifier.value"
+    },
+    {
       "name": "gender",
       "title": "Gender",
       "description": "Gender of the patient (male | female | other | unknown)",

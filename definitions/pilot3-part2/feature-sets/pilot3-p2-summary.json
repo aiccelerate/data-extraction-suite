@@ -31,7 +31,7 @@
         }
       }
     ],
-    "period": "3mo",
+    "period": "6mo",
     "secondaryTimePoint": [
       {
         "name": "maintenancePeriodEnd",
@@ -39,15 +39,15 @@
         "join": {
           "type": "future"
         },
-        "sessionWindow": "30d",
-        "initialGap": "30d",
+        "sessionWindow": "60d",
+        "initialGap": "60d",
         "featureGroup": [
           {
             "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medused",
             "filter": {
               "name": "treatment_maintenance_medications",
               "description": "Cancer treatment medications used during maintenance period",
-              "fhirPath": "code = 'G03BA03' or code = 'G03BA03' or code = 'H03AA01' or code = 'H01BA02' or code = 'H02AB09' or code = 'L02AE02'"
+              "fhirPath": "code = 'G03BA03' or code = 'G03CA03' or code = 'H03AA01' or code = 'H01BA02' or code = 'H02AB09' or code = 'L02AE02' or code = 'L02AE04'"
             }
           }
         ]
@@ -58,7 +58,7 @@
         "join": {
           "type": "past"
         },
-        "sessionWindow": "3mo",
+        "sessionWindow": "6mo",
         "featureGroup": [
           {
             "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/medadm",
@@ -86,6 +86,9 @@
     {
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/patient",
       "feature": [
+        {
+          "name": "studyId"
+        },
         {
           "name": "gender"
         },
@@ -132,6 +135,14 @@
           "description": "Whether this is a first treatment or treatment of a relapse",
           "valueExpr": {
             "fhirPath": "%previousReferenceTimePoint.exists().not()",
+            "dataType": "boolean"
+          }
+        },
+        {
+          "name": "hasRelapse",
+          "description": "Whether this is a first treatment or treatment of a relapse",
+          "valueExpr": {
+            "fhirPath": "%nextReferenceTimePoint.exists()",
             "dataType": "boolean"
           }
         }
@@ -518,7 +529,8 @@
       "reference": "https://aiccelerate.eu/feature-groups/pilot3-p2/labresult",
       "join": {
         "type": "past",
-        "duration": "%previousReferenceTimePoint"
+        "offset": "30d",
+        "duration": "%intensiveTreatmentPeriodStart - 2d"
       },
       "pivot": {
         "name": "code",
